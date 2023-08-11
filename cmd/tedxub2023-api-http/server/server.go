@@ -7,6 +7,11 @@ import (
 	"os"
 	"time"
 
+	"github.com/tedxub2023/internal/ticket"
+	tickethttphandler "github.com/tedxub2023/internal/ticket/handler/http"
+	ticketservice "github.com/tedxub2023/internal/ticket/service"
+	ticketpgstore "github.com/tedxub2023/internal/ticket/store/postgresql"
+
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -55,10 +60,41 @@ func new() (*server, error) {
 	}
 
 	// connect to dabatabase
-	_, err := sqlx.Connect("postgres", config.BaseConfig())
+	db, err := sqlx.Connect("postgres", config.BaseConfig())
 	if err != nil {
 		log.Printf("[tedxub2023-api-http] failed to connect database: %s\n", err.Error())
 		return nil, fmt.Errorf("failed to connect database: %s", err.Error())
+	}
+
+	// initialize ticket service
+	var ticketSvc ticket.Service
+	{
+		pgStore, err := ticketpgstore.New(db)
+		if err != nil {
+			log.Printf("[twitter-api-http] failed to initialize ticket postgresql store: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize ticket postgresql store: %s", err.Error())
+		}
+
+		ticketSvc, err = ticketservice.New(pgStore)
+		if err != nil {
+			log.Printf("[twitter-api-http] failed to initialize ticket service: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize ticket service: %s", err.Error())
+		}
+	}
+
+	// initialize ticket HTTP handler
+	{
+		identities := []tickethttphandler.HandlerIdentity{
+			tickethttphandler.HandlerTickets,
+		}
+
+		ticketHTTP, err := tickethttphandler.New(ticketSvc, identities)
+		if err != nil {
+			log.Printf("[twitter-api-http] failed to initialize ticket http handlers: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize ticket http handlers: %s", err.Error())
+		}
+
+		s.handlers = append(s.handlers, ticketHTTP)
 	}
 
 	return s, nil
@@ -70,10 +106,11 @@ func (s *server) start() int {
 
 	// create multiplexer object
 	rootMux := mux.NewRouter()
+	appMux := rootMux.PathPrefix("/api/v1").Subrouter()
 
 	// starts handlers
 	for _, h := range s.handlers {
-		if err := h.Start(rootMux); err != nil {
+		if err := h.Start(appMux); err != nil {
 			log.Printf("[tedxub2023-api-http] failed to start handler: %s\n", err.Error())
 			return CodeFailServeHTTP
 		}
