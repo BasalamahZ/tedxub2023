@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"time"
 
 	"github.com/tedxub2023/internal/ticket"
 )
@@ -21,4 +22,8 @@ type PGStoreClient interface {
 	// CreateTicket creates a new ticket and return the
 	// created ticket ID.
 	CreateTicket(ctx context.Context, ticket ticket.Ticket) (string, error)
+
+	GetAllTicket(ctx context.Context) ([]ticket.Ticket, error)
+
+	UpdateTicket(ctx context.Context, nomorTiket string, id int, updateTime time.Time) error
 }

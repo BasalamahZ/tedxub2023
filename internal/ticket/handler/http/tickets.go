@@ -20,6 +20,8 @@ func (h *ticketsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
 		h.handleCreateTicket(w, r)
+	case http.MethodPatch:
+		h.handleUpdateTicket(w, r)
 	default:
 		helper.WriteErrorResponse(w, http.StatusMethodNotAllowed, []string{errMethodNotAllowed.Error()})
 	}
@@ -154,4 +156,62 @@ func parseTicketFromCreateRequest(th ticketHTTP) (ticket.Ticket, error) {
 	}
 
 	return result, nil
+}
+
+func (h *ticketsHandler) handleUpdateTicket(w http.ResponseWriter, r *http.Request) {
+	// add timeout to context
+	ctx, cancel := context.WithTimeout(r.Context(), 3000*time.Millisecond)
+	defer cancel()
+
+	var (
+		err        error
+		source     string
+		resBody    []byte
+		statusCode = http.StatusOK
+	)
+
+	defer func() {
+		if err != nil {
+			log.Printf("[Ticket HTTP][handleRandomizeTicket] Failed to randomize tickets. Source: %s, Err: %s\n", source, err.Error())
+			helper.WriteErrorResponse(w, statusCode, []string{err.Error()})
+			return
+		}
+
+		helper.WriteResponse(w, resBody, statusCode, helper.JSONContentTypeDecorator)
+	}()
+
+	errChan := make(chan error, 1)
+
+	go func() {
+		err := h.ticket.UpdateTicket(ctx)
+
+		if err != nil {
+			parsedErr := errInternalServer
+			statusCode = http.StatusInternalServerError
+			if v, ok := mapHTTPError[err]; ok {
+				parsedErr = v
+				statusCode = http.StatusBadRequest
+			}
+
+			// log the actual error if its internal error
+			if statusCode == http.StatusInternalServerError {
+				log.Printf("[Ticket HTTP][handleRandomizeTicket] Internal error from RandomizeTicket. Err: %s\n", err.Error())
+			}
+
+			errChan <- parsedErr
+			return
+		}
+	}()
+
+	select {
+	case <-ctx.Done():
+		statusCode = http.StatusGatewayTimeout
+		err = errRequestTimeout
+	case err = <-errChan:
+	default:
+		resBody, err = json.Marshal(helper.ResponseEnvelope{
+			Status: "Success",
+			Data:   map[string]string{},
+		})
+	}
 }

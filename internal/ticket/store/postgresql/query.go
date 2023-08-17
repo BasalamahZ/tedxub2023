@@ -26,3 +26,21 @@ const queryCreateTicket = `
 	) RETURNING
 		nama
 `
+
+const queryUpdateTicket = `
+	UPDATE 
+		ticket
+	SET 
+		status = :status, 
+		nomor_tiket = :nomor_tiket,
+		update_time = :update_time
+	WHERE 
+		id = :id
+`
+
+const queryGetAllTicket = `
+	SELECT 
+		* 
+	FROM 
+		ticket
+`
