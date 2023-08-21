@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"time"
 
 	"github.com/tedxub2023/internal/ticket"
 )
@@ -25,5 +24,5 @@ type PGStoreClient interface {
 
 	GetAllTicket(ctx context.Context) ([]ticket.Ticket, error)
 
-	UpdateTicket(ctx context.Context, nomorTiket string, id int, updateTime time.Time) error
+	UpdateTicket(ctx context.Context, t TicketUpdate) error
 }

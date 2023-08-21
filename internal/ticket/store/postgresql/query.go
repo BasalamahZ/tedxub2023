@@ -39,8 +39,20 @@ const queryUpdateTicket = `
 `
 
 const queryGetAllTicket = `
-	SELECT 
-		* 
-	FROM 
+	SELECT
+		id,
+		nama,
+		nomor_identitas,
+		asal_institusi,
+		domisili,
+		email,
+		nomor_telepon,
+		line_id,
+		instagram,
+		status,
+		nomor_tiket,
+		create_time,
+		update_time
+	FROM
 		ticket
 `

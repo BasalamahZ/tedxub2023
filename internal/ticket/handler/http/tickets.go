@@ -163,25 +163,30 @@ func (h *ticketsHandler) handleUpdateTicket(w http.ResponseWriter, r *http.Reque
 	ctx, cancel := context.WithTimeout(r.Context(), 3000*time.Millisecond)
 	defer cancel()
 
+	// create variables to store error and response body
 	var (
 		err        error
-		source     string
 		resBody    []byte
 		statusCode = http.StatusOK
 	)
 
+	// write response
 	defer func() {
 		if err != nil {
-			log.Printf("[Ticket HTTP][handleRandomizeTicket] Failed to randomize tickets. Source: %s, Err: %s\n", source, err.Error())
+			log.Printf("[Ticket HTTP][handleUpdateTicket] Failed to update tickets. Err: %s\n", err.Error())
 			helper.WriteErrorResponse(w, statusCode, []string{err.Error()})
 			return
 		}
-
+		resBody, err = json.Marshal(helper.ResponseEnvelope{
+			Status: "Success",
+		})
 		helper.WriteResponse(w, resBody, statusCode, helper.JSONContentTypeDecorator)
 	}()
 
+	// prepare channels for main go routine
 	errChan := make(chan error, 1)
 
+	// create goroutine to handle main logic
 	go func() {
 		err := h.ticket.UpdateTicket(ctx)
 
@@ -195,7 +200,7 @@ func (h *ticketsHandler) handleUpdateTicket(w http.ResponseWriter, r *http.Reque
 
 			// log the actual error if its internal error
 			if statusCode == http.StatusInternalServerError {
-				log.Printf("[Ticket HTTP][handleRandomizeTicket] Internal error from RandomizeTicket. Err: %s\n", err.Error())
+				log.Printf("[Ticket HTTP][handleUpdateTicket] Internal error from UpdateTicket. Err: %s\n", err.Error())
 			}
 
 			errChan <- parsedErr
@@ -203,15 +208,12 @@ func (h *ticketsHandler) handleUpdateTicket(w http.ResponseWriter, r *http.Reque
 		}
 	}()
 
+	// wait and handle main go routine
 	select {
 	case <-ctx.Done():
 		statusCode = http.StatusGatewayTimeout
 		err = errRequestTimeout
 	case err = <-errChan:
 	default:
-		resBody, err = json.Marshal(helper.ResponseEnvelope{
-			Status: "Success",
-			Data:   map[string]string{},
-		})
 	}
 }

@@ -2,7 +2,6 @@ package ticket
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -27,8 +26,8 @@ type Ticket struct {
 	NomorTelepon   string
 	LineID         string
 	Instagram      string
-	Status         sql.NullBool
-	NomorTiket     sql.NullString
+	Status         bool
+	NomorTiket     string
 	CreateTime     time.Time
-	UpdateTime     sql.NullTime
+	UpdateTime     time.Time
 }

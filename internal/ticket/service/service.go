@@ -15,3 +15,10 @@ func New(pgStore PGStore) (*service, error) {
 		timeNow: time.Now,
 	}, nil
 }
+
+type TicketUpdate struct {
+	ID         int64
+	Status     bool
+	NomorTiket string
+	UpdateTime time.Time
+}

@@ -2,8 +2,10 @@ package postgresql
 
 import (
 	"errors"
+	"time"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/tedxub2023/internal/ticket"
 	"github.com/tedxub2023/internal/ticket/service"
 )
 
@@ -61,4 +63,49 @@ func (sc *storeClient) Rollback() error {
 		return tx.Rollback()
 	}
 	return errInvalidRollback
+}
+
+type TicketDB struct {
+	ID             int64      `db:"id"`
+	Nama           string     `db:"nama"`
+	NomorIdentitas string     `db:"nomor_identitas"`
+	AsalInstitusi  string     `db:"asal_institusi"`
+	Domisili       string     `db:"domisili"`
+	Email          string     `db:"email"`
+	NomorTelepon   string     `db:"nomor_telepon"`
+	LineID         string     `db:"line_id"`
+	Instagram      string     `db:"instagram"`
+	Status         *bool      `db:"status"`
+	NomorTiket     *string    `db:"nomor_tiket"`
+	CreateTime     time.Time  `db:"create_time"`
+	UpdateTime     *time.Time `db:"update_time"`
+}
+
+func (tdb *TicketDB) formatting() ticket.Ticket {
+	t := ticket.Ticket{
+		ID:             tdb.ID,
+		Nama:           tdb.Nama,
+		NomorIdentitas: tdb.NomorIdentitas,
+		AsalInstitusi:  tdb.AsalInstitusi,
+		Domisili:       tdb.Domisili,
+		Email:          tdb.Email,
+		NomorTelepon:   tdb.NomorTelepon,
+		LineID:         tdb.LineID,
+		Instagram:      tdb.Instagram,
+		CreateTime:     tdb.CreateTime,
+	}
+
+	if tdb.Status != nil {
+		t.Status = *tdb.Status
+	}
+
+	if tdb.NomorTiket != nil {
+		t.NomorTiket = *tdb.NomorTiket
+	}
+
+	if tdb.UpdateTime != nil {
+		t.UpdateTime = *tdb.UpdateTime
+	}
+
+	return t
 }

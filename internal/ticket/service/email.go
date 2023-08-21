@@ -1,10 +1,13 @@
 package service
 
 import (
+	"bytes"
 	"log"
 	"os"
 	"strconv"
+	"text/template"
 
+	"github.com/tedxub2023/internal/ticket"
 	"gopkg.in/gomail.v2"
 )
 
@@ -13,9 +16,8 @@ type Gomail struct {
 	dialer  *gomail.Dialer
 }
 
-func NewEmailClient() *Gomail {
+func NewMailClient() *Gomail {
 	port, err := strconv.Atoi(os.Getenv("CONFIG_SMTP_PORT"))
-
 	if err != nil {
 		log.Fatalf("[tedxub2023-api-http] failed to convert smtp port: %s\n", err.Error())
 	}
@@ -42,13 +44,26 @@ func (g *Gomail) SetSubject(subject string) {
 	g.message.SetHeader("Subject", subject)
 }
 
-func (g *Gomail) SetBodyHTML(body string) {
-	g.message.SetBody("text/html", body)
+func (g *Gomail) SetBodyHTML(nameReciever string) error {
+	var body bytes.Buffer
+	path := "tedxub2023/global/template/template.html"
+	t, err := template.ParseFiles(path)
+	if err != nil {
+		return ticket.ErrParseBodyHTML
+	}
+
+	t.Execute(&body, struct {
+		Nama string
+	}{
+		Nama: nameReciever,
+	})
+	g.message.SetBody("text/html", body.String())
+	return nil
 }
 
 func (g *Gomail) SendMail() error {
 	if err := g.dialer.DialAndSend(g.message); err != nil {
-		return err
+		return ticket.ErrSendEmail
 	}
 	return nil
 }

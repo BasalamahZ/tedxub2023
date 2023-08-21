@@ -2,10 +2,10 @@ package postgresql
 
 import (
 	"context"
-	"time"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/tedxub2023/internal/ticket"
+	"github.com/tedxub2023/internal/ticket/service"
 )
 
 func (sc *storeClient) CreateTicket(ctx context.Context, reqTicket ticket.Ticket) (string, error) {
@@ -46,21 +46,28 @@ func (sc *storeClient) CreateTicket(ctx context.Context, reqTicket ticket.Ticket
 func (sc *storeClient) GetAllTicket(ctx context.Context) ([]ticket.Ticket, error) {
 	var tickets []ticket.Ticket
 
-	rows, err := sc.q.Query(queryGetAllTicket)
+	query, args, err := sqlx.Named(queryGetAllTicket, map[string]interface{}{})
 	if err != nil {
 		return nil, err
 	}
+	query, args, err = sqlx.In(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	query = sc.q.Rebind(query)
 
+	rows, err := sc.q.Queryx(query, args...)
+	if err != nil {
+		return nil, err
+	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var ticket ticket.Ticket
-		err := rows.Scan(&ticket.ID, &ticket.Nama, &ticket.NomorIdentitas, &ticket.AsalInstitusi, &ticket.Domisili, &ticket.Email, &ticket.NomorTelepon, &ticket.LineID, &ticket.Instagram, &ticket.Status, &ticket.NomorTiket, &ticket.CreateTime, &ticket.UpdateTime)
-		if err != nil {
+		var ticketDB TicketDB
+		if err := rows.StructScan(&ticketDB); err != nil {
 			return nil, err
 		}
-
-		tickets = append(tickets, ticket)
+		tickets = append(tickets, ticketDB.formatting())
 	}
 
 	if err := rows.Err(); err != nil {
@@ -70,12 +77,12 @@ func (sc *storeClient) GetAllTicket(ctx context.Context) ([]ticket.Ticket, error
 	return tickets, nil
 }
 
-func (sc *storeClient) UpdateTicket(ctx context.Context, nomorTiket string, id int, updateTime time.Time) error {
+func (sc *storeClient) UpdateTicket(ctx context.Context, t service.TicketUpdate) error {
 	argsUpdate := map[string]interface{}{
-		"status":      true,
-		"nomor_tiket": nomorTiket,
-		"update_time": updateTime,
-		"id":          id,
+		"status":      t.Status,
+		"nomor_tiket": t.NomorTiket,
+		"update_time": t.UpdateTime,
+		"id":          t.ID,
 	}
 
 	queryUpdate, args, err := sqlx.Named(queryUpdateTicket, argsUpdate)

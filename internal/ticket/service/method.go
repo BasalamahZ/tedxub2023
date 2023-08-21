@@ -2,11 +2,11 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"log"
 	"math/rand"
 	"net/mail"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/tedxub2023/internal/ticket"
 )
@@ -35,6 +35,14 @@ func (s *service) CreateTicket(ctx context.Context, reqTicket ticket.Ticket) (st
 	if err != nil {
 		return "", err
 	}
+
+	_ = NewMailClient()
+
+	/*
+		Implement here
+		need email and name
+	*/
+
 	return ticketNama, nil
 }
 
@@ -79,49 +87,55 @@ func validateTicket(reqTicket ticket.Ticket) error {
 
 func (s *service) UpdateTicket(ctx context.Context) error {
 	pgStoreClient, err := s.pgStore.NewClient(true)
-
 	if err != nil {
-		return err
+		return ticket.ErrFailedTransaction
 	}
 
-	tickets, err := pgStoreClient.GetAllTicket(ctx)
-
-	if err != nil {
-		pgStoreClient.Rollback()
-		return err
-	}
-
-	var winnerTickets []ticket.Ticket
-
-	if len(tickets) <= 25 {
-		winnerTickets = tickets
-	} else {
-		rand.Seed(time.Now().UnixNano())
-
-		for i := len(tickets) - 1; i > 0; i-- {
-			j := rand.Intn(i + 1)
-			tickets[i], tickets[j] = tickets[j], tickets[i]
-		}
-
-		winnerTickets = tickets[:25]
-	}
-
-	for i := 0; i < len(winnerTickets); i++ {
-		ticketNumber := i + 1
-		ticketKey := "TICKET/TEDXUB/" + strconv.Itoa(ticketNumber)
-
-		err := pgStoreClient.UpdateTicket(ctx, ticketKey, int(tickets[i].ID), s.timeNow())
-
+	defer func() error {
 		if err != nil {
 			pgStoreClient.Rollback()
+			log.Printf("[tedxub2023-api-service] Service got rollback, error occured: %s\n", err.Error())
 			return err
 		}
-	}
 
-	err = pgStoreClient.Commit()
+		if err = pgStoreClient.Commit(); err != nil {
+			log.Printf("[tedxub2023-api-service] Failed to commit the transaction.: %s\n", err.Error())
+			return err
+		}
+		return nil
+	}()
 
+	tickets, err := pgStoreClient.GetAllTicket(ctx)
 	if err != nil {
 		return err
+	}
+
+	fmt.Println(tickets)
+
+	if len(tickets) == 0 {
+		return ticket.ErrTicketNotFound
+	}
+
+	rand.Shuffle(len(tickets), func(i, j int) {
+		tickets[i], tickets[j] = tickets[j], tickets[i]
+	})
+
+	for i := 0; i < len(tickets); i++ {
+		status := i < 25
+		ticketKey := fmt.Sprintf("TICKET/TEDXUB/%02d", i+1)
+
+		t := TicketUpdate{
+			ID:         tickets[i].ID,
+			Status:     status,
+			NomorTiket: ticketKey,
+			UpdateTime: s.timeNow(),
+		}
+
+		if status {
+			if err := pgStoreClient.UpdateTicket(ctx, t); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil

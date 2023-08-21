@@ -55,6 +55,22 @@ var (
 	// errRequestTimeout is returned when processing time
 	// has reached the timeout limit.
 	errRequestTimeout = errors.New("REQUEST_TIMEOUT")
+
+	// errFailedTransaction is returned when the request
+	// failed to make client with transaction
+	errFailedTransaction = errors.New("FAILED_CREATE_TRANSACTION")
+
+	// errSendEmail is returned when the request
+	// failed to send email
+	errSendEmail = errors.New("FAILED_SEND_EMAIL")
+
+	// errParseBodyHTML is returned when the request
+	// failed to parse body html
+	errParseBodyHTML = errors.New("FAILED_PARSE_BODY_HTML")
+
+	// errTicketNotFound is returned when the request
+	// failed to find ticket
+	errTicketNotFound = errors.New("TICKET_NOT_FOUND")
 )
 
 var (
@@ -73,5 +89,9 @@ var (
 		ticket.ErrInvalidTicketNomorTelepon:   errInvalidTicketNomorTelepon,
 		ticket.ErrInvalidTicketLineID:         errInvalidTicketLineID,
 		ticket.ErrInvalidTicketInstagram:      errInvalidTicketInstagram,
+		ticket.ErrFailedTransaction:           errFailedTransaction,
+		ticket.ErrSendEmail:                   errSendEmail,
+		ticket.ErrParseBodyHTML:               errParseBodyHTML,
+		ticket.ErrTicketNotFound:              errTicketNotFound,
 	}
 )
