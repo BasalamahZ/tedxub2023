@@ -35,9 +35,7 @@ var (
 	// ErrInvalidTicketInstagram is returned when the given ticket
 	// instagram is invalid.
 	ErrInvalidTicketInstagram = errors.New("invalid ticket instagram")
-)
 
-var (
 	// errFailedTransaction is returned when the request
 	// failed to make client with transaction
 	ErrFailedTransaction = errors.New("FAILED_CREATE_TRANSACTION")
