@@ -24,5 +24,5 @@ type PGStoreClient interface {
 
 	GetAllTicket(ctx context.Context) ([]ticket.Ticket, error)
 
-	UpdateTicket(ctx context.Context, t TicketUpdate) error
+	UpdateTicket(ctx context.Context, t ticket.Ticket) error
 }

@@ -97,11 +97,6 @@ func (s *service) UpdateTicket(ctx context.Context) error {
 			log.Printf("[tedxub2023-api-service] Service got rollback, error occured: %s\n", err.Error())
 			return err
 		}
-
-		if err = pgStoreClient.Commit(); err != nil {
-			log.Printf("[tedxub2023-api-service] Failed to commit the transaction.: %s\n", err.Error())
-			return err
-		}
 		return nil
 	}()
 
@@ -122,19 +117,24 @@ func (s *service) UpdateTicket(ctx context.Context) error {
 		status := i < 25
 		ticketKey := fmt.Sprintf("TICKET/TEDXUB/%02d", i+1)
 
-		t := TicketUpdate{
+		req := ticket.Ticket{
 			ID:         tickets[i].ID,
 			Status:     status,
 			NomorTiket: ticketKey,
-			UpdateTime: s.timeNow(),
 		}
 
 		if status {
-			if err := pgStoreClient.UpdateTicket(ctx, t); err != nil {
+			if err := pgStoreClient.UpdateTicket(ctx, req); err != nil {
 				return err
 			}
+		} else {
+			break
 		}
 	}
 
+	if err = pgStoreClient.Commit(); err != nil {
+		log.Printf("[tedxub2023-api-service] Failed to commit the transaction.: %s\n", err.Error())
+		return err
+	}
 	return nil
 }

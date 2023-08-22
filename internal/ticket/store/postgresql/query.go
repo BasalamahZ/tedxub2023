@@ -51,8 +51,7 @@ const queryGetAllTicket = `
 		instagram,
 		status,
 		nomor_tiket,
-		create_time,
-		update_time
+		create_time
 	FROM
 		ticket
 `

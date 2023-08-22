@@ -177,9 +177,6 @@ func (h *ticketsHandler) handleUpdateTicket(w http.ResponseWriter, r *http.Reque
 			helper.WriteErrorResponse(w, statusCode, []string{err.Error()})
 			return
 		}
-		resBody, err = json.Marshal(helper.ResponseEnvelope{
-			Status: "Success",
-		})
 		helper.WriteResponse(w, resBody, statusCode, helper.JSONContentTypeDecorator)
 	}()
 
@@ -215,5 +212,8 @@ func (h *ticketsHandler) handleUpdateTicket(w http.ResponseWriter, r *http.Reque
 		err = errRequestTimeout
 	case err = <-errChan:
 	default:
+		resBody, err = json.Marshal(helper.ResponseEnvelope{
+			Status: "Success",
+		})
 	}
 }

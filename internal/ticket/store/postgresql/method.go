@@ -5,7 +5,6 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/tedxub2023/internal/ticket"
-	"github.com/tedxub2023/internal/ticket/service"
 )
 
 func (sc *storeClient) CreateTicket(ctx context.Context, reqTicket ticket.Ticket) (string, error) {
@@ -77,7 +76,7 @@ func (sc *storeClient) GetAllTicket(ctx context.Context) ([]ticket.Ticket, error
 	return tickets, nil
 }
 
-func (sc *storeClient) UpdateTicket(ctx context.Context, t service.TicketUpdate) error {
+func (sc *storeClient) UpdateTicket(ctx context.Context, t ticket.Ticket) error {
 	argsUpdate := map[string]interface{}{
 		"status":      t.Status,
 		"nomor_tiket": t.NomorTiket,
