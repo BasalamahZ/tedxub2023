@@ -3,106 +3,65 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Template Email Menarik</title>
+	<title>Document</title>
 	<style>
 		body {
+			text-align: center;
 			font-family: Arial, sans-serif;
 			line-height: 1.6;
 			margin: 0;
 			padding: 0;
-			background-color: #f7f7f7; /* Warna latar belakang halaman */
+			background-color: #f7f7f7;
 		}
-
+		
+		.tedx {
+			color: #e62b1e;
+			
+		}
 		.email-wrapper {
 			max-width: 600px;
 			margin: 0 auto;
 			padding: 20px;
 			border: 1px solid #ccc;
-			background-color: #fff; /* Warna latar belakang konten email */
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Efek bayangan pada kotak email */
+			background-color: #fff;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 			border-radius: 10px;
 		}
 
-		.email-header {
-			text-align: center;
-			background-color: #2a88bd; /* Warna latar belakang header email */
-			padding: 20px;
-			border-radius: 10px 10px 0 0;
+		.contact {
+			line-height: 0.5;
+			margin-top: 0;
 		}
 
-		.email-header h1 {
-			font-size: 28px;
-			margin: 0;
-			color: #fff; /* Warna teks judul email */
-		}
-
-		.email-content {
-			margin-top: 20px;
-			padding: 20px;
-			background-color: #f9f9f9; /* Warna latar belakang konten email */
-			border-radius: 0 0 10px 10px;
-		}
-
-		.email-content p {
-			font-size: 16px;
-			margin: 5px 0;
-			color: #333; /* Warna teks konten email */
-		}
-
-		.email-content .highlight {
-			background-color: #2a88bd; /* Warna latar belakang highlight */
-			padding: 5px;
-			border-radius: 5px;
-			color: #fff; /* Warna teks highlight */
-		}
-
-		.email-content .quote {
-			font-style: italic;
-			color: #888; /* Warna teks kutipan */
-		}
-
-		.email-footer {
-			margin-top: 30px;
-			text-align: center;
-		}
-
-		.email-footer p {
-			font-size: 14px;
-			margin: 5px 0;
-			color: #888; /* Warna teks footer email */
-		}
-
-		.email-footer a {
-			color: #2a88bd; /* Warna teks tautan email */
-			text-decoration: none;
-		}
-
-		.email-footer a:hover {
-			text-decoration: underline;
-		}
 	</style>
 </head>
 <body>
 	<div class="email-wrapper">
-		<div class="email-header">
-			<h1 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Email Elegan</h1>
+		<h3>Halo, {{.nama}} </h3>
+		<br>
+		<p>Terima kasih atas partisipasimu untuk menjadi bagian dari <b>Panggung Swara Insan</b> <span class="tedx"><b>TEDx</b></span><b>Universitas Brawijaya 2023!</b></p>
+		<br>
+		<p><b>Panggung Swara Insan</b> akan mengemukakan gagasan inspiratif yang disampaikan para pembicara dari kalangan mahasiswa Universitas Brawijaya dengan konsep intimate session.
+		</p>
+		<br>
+		<p>Pendaftar yang terpilih untuk menghadiri <b>Panggung Swara Insan</b> akan kami hubungi melalui email dari masing-masing pendaftar, semoga keberuntungan berpihak padamu!
+		</p>
+		<br>
+		<p>Terima kasih dan sampai jumpa!</p>
+		<br><br>
+		<p>Salam hangat,</p>
+		<p><span class="tedx"><b>TEDx</b></span><b>Universitas Brawijaya 2023!</b></p>
+		<br>
+		<hr style="color: #333; background-color: #333; height: 1px; border: none; width: 300px;">
+		<img class="tedxpicture" src="https://drive.google.com/uc?id=1JoNLqUn0xZ7bgtbtBETLruLwOsdoO6pQ" alt="">
+		<div class="contact">
+			<p>www.tedxuniversitasbrawijaya.org</p>
+			<p>Instagram: @tedxuniversitasbrawijaya</p>
+			<p>Twitter: @tedxbrawijaya</p>
+			<p>Email: tedxuniversitasbrawijaya@gmail.com</p>
 		</div>
-		<div class="email-content">
-			<p class="highlight">Halo,</p>
-			<p>Selamat datang di <span class="highlight">Perusahaan ABC</span>. Kami senang memiliki {{.Nama}} sebagai bagian dari tim kami.</p>
-			<p>Kami ingin mengingatkan Anda tentang acara perusahaan yang akan datang:</p>
-			<p class="highlight">Nama Acara</p>
-			<p class="highlight">Tanggal dan Waktu</p>
-			<p class="highlight">Lokasi Acara</p>
-			<p>Harap hadir tepat waktu dan berpakaian formal.</p>
-			<p class="quote">"Kesuksesan terjadi ketika kesempatan bertemu dengan persiapan."</p>
-			<p>Sampai jumpa di acara tersebut!</p>
-		</div>
-		<div class="email-footer">
-			<p>Terima kasih,</p>
-			<p>Tim <span class="highlight">Perusahaan ABC</span></p>
-			<p>Kontak: <a href="mailto:info@perusahaanabc.com">info@perusahaanabc.com</a></p>
-		</div>
+
+	</body>
 	</div>
-</body>
+
 </html>
