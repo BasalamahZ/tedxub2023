@@ -12,19 +12,24 @@
         margin: 0;
         padding: 0;
         background-color: #f7f7f7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
       }
 
       .tedx {
         color: #e62b1e;
       }
+
       .email-wrapper {
         max-width: 600px;
-        margin: 0 auto;
         padding: 20px;
         border: 1px solid #ccc;
         background-color: #fff;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
+        text-align: center;
       }
 
       .contact {
@@ -35,7 +40,7 @@
   </head>
   <body>
     <div class="email-wrapper">
-      <h3>Halo, {{.nama}}</h3>
+      <h3>Halo, {{.Nama}}</h3>
       <br />
       <p>
         Terima kasih atas partisipasimu untuk menjadi bagian dari
@@ -60,7 +65,7 @@
       <p>Salam hangat,</p>
       <p>
         <span class="tedx"><b>TEDx</b></span
-        ><b>Universitas Brawijaya 2023!</b>
+        ><b>Universitas Brawijaya 2023</b>
       </p>
       <br />
       <hr
