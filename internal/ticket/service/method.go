@@ -110,8 +110,6 @@ func (s *service) UpdateTicket(ctx context.Context) error {
 		return err
 	}
 
-	fmt.Println(tickets)
-
 	if len(tickets) == 0 {
 		return ticket.ErrTicketNotFound
 	}
