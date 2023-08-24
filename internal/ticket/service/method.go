@@ -2,6 +2,9 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"log"
+	"math/rand"
 	"net/mail"
 	"strings"
 
@@ -32,6 +35,14 @@ func (s *service) CreateTicket(ctx context.Context, reqTicket ticket.Ticket) (st
 	if err != nil {
 		return "", err
 	}
+
+	_ = NewMailClient()
+
+	/*
+		Implement here
+		need email and name
+	*/
+
 	return ticketNama, nil
 }
 
@@ -71,5 +82,59 @@ func validateTicket(reqTicket ticket.Ticket) error {
 		return ticket.ErrInvalidTicketInstagram
 	}
 
+	return nil
+}
+
+func (s *service) UpdateTicket(ctx context.Context) error {
+	pgStoreClient, err := s.pgStore.NewClient(true)
+	if err != nil {
+		return ticket.ErrFailedTransaction
+	}
+
+	defer func() error {
+		if err != nil {
+			pgStoreClient.Rollback()
+			log.Printf("[tedxub2023-api-service] Service got rollback, error occured: %s\n", err.Error())
+			return err
+		}
+		return nil
+	}()
+
+	tickets, err := pgStoreClient.GetAllTicket(ctx)
+	if err != nil {
+		return err
+	}
+
+	if len(tickets) == 0 {
+		return ticket.ErrTicketNotFound
+	}
+
+	rand.Shuffle(len(tickets), func(i, j int) {
+		tickets[i], tickets[j] = tickets[j], tickets[i]
+	})
+
+	for i := 0; i < len(tickets); i++ {
+		status := i < 25
+		ticketKey := fmt.Sprintf("TICKET/TEDXUB/%02d", i+1)
+
+		req := ticket.Ticket{
+			ID:         tickets[i].ID,
+			Status:     status,
+			NomorTiket: ticketKey,
+		}
+
+		if status {
+			if err := pgStoreClient.UpdateTicket(ctx, req); err != nil {
+				return err
+			}
+		} else {
+			break
+		}
+	}
+
+	if err = pgStoreClient.Commit(); err != nil {
+		log.Printf("[tedxub2023-api-service] Failed to commit the transaction.: %s\n", err.Error())
+		return err
+	}
 	return nil
 }

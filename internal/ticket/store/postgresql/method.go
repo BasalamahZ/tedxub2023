@@ -41,3 +41,68 @@ func (sc *storeClient) CreateTicket(ctx context.Context, reqTicket ticket.Ticket
 
 	return ticketNama, nil
 }
+
+func (sc *storeClient) GetAllTicket(ctx context.Context) ([]ticket.Ticket, error) {
+	var tickets []ticket.Ticket
+
+	query, args, err := sqlx.Named(queryGetAllTicket, map[string]interface{}{})
+	if err != nil {
+		return nil, err
+	}
+	query, args, err = sqlx.In(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	query = sc.q.Rebind(query)
+
+	rows, err := sc.q.Queryx(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var ticketDB TicketDB
+		if err := rows.StructScan(&ticketDB); err != nil {
+			return nil, err
+		}
+		tickets = append(tickets, ticketDB.formatting())
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tickets, nil
+}
+
+func (sc *storeClient) UpdateTicket(ctx context.Context, t ticket.Ticket) error {
+	argsUpdate := map[string]interface{}{
+		"status":      t.Status,
+		"nomor_tiket": t.NomorTiket,
+		"update_time": t.UpdateTime,
+		"id":          t.ID,
+	}
+
+	queryUpdate, args, err := sqlx.Named(queryUpdateTicket, argsUpdate)
+
+	if err != nil {
+		return err
+	}
+
+	queryUpdate, args, err = sqlx.In(queryUpdate, args...)
+
+	if err != nil {
+		return err
+	}
+
+	queryUpdate = sc.q.Rebind(queryUpdate)
+
+	_, err = sc.q.Exec(queryUpdate, args...)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

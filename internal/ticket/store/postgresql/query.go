@@ -26,3 +26,32 @@ const queryCreateTicket = `
 	) RETURNING
 		nama
 `
+
+const queryUpdateTicket = `
+	UPDATE 
+		ticket
+	SET 
+		status = :status, 
+		nomor_tiket = :nomor_tiket,
+		update_time = :update_time
+	WHERE 
+		id = :id
+`
+
+const queryGetAllTicket = `
+	SELECT
+		id,
+		nama,
+		nomor_identitas,
+		asal_institusi,
+		domisili,
+		email,
+		nomor_telepon,
+		line_id,
+		instagram,
+		status,
+		nomor_tiket,
+		create_time
+	FROM
+		ticket
+`

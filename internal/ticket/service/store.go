@@ -21,4 +21,8 @@ type PGStoreClient interface {
 	// CreateTicket creates a new ticket and return the
 	// created ticket ID.
 	CreateTicket(ctx context.Context, ticket ticket.Ticket) (string, error)
+
+	GetAllTicket(ctx context.Context) ([]ticket.Ticket, error)
+
+	UpdateTicket(ctx context.Context, t ticket.Ticket) error
 }

@@ -35,4 +35,20 @@ var (
 	// ErrInvalidTicketInstagram is returned when the given ticket
 	// instagram is invalid.
 	ErrInvalidTicketInstagram = errors.New("invalid ticket instagram")
+
+	// errFailedTransaction is returned when the request
+	// failed to make client with transaction
+	ErrFailedTransaction = errors.New("FAILED_CREATE_TRANSACTION")
+
+	// errSendEmail is returned when the request
+	// failed to send email
+	ErrSendEmail = errors.New("FAILED_SEND_EMAIL")
+
+	// errParseBodyHTML is returned when the request
+	// failed to parse body html
+	ErrParseBodyHTML = errors.New("FAILED_PARSE_BODY_HTML")
+
+	// errTicketNotFound is returned when the request
+	// failed to find ticket
+	ErrTicketNotFound = errors.New("TICKET_NOT_FOUND")
 )
