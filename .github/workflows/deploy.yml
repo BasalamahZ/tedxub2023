@@ -12,15 +12,15 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v2
 
-    #   - name: 📁 Send files via Rsync
-    #     uses: Burnett01/rsync-deployments@5.2.1
-    #     with:
-    #         switches: -avzr
-    #         path: .
-    #         remote_path: /home/tedxbrawijaya/tedxub2023
-    #         remote_host: ${{ secrets.SSH_HOST }}
-    #         remote_user: ${{ secrets.SSH_USERNAME }}
-    #         remote_key: ${{ secrets.SSH_KEY }}
+      - name: 📁 Send files via Rsync
+        uses: Burnett01/rsync-deployments@5.2.1
+        with:
+            switches: -avzr
+            path: .
+            remote_path: /home/tedxbrawijaya/tedxub2023
+            remote_host: ${{ secrets.SSH_HOST }}
+            remote_user: ${{ secrets.SSH_USERNAME }}
+            remote_key: ${{ secrets.SSH_KEY }}
 
       - name: 🌟 Run server
         uses: appleboy/ssh-action@master
@@ -30,6 +30,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/tedxbrawijaya/tedxub2023
-            git pull
             go build ./cmd/tedxub2023-api-http
             pm2 restart backend
