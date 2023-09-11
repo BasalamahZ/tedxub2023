@@ -115,10 +115,10 @@ func (s *server) start() int {
 			return CodeFailServeHTTP
 		}
 	}
-	
+
 	// endpoint checker
 	appMux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Hello world!")
+		fmt.Fprint(w, "Hello world! Auto Deploy On")
 	})
 
 	// assign multiplexer as server handler
