@@ -46,7 +46,7 @@ func (g *Gomail) SetSubject(subject string) {
 
 func (g *Gomail) SetBodyHTML(nameReciever string) error {
 	var body bytes.Buffer
-	path := "tedxub2023/global/template/template.html"
+	path := "global/template/template.html"
 	t, err := template.ParseFiles(path)
 	if err != nil {
 		return ticket.ErrParseBodyHTML
