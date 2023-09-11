@@ -36,14 +36,24 @@ func (s *service) CreateTicket(ctx context.Context, reqTicket ticket.Ticket) (st
 		return "", err
 	}
 
-	_ = NewMailClient()
-
-	/*
-		Implement here
-		need email and name
-	*/
+	go sendEmail(reqTicket)
 
 	return ticketNama, nil
+}
+
+func sendEmail(reqTicket ticket.Ticket) error {
+	mail := NewMailClient()
+	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
+	mail.SetReciever(reqTicket.Email)
+	mail.SetSubject("Registrasi Panggung Swara Insan")
+	if err := mail.SetBodyHTML(reqTicket.Nama); err != nil {
+		return err
+	}
+	if err := mail.SendMail(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // validateTicket validates fields of the given Ticket
