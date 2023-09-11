@@ -20,14 +20,14 @@ jobs:
             remote_path: /home/tedxbrawijaya/tedxub2023
             remote_host: ${{ secrets.SSH_HOST }}
             remote_user: ${{ secrets.SSH_USERNAME }}
-            remote_key: ${{ secrets.SSH_PASSWORD }}
+            remote_key: ${{ secrets.SSH_KEY }}
 
       - name: 🌟 Run server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             cd /home/tedxbrawijaya/tedxub2023
             go build ./cmd/tedxub2023-api-http
