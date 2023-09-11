@@ -121,6 +121,7 @@ func (s *service) UpdateTicket(ctx context.Context) error {
 			ID:         tickets[i].ID,
 			Status:     status,
 			NomorTiket: ticketKey,
+			UpdateTime: s.timeNow(),
 		}
 
 		if status {
