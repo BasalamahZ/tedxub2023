@@ -68,6 +68,7 @@ func (sc *storeClient) Rollback() error {
 type TicketDB struct {
 	ID             int64      `db:"id"`
 	Nama           string     `db:"nama"`
+	JenisKelamin   string     `db:"jenis_kelamin"`
 	NomorIdentitas string     `db:"nomor_identitas"`
 	AsalInstitusi  string     `db:"asal_institusi"`
 	Domisili       string     `db:"domisili"`
@@ -85,6 +86,7 @@ func (tdb *TicketDB) formatting() ticket.Ticket {
 	t := ticket.Ticket{
 		ID:             tdb.ID,
 		Nama:           tdb.Nama,
+		JenisKelamin:   tdb.JenisKelamin,
 		NomorIdentitas: tdb.NomorIdentitas,
 		AsalInstitusi:  tdb.AsalInstitusi,
 		Domisili:       tdb.Domisili,
