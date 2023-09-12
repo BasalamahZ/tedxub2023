@@ -127,12 +127,59 @@ func (s *service) UpdateTicket(ctx context.Context) error {
 		tickets[i], tickets[j] = tickets[j], tickets[i]
 	})
 
-	for i := 0; i < len(tickets); i++ {
-		status := i < 25
+	var womanTickets []ticket.Ticket
+	var manTickets []ticket.Ticket
+
+	for _, ticket := range tickets {
+		if ticket.JenisKelamin == "Wanita" {
+			womanTickets = append(womanTickets, ticket)
+		} else {
+			manTickets = append(manTickets, ticket)
+		}
+	}
+
+	var womanCount int
+	var manCount int
+	if len(womanTickets) < 18 && len(womanTickets) < len(manTickets) {
+		womanCount = len(womanTickets)
+		manCount = 35 - len(womanTickets)
+	} else if len(manTickets) < 17 && len(manTickets) < len(womanTickets) {
+		manCount = len(manTickets)
+		womanCount = 35 - len(manTickets)
+	} else if len(womanTickets) < 18 && len(manTickets) < 17 {
+		manCount = len(manTickets)
+		womanCount = len(womanTickets)
+	} else {
+		manCount = 17
+		womanCount = 18
+	}
+
+	for i := 0; i < len(womanTickets); i++ {
+		status := i < womanCount
 		ticketKey := fmt.Sprintf("TICKET/TEDXUB/%02d", i+1)
 
 		req := ticket.Ticket{
-			ID:         tickets[i].ID,
+			ID:         womanTickets[i].ID,
+			Status:     status,
+			NomorTiket: ticketKey,
+			UpdateTime: s.timeNow(),
+		}
+
+		if status {
+			if err := pgStoreClient.UpdateTicket(ctx, req); err != nil {
+				return err
+			}
+		} else {
+			break
+		}
+	}
+
+	for i := 0; i < len(manTickets); i++ {
+		status := i < manCount
+		ticketKey := fmt.Sprintf("TICKET/TEDXUB/%02d", (i + 1 + womanCount))
+
+		req := ticket.Ticket{
+			ID:         manTickets[i].ID,
 			Status:     status,
 			NomorTiket: ticketKey,
 			UpdateTime: s.timeNow(),

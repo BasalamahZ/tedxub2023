@@ -44,6 +44,7 @@ const queryGetAllTicket = `
 	SELECT
 		id,
 		nama,
+		jenis_kelamin,
 		nomor_identitas,
 		asal_institusi,
 		domisili,
