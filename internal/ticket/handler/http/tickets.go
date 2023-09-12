@@ -127,6 +127,10 @@ func parseTicketFromCreateRequest(th ticketHTTP) (ticket.Ticket, error) {
 		result.Nama = *th.Nama
 	}
 
+	if th.JenisKelamin != nil {
+		result.JenisKelamin = *th.JenisKelamin
+	}
+
 	if th.NomorIdentitas != nil {
 		result.NomorIdentitas = *th.NomorIdentitas
 	}
