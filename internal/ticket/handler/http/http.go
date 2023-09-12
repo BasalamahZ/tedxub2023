@@ -94,6 +94,7 @@ func (h *Handler) Start(multiplexer *mux.Router) error {
 type ticketHTTP struct {
 	ID             *int64  `json:"id"`
 	Nama           *string `json:"nama"`
+	JenisKelamin   *string `json:"jenis_kelamin"`
 	NomorIdentitas *string `json:"nomor_identitas"`
 	AsalInstitusi  *string `json:"asal_institusi"`
 	Domisili       *string `json:"domisili"`

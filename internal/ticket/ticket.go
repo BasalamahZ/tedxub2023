@@ -19,6 +19,7 @@ type Service interface {
 type Ticket struct {
 	ID             int64
 	Nama           string
+	JenisKelamin   string
 	NomorIdentitas string
 	AsalInstitusi  string
 	Domisili       string
