@@ -11,6 +11,7 @@ func (sc *storeClient) CreateTicket(ctx context.Context, reqTicket ticket.Ticket
 	// construct arguments filled with fields for the query
 	argsKV := map[string]interface{}{
 		"nama":            reqTicket.Nama,
+		"jenis_kelamin":   reqTicket.JenisKelamin,
 		"nomor_identitas": reqTicket.NomorIdentitas,
 		"asal_institusi":  reqTicket.AsalInstitusi,
 		"domisili":        reqTicket.Domisili,

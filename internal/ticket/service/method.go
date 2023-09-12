@@ -63,6 +63,10 @@ func validateTicket(reqTicket ticket.Ticket) error {
 		return ticket.ErrInvalidTicketNama
 	}
 
+	if reqTicket.JenisKelamin == "" || (reqTicket.JenisKelamin != "Pria" && reqTicket.JenisKelamin != "Wanita") {
+		return ticket.ErrInvalidTicketJenisKelamin
+	}
+
 	if reqTicket.NomorIdentitas == "" || len(reqTicket.NomorIdentitas) < 15 {
 		return ticket.ErrInvalidTicketNomorIdentitas
 	}
