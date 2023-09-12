@@ -5,6 +5,7 @@ const queryCreateTicket = `
 		ticket
 	(
 		nama,
+		jenis_kelamin,
 		nomor_identitas,
 		asal_institusi,
 		domisili,
@@ -15,6 +16,7 @@ const queryCreateTicket = `
 		create_time
 	) VALUES (
 		:nama,
+		:jenis_kelamin,
 		:nomor_identitas,
 		:asal_institusi,
 		:domisili,
