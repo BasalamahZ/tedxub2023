@@ -71,6 +71,10 @@ var (
 	// errTicketNotFound is returned when the request
 	// failed to find ticket
 	errTicketNotFound = errors.New("TICKET_NOT_FOUND")
+
+	// errInvalidTicketJenisKelamin is returned when the request
+	// is not valid format
+	errInvalidTicketJenisKelamin = errors.New("INVALID_TICKET_JENIS_KELAMIN")
 )
 
 var (
@@ -93,5 +97,6 @@ var (
 		ticket.ErrSendEmail:                   errSendEmail,
 		ticket.ErrParseBodyHTML:               errParseBodyHTML,
 		ticket.ErrTicketNotFound:              errTicketNotFound,
+		ticket.ErrInvalidTicketJenisKelamin:   errInvalidTicketJenisKelamin,
 	}
 )
