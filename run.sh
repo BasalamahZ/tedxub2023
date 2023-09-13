@@ -1,2 +1,2 @@
-sudo su
-pm2 restart all
+chmod +x ./run.sh
+pm2 restart backend
