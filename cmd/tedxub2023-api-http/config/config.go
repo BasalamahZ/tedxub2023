@@ -4,10 +4,10 @@ import "os"
 
 func BaseConfig() string {
 	return "" +
-		"host=" + os.Getenv("DB_HOST") +
-		" user=" + os.Getenv("DB_USERNAME") +
-		" password=" + os.Getenv("DB_PASSWORD") +
-		" dbname=" + os.Getenv("DB_NAME") +
-		" port=" + os.Getenv("DB_PORT") +
+		"host=" + os.Getenv("PGHOST") +
+		" user=" + os.Getenv("PGUSER") +
+		" password=" + os.Getenv("PGPASSWORD") +
+		" dbname=" + os.Getenv("PGDATABASE") +
+		" port=" + os.Getenv("PGPORT") +
 		" sslmode=disable"
 }
