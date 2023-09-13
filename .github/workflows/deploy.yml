@@ -31,6 +31,8 @@ jobs:
           script: |
             cd /home/tedxbrawijaya/tedxub2023
             go build ./cmd/tedxub2023-api-http
+            chmod +x ./run.sh
+            chmod +x ./tedxub2023-api-http
             ./run.sh
 
 
