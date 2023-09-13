@@ -31,4 +31,7 @@ jobs:
           script: |
             cd /home/tedxbrawijaya/tedxub2023
             go build ./cmd/tedxub2023-api-http
-            pm2 restart backend
+            sudo su
+            pm2 restart all
+
+
