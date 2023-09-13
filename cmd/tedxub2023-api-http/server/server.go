@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/rs/cors"
 	ourTeamhttphandler "github.com/tedxub2023/internal/ourteam/handler/http"
 	"github.com/tedxub2023/internal/ticket"
 	tickethttphandler "github.com/tedxub2023/internal/ticket/handler/http"
@@ -103,7 +104,7 @@ func new() (*server, error) {
 		identities := []ourTeamhttphandler.HandlerIdentity{
 			ourTeamhttphandler.HandlerOutTeams,
 		}
-		
+
 		ourTeamHTTP, err := ourTeamhttphandler.New(identities)
 		if err != nil {
 			log.Printf("[twitter-api-http] failed to initialize ourTeam http handlers: %s\n", err.Error())
@@ -123,6 +124,11 @@ func (s *server) start() int {
 	// create multiplexer object
 	rootMux := mux.NewRouter()
 	appMux := rootMux.PathPrefix("/api/v1").Subrouter()
+
+	// use middlewares to app mux only
+	appMux.Use(
+		cors.Default().Handler,
+	)
 
 	// starts handlers
 	for _, h := range s.handlers {
