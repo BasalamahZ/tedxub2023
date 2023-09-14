@@ -7,13 +7,13 @@ import (
 	"os"
 	"time"
 
-	"github.com/rs/cors"
 	ourTeamhttphandler "github.com/tedxub2023/internal/ourteam/handler/http"
 	"github.com/tedxub2023/internal/ticket"
 	tickethttphandler "github.com/tedxub2023/internal/ticket/handler/http"
 	ticketservice "github.com/tedxub2023/internal/ticket/service"
 	ticketpgstore "github.com/tedxub2023/internal/ticket/store/postgresql"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -134,13 +134,9 @@ func (s *server) start() int {
 	}
 
 	// use middlewares to app mux only
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowCredentials: true,
-		AllowedMethods:   []string{"POST, OPTIONS, GET, PUT, DELETE, PATCH"},
-	})
-
-	c.Handler(appMux)
+	headersObj := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	originsObj := handlers.AllowedOrigins([]string{"*"})
+	methodsObj := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
 	// endpoint checker
 	appMux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -149,7 +145,7 @@ func (s *server) start() int {
 
 	// listen and serve
 	log.Printf("[tedxub2023-api-http] Server is running at %s:%s", os.Getenv("ADDRESS"), os.Getenv("PORT"))
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", os.Getenv("ADDRESS"), os.Getenv("PORT")), rootMux))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", os.Getenv("ADDRESS"), os.Getenv("PORT")), handlers.CORS(headersObj, originsObj, methodsObj)(rootMux)))
 
 	return CodeSuccess
 }
