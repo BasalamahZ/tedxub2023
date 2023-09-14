@@ -125,11 +125,6 @@ func (s *server) start() int {
 	rootMux := mux.NewRouter()
 	appMux := rootMux.PathPrefix("/api/v1").Subrouter()
 
-	// use middlewares to app mux only
-	appMux.Use(
-		cors.Default().Handler,
-	)
-
 	// starts handlers
 	for _, h := range s.handlers {
 		if err := h.Start(appMux); err != nil {
@@ -138,13 +133,19 @@ func (s *server) start() int {
 		}
 	}
 
+	// use middlewares to app mux only
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		AllowedMethods:   []string{"POST, OPTIONS, GET, PUT, DELETE, PATCH"},
+	})
+
+	c.Handler(appMux)
+
 	// endpoint checker
 	appMux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Hello world! Auto Deploy On, INPO 60 RIBUNYA CAIRINN DONGG!!! @tedxub2023")
 	})
-
-	// assign multiplexer as server handler
-	s.srv.Handler = rootMux
 
 	// listen and serve
 	log.Printf("[tedxub2023-api-http] Server is running at %s:%s", os.Getenv("ADDRESS"), os.Getenv("PORT"))
