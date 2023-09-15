@@ -58,3 +58,12 @@ const queryGetAllTicket = `
 	FROM
 		ticket
 `
+
+const queryCountEmail = `
+		SELECT
+			COUNT(email)
+		FROM
+			ticket
+		WHERE
+			email = :email
+`
