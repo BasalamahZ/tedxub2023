@@ -31,6 +31,15 @@ func (s *service) CreateTicket(ctx context.Context, reqTicket ticket.Ticket) (st
 		return "", err
 	}
 
+	total, err := pgStoreClient.CountEmail(ctx, reqTicket.Email)
+	if err != nil {
+		return "", err
+	}
+
+	if total > 0 {
+		return "", ticket.ErrEmailAlreadyRegistered
+	}
+
 	ticketNama, err := pgStoreClient.CreateTicket(ctx, reqTicket)
 	if err != nil {
 		return "", err

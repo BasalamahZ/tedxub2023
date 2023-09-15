@@ -75,6 +75,10 @@ var (
 	// errInvalidTicketJenisKelamin is returned when the request
 	// is not valid format
 	errInvalidTicketJenisKelamin = errors.New("INVALID_TICKET_JENIS_KELAMIN")
+
+	// errEmailAlreadyRegistered is returned when the request
+	// email already in DB
+	errEmailAlreadyRegistered = errors.New("EMAIL_ALREADY_REGISTERED")
 )
 
 var (
@@ -98,5 +102,6 @@ var (
 		ticket.ErrParseBodyHTML:               errParseBodyHTML,
 		ticket.ErrTicketNotFound:              errTicketNotFound,
 		ticket.ErrInvalidTicketJenisKelamin:   errInvalidTicketJenisKelamin,
+		ticket.ErrEmailAlreadyRegistered:      errEmailAlreadyRegistered,
 	}
 )

@@ -55,4 +55,8 @@ var (
 	// errInvalidTicketJenisKelamin is returned when the request
 	// is not valid format
 	ErrInvalidTicketJenisKelamin = errors.New("invalid ticket jenis kelamin")
+
+	// errEmailAlreadyRegistered is returned when the request
+	// email already in DB
+	ErrEmailAlreadyRegistered = errors.New("email already registered")
 )
