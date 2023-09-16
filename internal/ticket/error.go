@@ -59,4 +59,8 @@ var (
 	// errEmailAlreadyRegistered is returned when the request
 	// email already in DB
 	ErrEmailAlreadyRegistered = errors.New("email already registered")
+
+	// errNumberIdentityAlreadyRegistered is returned when the request
+	// number identity already in DB
+	ErrNumberIdentityAlreadyRegistered = errors.New("number identity already registered")
 )

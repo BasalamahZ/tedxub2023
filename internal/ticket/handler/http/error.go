@@ -79,6 +79,10 @@ var (
 	// errEmailAlreadyRegistered is returned when the request
 	// email already in DB
 	errEmailAlreadyRegistered = errors.New("EMAIL_ALREADY_REGISTERED")
+
+	// errNumberIdentityAlreadyRegistered is returned when the request
+	// number identity already in DB
+	errNumberIdentityAlreadyRegistered = errors.New("NUMBER_IDENTITY_ALREADY_REGISTERED")
 )
 
 var (
@@ -89,19 +93,20 @@ var (
 	// here, and the handler should just return `errInternal`
 	// as the error instead
 	mapHTTPError = map[error]error{
-		ticket.ErrInvalidTicketNama:           errInvalidTicketNama,
-		ticket.ErrInvalidTicketNomorIdentitas: errInvalidTicketNomorIdentitas,
-		ticket.ErrInvalidTicketAsalInstitusi:  errInvalidTicketAsalInstitusi,
-		ticket.ErrInvalidTicketDomisili:       errInvalidTicketDomisili,
-		ticket.ErrInvalidTicketEmail:          errInvalidTicketEmail,
-		ticket.ErrInvalidTicketNomorTelepon:   errInvalidTicketNomorTelepon,
-		ticket.ErrInvalidTicketLineID:         errInvalidTicketLineID,
-		ticket.ErrInvalidTicketInstagram:      errInvalidTicketInstagram,
-		ticket.ErrFailedTransaction:           errFailedTransaction,
-		ticket.ErrSendEmail:                   errSendEmail,
-		ticket.ErrParseBodyHTML:               errParseBodyHTML,
-		ticket.ErrTicketNotFound:              errTicketNotFound,
-		ticket.ErrInvalidTicketJenisKelamin:   errInvalidTicketJenisKelamin,
-		ticket.ErrEmailAlreadyRegistered:      errEmailAlreadyRegistered,
+		ticket.ErrInvalidTicketNama:               errInvalidTicketNama,
+		ticket.ErrInvalidTicketNomorIdentitas:     errInvalidTicketNomorIdentitas,
+		ticket.ErrInvalidTicketAsalInstitusi:      errInvalidTicketAsalInstitusi,
+		ticket.ErrInvalidTicketDomisili:           errInvalidTicketDomisili,
+		ticket.ErrInvalidTicketEmail:              errInvalidTicketEmail,
+		ticket.ErrInvalidTicketNomorTelepon:       errInvalidTicketNomorTelepon,
+		ticket.ErrInvalidTicketLineID:             errInvalidTicketLineID,
+		ticket.ErrInvalidTicketInstagram:          errInvalidTicketInstagram,
+		ticket.ErrFailedTransaction:               errFailedTransaction,
+		ticket.ErrSendEmail:                       errSendEmail,
+		ticket.ErrParseBodyHTML:                   errParseBodyHTML,
+		ticket.ErrTicketNotFound:                  errTicketNotFound,
+		ticket.ErrInvalidTicketJenisKelamin:       errInvalidTicketJenisKelamin,
+		ticket.ErrEmailAlreadyRegistered:          errEmailAlreadyRegistered,
+		ticket.ErrNumberIdentityAlreadyRegistered: errNumberIdentityAlreadyRegistered,
 	}
 )

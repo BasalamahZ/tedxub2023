@@ -26,22 +26,40 @@ func (s *service) CreateTicket(ctx context.Context, reqTicket ticket.Ticket) (st
 	reqTicket.CreateTime = createTime
 
 	// get pg store client without using transaction
-	pgStoreClient, err := s.pgStore.NewClient(false)
+	pgStoreClient, err := s.pgStore.NewClient(true)
 	if err != nil {
 		return "", err
 	}
 
-	total, err := pgStoreClient.CountEmail(ctx, reqTicket.Email)
+	defer func() error {
+		if err != nil {
+			pgStoreClient.Rollback()
+			log.Printf("[tedxub2023-api-service] Service got rollback, error occured: %s\n", err.Error())
+			return err
+		}
+		return nil
+	}()
+
+	totalEmail, totalNomorIdentitas, err := pgStoreClient.CountUniqueValue(ctx, reqTicket.Email, reqTicket.NomorIdentitas)
 	if err != nil {
 		return "", err
 	}
 
-	if total > 0 {
+	if totalEmail > 0 {
 		return "", ticket.ErrEmailAlreadyRegistered
+	}
+
+	if totalNomorIdentitas > 0 {
+		return "", ticket.ErrNumberIdentityAlreadyRegistered
 	}
 
 	ticketNama, err := pgStoreClient.CreateTicket(ctx, reqTicket)
 	if err != nil {
+		return "", err
+	}
+
+	if err = pgStoreClient.Commit(); err != nil {
+		log.Printf("[tedxub2023-api-service] Failed to commit the transaction.: %s\n", err.Error())
 		return "", err
 	}
 
