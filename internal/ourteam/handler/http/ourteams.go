@@ -58,14 +58,14 @@ func (h *ourteamsHandler) handleGetAllOurTeams(w http.ResponseWriter, r *http.Re
 					{
 						Nama:      "Nabyl Fadhlurrahman",
 						Fakultas:  "Fakultas Ilmu Sosial dan Ilmu Politik",
-						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694624146/TEDXUB2023%20Our%20Team/Website%20Low%20Res%20Rev/jaffarv2_rjo3jt.jpg",
+						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694845919/TEDXUB2023%20Our%20Team/Tambahan/Nabyl_tibfxq.png",
 						Instagram: "nabylf",
 						LinkedIn:  "",
 					},
 					{
 						Nama:      "Muhammad Nur Mi'raj AL-Qadrie",
 						Fakultas:  "Fakultas Ekonomi dan Bisnis",
-						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694624146/TEDXUB2023%20Our%20Team/Website%20Low%20Res%20Rev/jaffarv2_rjo3jt.jpg",
+						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694845948/TEDXUB2023%20Our%20Team/Tambahan/Minem_jlfgqy.png",
 						Instagram: "qadrieeee",
 						LinkedIn:  "",
 					},
@@ -226,7 +226,7 @@ func (h *ourteamsHandler) handleGetAllOurTeams(w http.ResponseWriter, r *http.Re
 					{
 						Nama:      "Muhammad Faris Faisal",
 						Fakultas:  "Fakultas Perikanan dan Ilmu Kelautan",
-						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694624146/TEDXUB2023%20Our%20Team/Website%20Low%20Res%20Rev/jaffarv2_rjo3jt.jpg",
+						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694845920/TEDXUB2023%20Our%20Team/Tambahan/Isal_otcjrq.png",
 						Instagram: "_mffaisal",
 						LinkedIn:  "mfarisfaisal",
 					},
@@ -323,14 +323,14 @@ func (h *ourteamsHandler) handleGetAllOurTeams(w http.ResponseWriter, r *http.Re
 					{
 						Nama:      "Ana Pralisti",
 						Fakultas:  "Fakultas Ekonomi dan Bisnis",
-						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694624146/TEDXUB2023%20Our%20Team/Website%20Low%20Res%20Rev/jaffarv2_rjo3jt.jpg",
+						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694845919/TEDXUB2023%20Our%20Team/Tambahan/Ana_tqiqzv.png",
 						Instagram: "anapralisti",
 						LinkedIn:  "ana-pralisti-969315235",
 					},
 					{
 						Nama:      "Silviana Rahel Novianty Hutasoit ",
 						Fakultas:  "Fakultas Ekonomi dan Bisnis",
-						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694624146/TEDXUB2023%20Our%20Team/Website%20Low%20Res%20Rev/jaffarv2_rjo3jt.jpg",
+						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694845919/TEDXUB2023%20Our%20Team/Tambahan/Rahel_z9gp3u.png",
 						Instagram: "rahelnh",
 						LinkedIn:  "silvianarahel",
 					},
