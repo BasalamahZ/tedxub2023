@@ -108,25 +108,44 @@ func (sc *storeClient) UpdateTicket(ctx context.Context, t ticket.Ticket) error 
 	return nil
 }
 
-func (sc *storeClient) CountEmail(ctx context.Context, email string) (int, error) {
-	argKV := map[string]interface{}{
+func (sc *storeClient) CountUniqueValue(ctx context.Context, email, numberIdentity string) (int, int, error) {
+	argKV1 := map[string]interface{}{
 		"email": email,
 	}
 
-	query, args, err := sqlx.Named(queryCountEmail, argKV)
+	query, args, err := sqlx.Named(queryCountEmail, argKV1)
 	if err != nil {
-		return -1, err
+		return -1, -1, err
 	}
 	query, args, err = sqlx.In(query, args...)
 	if err != nil {
-		return -1, err
+		return -1, -1, err
 	}
 	query = sc.q.Rebind(query)
 
-	var result int
-	if err := sc.q.QueryRowx(query, args...).Scan(&result); err != nil {
-		return -1, err
+	var countEmail int
+	if err := sc.q.QueryRowx(query, args...).Scan(&countEmail); err != nil {
+		return -1, -1, err
 	}
 
-	return result, nil
+	argKV2 := map[string]interface{}{
+		"nomor_identitas": numberIdentity,
+	}
+
+	query, args, err = sqlx.Named(queryCountNumberIdentity, argKV2)
+	if err != nil {
+		return -1, -1, err
+	}
+	query, args, err = sqlx.In(query, args...)
+	if err != nil {
+		return -1, -1, err
+	}
+	query = sc.q.Rebind(query)
+
+	var countNumberIdentity int
+	if err := sc.q.QueryRowx(query, args...).Scan(&countNumberIdentity); err != nil {
+		return -1, -1, err
+	}
+
+	return countEmail, countNumberIdentity, nil
 }

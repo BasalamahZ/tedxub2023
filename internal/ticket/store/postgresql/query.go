@@ -67,3 +67,12 @@ const queryCountEmail = `
 		WHERE
 			email = :email
 `
+
+const queryCountNumberIdentity = `
+		SELECT
+			COUNT(nomor_identitas)
+		FROM
+			ticket
+		WHERE
+			nomor_identitas = :nomor_identitas
+`

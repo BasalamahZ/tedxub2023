@@ -26,5 +26,5 @@ type PGStoreClient interface {
 
 	UpdateTicket(ctx context.Context, t ticket.Ticket) error
 
-	CountEmail(ctx context.Context, email string) (int, error)
+	CountUniqueValue(ctx context.Context, email, numberIdentity string) (int, int, error)
 }
