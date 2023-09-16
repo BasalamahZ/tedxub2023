@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	merchhttphandler "github.com/tedxub2023/internal/merch/handler/http"
 	ourTeamhttphandler "github.com/tedxub2023/internal/ourteam/handler/http"
 	"github.com/tedxub2023/internal/ticket"
 	tickethttphandler "github.com/tedxub2023/internal/ticket/handler/http"
@@ -111,6 +112,21 @@ func new() (*server, error) {
 		}
 
 		s.handlers = append(s.handlers, ourTeamHTTP)
+	}
+
+	// initialize Merch HTTP handler
+	{
+		identities := []merchhttphandler.HandlerIdentity{
+			merchhttphandler.HandlerMerch,
+		}
+
+		merchTTP, err := merchhttphandler.New(identities)
+		if err != nil {
+			log.Printf("[twitter-api-http] failed to initialize ourTeam http handlers: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize ourTeam http handlers: %s", err.Error())
+		}
+
+		s.handlers = append(s.handlers, merchTTP)
 	}
 
 	return s, nil
