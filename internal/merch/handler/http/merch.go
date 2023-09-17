@@ -57,7 +57,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Harga:     "Rp129.900",
 				Deskripsi: "Setiap individu merupakan pribadi yang unik. Keunikan ini dapat kamu wujudkan melalui bahasa rupa yang imajinatif!",
 				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712259/MERCH%20%2B%20BG/Artboard_1_wtscgn.png",
-				Link:      "gform link",
+				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
 				ID:        2,
@@ -65,7 +65,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Harga:     "Rp139.900",
 				Deskripsi: "Manifestasikan intuisi dirimu sebagai insan yang bergelora.",
 				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712260/MERCH%20%2B%20BG/Artboard_2_sdp4gr.png",
-				Link:      "gform link",
+				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
 				ID:        3,
@@ -73,7 +73,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Harga:     "Rp74.900",
 				Deskripsi: "Adakalanya kreativitas membawa dirimu hanyut dalam dimensi yang tak terlupakan.",
 				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712258/MERCH%20%2B%20BG/TOTE_BAG_p0eivf.png",
-				Link:      "gform link",
+				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
 				ID:        4,
@@ -81,7 +81,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Harga:     "Rp25.000",
 				Deskripsi: "Personalisasikan dan ekspresikan dirimu di antara eksklusivitas yang mendominasi!",
 				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712256/MERCH%20%2B%20BG/LANYARD_okcqeo.png",
-				Link:      "gform link",
+				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
 				ID:        5,
@@ -89,7 +89,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Harga:     "Rp25.000",
 				Deskripsi: "Eksplorasi imajinatif melahirkan keunikan dengan nilai tak terbatas.",
 				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712260/MERCH%20%2B%20BG/stickerpack_z552r2.png",
-				Link:      "gform link",
+				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
 				ID:        6,
@@ -97,31 +97,40 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Harga:     "Rp15.000",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
 				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712260/MERCH%20%2B%20BG/LIGHTER_pkr0rf.png",
-				Link:      "gform link",
+				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
 				ID:        7,
 				Nama:      "Bundling 1",
 				Harga:     "Rp199.900",
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
-				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712257/MERCH%20%2B%20BG/Artboard_4_smrl1k.png",
-				Link:      "gform link",
+				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694943087/MERCH%20%2B%20BG/Bundling_1_of7ord.jpg",
+				Detail: []string{
+					"https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712257/MERCH%20%2B%20BG/Artboard_4_smrl1k.png",
+				},
+				Link: "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
 				ID:        8,
 				Nama:      "Bundling 2",
 				Harga:     "Rp199.900",
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
-				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712257/MERCH%20%2B%20BG/Artboard_5_a7ozwc.png",
-				Link:      "gform link",
+				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694943087/MERCH%20%2B%20BG/Bundling_2_apojfk.jpg",
+				Detail: []string{
+					"https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712257/MERCH%20%2B%20BG/Artboard_5_a7ozwc.png",
+				},
+				Link: "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
 				ID:        9,
 				Nama:      "Extra Bundling",
 				Harga:     "Rp54.900",
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
-				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712256/MERCH%20%2B%20BG/Artboard_6_kpiozl.png",
-				Link:      "gform link",
+				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694943088/MERCH%20%2B%20BG/Extra_Bundling_gf1ii2.jpg",
+				Detail: []string{
+					"https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712256/MERCH%20%2B%20BG/Artboard_6_kpiozl.png",
+				},
+				Link: "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 		}
 
