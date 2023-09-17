@@ -86,10 +86,11 @@ func (h *Handler) Start(multiplexer *mux.Router) error {
 }
 
 type MerchHTTP struct {
-	ID        int    `json:"id"`
-	Nama      string `json:"nama"`
-	Harga     string `json:"harga"`
-	Deskripsi string `json:"deskripsi"`
-	Thumbnail string `json:"thumbnail"`
-	Link      string `json:"link"`
+	ID        int      `json:"id"`
+	Nama      string   `json:"nama"`
+	Harga     string   `json:"harga"`
+	Deskripsi string   `json:"deskripsi"`
+	Thumbnail string   `json:"thumbnail"`
+	Detail    []string `json:"detail"`
+	Link      string   `json:"link"`
 }
