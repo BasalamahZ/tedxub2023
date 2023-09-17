@@ -138,11 +138,11 @@ func (h *ourteamsHandler) handleGetAllOurTeams(w http.ResponseWriter, r *http.Re
 						LinkedIn:  "adam-zidan",
 					},
 					{
-						Nama:      "Kristian Ja'far Manullang",
-						Fakultas:  "Fakultas Kriminal",
-						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694624146/TEDXUB2023%20Our%20Team/Website%20Low%20Res%20Rev/jaffarv2_rjo3jt.jpg",
-						Instagram: "husein_hadar",
-						LinkedIn:  "Kristian Ja'far Manullang",
+						Nama:      "Muhammad Ja’far Shiddiq",
+						Fakultas:  "Fakultas Ekonomi dan Bisnis",
+						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694609801/TEDXUB2023%20Our%20Team/Website%20Low%20Res%20Rev/DSC00378_du4rfx.jpg",
+						Instagram: "jafarrs",
+						LinkedIn:  "Muhammad Ja’far Shiddiq",
 					},
 					{
 						Nama:      "Kania Ayu Ramadhina",
@@ -304,7 +304,7 @@ func (h *ourteamsHandler) handleGetAllOurTeams(w http.ResponseWriter, r *http.Re
 					{
 						Nama:      "Ryo Shandy",
 						Fakultas:  "Fakultas Ilmu Komputer",
-						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694609799/TEDXUB2023%20Our%20Team/Website%20Low%20Res%20Rev/DSC00723_ldnf7u.jpg",
+						ImageURL:  "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694941123/TEDXUB2023%20Our%20Team/Website%20Low%20Res%20Rev/DSC00723_1-min_xt1ird.jpg",
 						Instagram: "ryoshandy",
 						LinkedIn:  "ryoshandy",
 					},
