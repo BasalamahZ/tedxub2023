@@ -121,7 +121,7 @@ func (h *ourteamsHandler) handleGetAllOurTeams(w http.ResponseWriter, r *http.Re
 			},
 			{
 				ID:     4,
-				Divisi: "Communication, Editorial, dan Marketing",
+				Divisi: "Communication Editorial Marketing",
 				CoreTeam: []CoreTeam{
 					{
 						Nama:      "Maria Desvita Sari",
