@@ -106,7 +106,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
 				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1695054946/MERCH%20%2B%20BG/IMG_3669_dm0ht6.png",
 				Detail: []string{
-					"https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712257/MERCH%20%2B%20BG/Artboard_4_smrl1k.png",
+					"https://res.cloudinary.com/dpcwbnax4/image/upload/v1695054946/MERCH%20%2B%20BG/IMG_3669_dm0ht6.png",
 				},
 				Link: "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
