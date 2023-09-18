@@ -104,9 +104,9 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Nama:      "Bundling 1",
 				Harga:     "Rp199.900",
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
-				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1695054946/MERCH%20%2B%20BG/IMG_3669_dm0ht6.png",
+				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694943087/MERCH%20%2B%20BG/Bundling_1_of7ord.jpg",
 				Detail: []string{
-					"https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712257/MERCH%20%2B%20BG/Artboard_4_smrl1k.png",
+					"https://res.cloudinary.com/dpcwbnax4/image/upload/v1695054946/MERCH%20%2B%20BG/IMG_3669_dm0ht6.png",
 				},
 				Link: "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
