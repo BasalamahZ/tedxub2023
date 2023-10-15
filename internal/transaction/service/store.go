@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"time"
 
 	"github.com/tedxub2023/internal/transaction"
 )
@@ -27,6 +28,6 @@ type PGStoreClient interface {
 	GetTransactionByID(ctx context.Context, transactionID int64) (transaction.Transaction, error)
 
 	// DeleteTransactionByEmail deletes all transaction
-	// with the given email
-	DeleteTransactionByEmail(ctx context.Context, email string) error
+	// with the given email and tanggal.
+	DeleteTransactionByEmail(ctx context.Context, email string, tanggal time.Time) error
 }
