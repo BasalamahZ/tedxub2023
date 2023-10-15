@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/midtrans/midtrans-go"
 	merchhttphandler "github.com/tedxub2023/internal/merch/handler/http"
 	ourTeamhttphandler "github.com/tedxub2023/internal/ourteam/handler/http"
 	"github.com/tedxub2023/internal/ticket"
@@ -97,7 +98,7 @@ func new() (*server, error) {
 			return nil, fmt.Errorf("failed to initialize transaction postgresql store: %s", err.Error())
 		}
 
-		transactionSvc, err = transactionservice.New(pgStore)
+		transactionSvc, err = transactionservice.New(pgStore, midtrans.Sandbox, os.Getenv("SERVER_KEY_MIDTRANS"))
 		if err != nil {
 			log.Printf("[twitter-api-http] failed to initialize transaction service: %s\n", err.Error())
 			return nil, fmt.Errorf("failed to initialize transaction service: %s", err.Error())
