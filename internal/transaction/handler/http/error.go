@@ -16,41 +16,49 @@ var (
 	// unexpected error encountered when processing a request.
 	errInternalServer = errors.New("INTERNAL_SERVER_ERROR")
 
-	// errInvalidTicketNama is returned when the given
-	// ticket nama is invalid.
-	errInvalidTicketNama = errors.New("INVALID_TICKET_NAMA")
+	// errDataNotFound is returned when the desired data is
+	// not found.
+	errDataNotFound = errors.New("DATA_NOT_FOUND")
 
-	// errInvalidTicketNomorIdentitas is returned when the given
-	// ticket nomor identitas is invalid.
-	errInvalidTicketNomorIdentitas = errors.New("INVALID_TICKET_NOMOR_IDENTITAS")
+	// errInvalidTransactionID is returned when the given
+	// transaction id is invalid.
+	errInvalidTransactionID = errors.New("INVALID_TRANSACTION_ID")
 
-	// errInvalidTicketAsalInstitusi is returned when the given
-	// ticket asal institusi is invalid.
-	errInvalidTicketAsalInstitusi = errors.New("INVALID_TICKET_ASAL_INSITITUSI")
+	// errInvalidTransactionNama is returned when the given
+	// transaction nama is invalid.
+	errInvalidTransactionNama = errors.New("INVALID_TRANSACTION_NAMA")
 
-	// errInvalidTicketDomisili is returned when the given
-	// ticket domisili is invalid.
-	errInvalidTicketDomisili = errors.New("INVALID_TICKET_DOMISILI")
+	// errInvalidTransactionNomorIdentitas is returned when the given
+	// transaction nomor identitas is invalid.
+	errInvalidTransactionNomorIdentitas = errors.New("INVALID_TRANSACTION_NOMOR_IDENTITAS")
 
-	// errInvalidTicketEmail is returned when the given
-	// ticket email is invalid.
-	errInvalidTicketEmail = errors.New("INVALID_TICKET_EMAIL")
+	// errInvalidTransactionAsalInstitusi is returned when the given
+	// transaction asal institusi is invalid.
+	errInvalidTransactionAsalInstitusi = errors.New("INVALID_TRANSACTION_ASAL_INSITITUSI")
 
-	// errInvalidTicketNomorTelepon is returned when the given
-	// ticket nomor telepon is invalid.
-	errInvalidTicketNomorTelepon = errors.New("INVALID_TICKET_NOMOR_TELEPON")
+	// errInvalidTransactionDomisili is returned when the given
+	// transaction domisili is invalid.
+	errInvalidTransactionDomisili = errors.New("INVALID_TRANSACTION_DOMISILI")
 
-	// errInvalidTicketLineID is returned when the given
-	// ticket line id is invalid.
-	errInvalidTicketLineID = errors.New("INVALID_TICKET_LINE_ID")
+	// errInvalidTransactionEmail is returned when the given
+	// transaction email is invalid.
+	errInvalidTransactionEmail = errors.New("INVALID_TRANSACTION_EMAIL")
 
-	// errInvalidTicketInstagram is returned when the given
-	// ticket instagram is invalid.
-	errInvalidTicketInstagram = errors.New("INVALID_TICKET_INSTAGRAM")
+	// errInvalidTransactionNomorTelepon is returned when the given
+	// transaction nomor telepon is invalid.
+	errInvalidTransactionNomorTelepon = errors.New("INVALID_TRANSACTION_NOMOR_TELEPON")
 
-	// errInvalidTicketJenisKelamin is returned when the request
+	// errInvalidTransactionLineID is returned when the given
+	// transaction line id is invalid.
+	errInvalidTransactionLineID = errors.New("INVALID_TRANSACTION_LINE_ID")
+
+	// errInvalidTransactionInstagram is returned when the given
+	// transaction instagram is invalid.
+	errInvalidTransactionInstagram = errors.New("INVALID_TRANSACTION_INSTAGRAM")
+
+	// errInvalidTransactionJenisKelamin is returned when the request
 	// is not valid format
-	errInvalidTicketJenisKelamin = errors.New("INVALID_TICKET_JENIS_KELAMIN")
+	errInvalidTransactionJenisKelamin = errors.New("INVALID_TRANSACTION_JENIS_KELAMIN")
 
 	// errMethodNotAllowed is returned when accessing not
 	// allowed HTTP method.
@@ -69,14 +77,16 @@ var (
 	// here, and the handler should just return `errInternal`
 	// as the error instead
 	mapHTTPError = map[error]error{
-		transaction.ErrInvalidTicketNama:           errInvalidTicketNama,
-		transaction.ErrInvalidTicketNomorIdentitas: errInvalidTicketNomorIdentitas,
-		transaction.ErrInvalidTicketAsalInstitusi:  errInvalidTicketAsalInstitusi,
-		transaction.ErrInvalidTicketDomisili:       errInvalidTicketDomisili,
-		transaction.ErrInvalidTicketEmail:          errInvalidTicketEmail,
-		transaction.ErrInvalidTicketNomorTelepon:   errInvalidTicketNomorTelepon,
-		transaction.ErrInvalidTicketLineID:         errInvalidTicketLineID,
-		transaction.ErrInvalidTicketInstagram:      errInvalidTicketInstagram,
-		transaction.ErrInvalidTicketJenisKelamin:   errInvalidTicketJenisKelamin,
+		transaction.ErrDataNotFound:                     errDataNotFound,
+		transaction.ErrInvalidTransactionID:             errInvalidTransactionID,
+		transaction.ErrInvalidTransactionNama:           errInvalidTransactionNama,
+		transaction.ErrInvalidTransactionNomorIdentitas: errInvalidTransactionNomorIdentitas,
+		transaction.ErrInvalidTransactionAsalInstitusi:  errInvalidTransactionAsalInstitusi,
+		transaction.ErrInvalidTransactionDomisili:       errInvalidTransactionDomisili,
+		transaction.ErrInvalidTransactionEmail:          errInvalidTransactionEmail,
+		transaction.ErrInvalidTransactionNomorTelepon:   errInvalidTransactionNomorTelepon,
+		transaction.ErrInvalidTransactionLineID:         errInvalidTransactionLineID,
+		transaction.ErrInvalidTransactionInstagram:      errInvalidTransactionInstagram,
+		transaction.ErrInvalidTransactionJenisKelamin:   errInvalidTransactionJenisKelamin,
 	}
 )
