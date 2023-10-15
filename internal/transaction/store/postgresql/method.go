@@ -4,16 +4,18 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/lib/pq"
 	"github.com/tedxub2023/internal/transaction"
 )
 
-func (sc *storeClient) DeleteTransactionByEmail(ctx context.Context, email string) error {
+func (sc *storeClient) DeleteTransactionByEmail(ctx context.Context, email string, tanggal time.Time) error {
 	// construct arguments filled with fields for the query
 	argsKV := map[string]interface{}{
-		"email": email,
+		"email":          email,
+		"tanggal":        tanggal,
+		"status_payment": "pending",
 	}
 
 	// prepare query
@@ -33,9 +35,6 @@ func (sc *storeClient) DeleteTransactionByEmail(ctx context.Context, email strin
 }
 
 func (sc *storeClient) CreateTransaction(ctx context.Context, reqTransaction transaction.Transaction) (int64, error) {
-	ticketNumbers := make([]string, 0)
-	ticketNumbers = append(ticketNumbers, reqTransaction.NomorTiket...)
-
 	// construct arguments filled with fields for the query
 	argsKV := map[string]interface{}{
 		"nama":              reqTransaction.Nama,
@@ -48,8 +47,10 @@ func (sc *storeClient) CreateTransaction(ctx context.Context, reqTransaction tra
 		"line_id":           reqTransaction.LineID,
 		"instagram":         reqTransaction.Instagram,
 		"jumlah_tiket":      reqTransaction.JumlahTiket,
-		"harga":             reqTransaction.Harga,
-		"nomor_tiket":       pq.StringArray(ticketNumbers),
+		"total_harga":       reqTransaction.TotalHarga,
+		"tanggal":           reqTransaction.Tanggal,
+		"order_id":          reqTransaction.OrderID,
+		"status_payment":    reqTransaction.StatusPayment,
 		"response_midtrans": reqTransaction.ResponseMidtrans,
 		"create_time":       reqTransaction.CreateTime,
 	}
@@ -87,5 +88,6 @@ func (sc *storeClient) GetTransactionByID(ctx context.Context, transactionID int
 		}
 		return transaction.Transaction{}, err
 	}
+
 	return tdb.format(), nil
 }

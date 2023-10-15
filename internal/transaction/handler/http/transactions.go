@@ -159,8 +159,13 @@ func parseTransactionFromCreateRequest(th transactionHTTP) (transaction.Transact
 		result.JumlahTiket = *th.JumlahTiket
 	}
 
-	if th.Harga != nil {
-		result.Harga = *th.Harga
+	if th.Tanggal != nil && *th.Tanggal != "" {
+		tanggal, err := time.Parse(dateFormat, *th.Tanggal)
+		if err != nil {
+			return transaction.Transaction{}, errInvalidDateFormat
+		}
+
+		result.Tanggal = tanggal
 	}
 
 	return result, nil

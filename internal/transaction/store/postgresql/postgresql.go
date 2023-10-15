@@ -67,24 +67,27 @@ func (sc *storeClient) Rollback() error {
 }
 
 type transactionDB struct {
-	ID               int64          `db:"id"`
-	Nama             string         `db:"nama"`
-	JenisKelamin     string         `db:"jenis_kelamin"`
-	NomorIdentitas   string         `db:"nomor_identitas"`
-	AsalInstitusi    string         `db:"asal_institusi"`
-	Domisili         string         `db:"domisili"`
-	Email            string         `db:"email"`
-	NomorTelepon     string         `db:"nomor_telepon"`
-	LineID           string         `db:"line_id"`
-	Instagram        string         `db:"instagram"`
-	JumlahTiket      int            `db:"jumlah_tiket"`
-	Harga            int64          `db:"harga"`
-	NomorTiket       pq.StringArray `db:"nomor_tiket"`
-	ResponseMidtrans string         `db:"response_midtrans"`
-	CheckInStatus    *bool          `db:"checkin_status"`
-	CheckInCounter   *int           `db:"checkin_counter"`
-	CreateTime       time.Time      `db:"create_time"`
-	UpdateTime       *time.Time     `db:"update_time"`
+	ID                int64          `db:"id"`
+	Nama              string         `db:"nama"`
+	JenisKelamin      string         `db:"jenis_kelamin"`
+	NomorIdentitas    string         `db:"nomor_identitas"`
+	AsalInstitusi     string         `db:"asal_institusi"`
+	Domisili          string         `db:"domisili"`
+	Email             string         `db:"email"`
+	NomorTelepon      string         `db:"nomor_telepon"`
+	LineID            string         `db:"line_id"`
+	Instagram         string         `db:"instagram"`
+	JumlahTiket       int            `db:"jumlah_tiket"`
+	TotalHarga        int64          `db:"total_harga"`
+	Tanggal           time.Time      `db:"tanggal"`
+	OrderID           string         `db:"order_id"`
+	StatusPayment     string         `db:"status_payment"`
+	ResponseMidtrans  string         `db:"response_midtrans"`
+	NomorTiket        pq.StringArray `db:"nomor_tiket"`
+	CheckInStatus     *bool          `db:"checkin_status"`
+	CheckInNomorTiket pq.StringArray `db:"checkin_nomor_tiket"`
+	CreateTime        time.Time      `db:"create_time"`
+	UpdateTime        *time.Time     `db:"update_time"`
 }
 
 // format formats database struct into domain struct.
@@ -101,7 +104,10 @@ func (tdb *transactionDB) format() transaction.Transaction {
 		LineID:           tdb.LineID,
 		Instagram:        tdb.Instagram,
 		JumlahTiket:      tdb.JumlahTiket,
-		Harga:            tdb.Harga,
+		TotalHarga:       tdb.TotalHarga,
+		Tanggal:          tdb.Tanggal,
+		OrderID:          tdb.OrderID,
+		StatusPayment:    tdb.StatusPayment,
 		ResponseMidtrans: tdb.ResponseMidtrans,
 		CreateTime:       tdb.CreateTime,
 	}
@@ -118,8 +124,12 @@ func (tdb *transactionDB) format() transaction.Transaction {
 		t.CheckInStatus = *tdb.CheckInStatus
 	}
 
-	if tdb.CheckInCounter != nil {
-		t.CheckInCounter = *tdb.CheckInCounter
+	if len(tdb.CheckInNomorTiket) > 0 {
+		checkinTicketNumbers := make([]string, 0)
+		for _, checkinTicketNumber := range tdb.CheckInNomorTiket {
+			checkinTicketNumbers = append(checkinTicketNumbers, checkinTicketNumber)
+		}
+		t.CheckInNomorTiket = checkinTicketNumbers
 	}
 
 	if tdb.UpdateTime != nil {

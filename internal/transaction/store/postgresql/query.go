@@ -14,8 +14,10 @@ const queryCreateTransaction = `
 		line_id,
 		instagram,
 		jumlah_tiket,
-		harga,
-		nomor_tiket,
+		total_harga,
+		tanggal,
+		order_id,
+		status_payment,
 		response_midtrans,
 		create_time
 	) VALUES (
@@ -29,8 +31,10 @@ const queryCreateTransaction = `
 		:line_id,
 		:instagram,
 		:jumlah_tiket,
-		:harga,
-		:nomor_tiket,
+		:total_harga,
+		:tanggal,
+		:order_id,
+		:status_payment,
 		:response_midtrans,
 		:create_time
 	) RETURNING
@@ -50,11 +54,14 @@ const queryGetTransaction = `
 		t.line_id,
 		t.instagram,
 		t.jumlah_tiket,
-		t.harga,
-		t.nomor_tiket,
+		t.total_harga,
+		t.tanggal,
+		t.order_id,
+		t.status_payment,
 		t.response_midtrans,
+		t.nomor_tiket,
 		t.checkin_status,
-		t.checkin_counter,
+		t.checkin_nomor_tiket,
 		t.create_time,
 		t.update_time
 	FROM
@@ -67,4 +74,8 @@ const queryuDeleteTransactionByEmail = `
 		transaction
 	WHERE
 		email = :email
+	AND
+		tanggal = :tanggal
+	AND
+		status_payment = :status_payment
 `

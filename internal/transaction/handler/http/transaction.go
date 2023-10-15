@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 
@@ -63,8 +64,16 @@ func (h *transactionHandler) handleGetTransactionByID(w http.ResponseWriter, r *
 	errChan := make(chan error, 1)
 
 	go func() {
+		// parsed filter
+		nomorTiket, err := parseGetTransactionFilter(r.URL.Query())
+		if err != nil {
+			statusCode = http.StatusBadRequest
+			errChan <- err
+			return
+		}
+
 		// get result transaction
-		res, err := h.transaction.GetTransactionByID(ctx, transactionID)
+		res, err := h.transaction.GetTransactionByID(ctx, transactionID, nomorTiket)
 		if err != nil {
 			// determine error and status code, by default its internal error
 			parsedErr := errInternalServer
@@ -105,4 +114,13 @@ func (h *transactionHandler) handleGetTransactionByID(w http.ResponseWriter, r *
 			Data: t,
 		})
 	}
+}
+
+func parseGetTransactionFilter(request url.Values) (string, error) {
+	var nomor_tiket string
+	if queryNomorTIket := request.Get("nomor_tiket"); queryNomorTIket != "" {
+		nomor_tiket = queryNomorTIket
+	}
+
+	return nomor_tiket, nil
 }

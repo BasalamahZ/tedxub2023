@@ -1,28 +1,23 @@
 package service
 
 import (
-	"encoding/json"
-
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/coreapi"
 	"github.com/tedxub2023/internal/transaction"
 )
 
-func payment(reqTransaction transaction.Transaction) (string, error) {
-	midtrans.ServerKey = "SB-Mid-server-9TNsU_ksDobqWqY2ZHGsMWXA"
-	midtrans.Environment = midtrans.Sandbox
-
+func (s *service) payment(reqTransaction transaction.Transaction) (*coreapi.ChargeResponse, error) {
 	chargeReq := &coreapi.ChargeReq{
 		PaymentType: coreapi.PaymentTypeQris,
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID:  reqTransaction.NomorTiket[0],
-			GrossAmt: reqTransaction.Harga * int64(reqTransaction.JumlahTiket),
+			OrderID:  reqTransaction.OrderID,
+			GrossAmt: reqTransaction.TotalHarga,
 		},
 		Items: &[]midtrans.ItemDetails{
 			{
-				ID:    reqTransaction.NomorTiket[0],
+				ID:    "1",
 				Name:  "Ticket Propaganda 2",
-				Price: reqTransaction.Harga,
+				Price: 30000,
 				Qty:   int32(reqTransaction.JumlahTiket),
 			},
 		},
@@ -39,10 +34,8 @@ func payment(reqTransaction transaction.Transaction) (string, error) {
 
 	coreApiRes, err := coreapi.ChargeTransaction(chargeReq)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	jsonData, _ := json.Marshal(coreApiRes)
-
-	return string(jsonData), nil
+	return coreApiRes, nil
 }

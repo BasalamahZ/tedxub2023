@@ -2,10 +2,12 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
-	"hash/crc32"
+	"math/rand"
 	"net/mail"
 	"strings"
+	"time"
 
 	"github.com/tedxub2023/internal/transaction"
 )
@@ -17,6 +19,7 @@ func (s *service) ReplaceTransactionByEmail(ctx context.Context, reqTransaction 
 		return 0, err
 	}
 	reqTransaction.CreateTime = s.timeNow()
+	reqTransaction.TotalHarga = 30000 * int64(reqTransaction.JumlahTiket)
 
 	// get pg store client with using transaction
 	pgStoreClient, err := s.pgStore.NewClient(true)
@@ -35,23 +38,28 @@ func (s *service) ReplaceTransactionByEmail(ctx context.Context, reqTransaction 
 		}
 	}()
 
-	// delete transaction specified with email in pgstore
-	err = pgStoreClient.DeleteTransactionByEmail(ctx, reqTransaction.Email)
+	// delete transaction specified with email and tanggal in pgstore
+	err = pgStoreClient.DeleteTransactionByEmail(ctx, reqTransaction.Email, reqTransaction.Tanggal)
 	if err != nil {
 		return 0, err
 	}
 
-	ticketNumbers, err := genereteTicketNumber(reqTransaction)
-	if err != nil {
-		return 0, err
-	}
-	reqTransaction.NomorTiket = ticketNumbers
+	rand.Seed(time.Now().UnixNano())
+	randomNum := rand.Intn(1e10)
+	reqTransaction.OrderID = fmt.Sprintf("%010d", randomNum)
 
-	resPayment, err := payment(reqTransaction)
+	resPayment, err := s.payment(reqTransaction)
 	if err != nil {
 		return 0, err
 	}
-	reqTransaction.ResponseMidtrans = resPayment
+
+	reqTransaction.StatusPayment = resPayment.TransactionStatus
+
+	jsonData, err := json.Marshal(resPayment)
+	if err != nil {
+		return 0, err
+	}
+	reqTransaction.ResponseMidtrans = string(jsonData)
 
 	ticketID, err := pgStoreClient.CreateTransaction(ctx, reqTransaction)
 	if err != nil {
@@ -67,7 +75,7 @@ func (s *service) ReplaceTransactionByEmail(ctx context.Context, reqTransaction 
 	return ticketID, nil
 }
 
-func (s *service) GetTransactionByID(ctx context.Context, transactionID int64) (transaction.Transaction, error) {
+func (s *service) GetTransactionByID(ctx context.Context, transactionID int64, nomorTiket string) (transaction.Transaction, error) {
 	// validate id
 	if transactionID <= 0 {
 		return transaction.Transaction{}, transaction.ErrInvalidTransactionID
@@ -85,34 +93,24 @@ func (s *service) GetTransactionByID(ctx context.Context, transactionID int64) (
 		return transaction.Transaction{}, err
 	}
 
+	if nomorTiket != "" {
+		valid := false
+		for _, nomorTikett := range result.NomorTiket {
+			if nomorTikett == nomorTiket {
+				valid = true
+				break
+			}
+		}
+
+		if !valid {
+			return transaction.Transaction{}, transaction.ErrDataNotFound
+		}
+	}
+
 	return result, nil
 }
 
-func genereteTicketNumber(reqTransaction transaction.Transaction) ([]string, error) {
-	// Calculate the CRC32 hash of the data
-	hash := crc32.ChecksumIEEE([]byte(reqTransaction.Email))
-
-	// Reduce the hash to a 3-digit number
-	uniqueNumber := int(hash % 100)
-	// uniqueNumberStr := strconv.Itoa(uniqueNumber)
-	uniqueNumberStr := fmt.Sprintf("%02d", uniqueNumber)
-
-	ticketNumbers := make([]string, 0)
-	// combination := reqTransaction.JumlahTiket * 100
-	for i := 0; i < reqTransaction.JumlahTiket; i++ {
-		letter := string('A' + i)
-
-		combination := letter + uniqueNumberStr
-
-		ticketNumber := fmt.Sprintf("TICKET/TEDXUB/%s", combination)
-
-		ticketNumbers = append(ticketNumbers, ticketNumber)
-	}
-
-	return ticketNumbers, nil
-}
-
-// validateTransaction validates fields of the given Ticket
+// validateTransaction validates fields of the given transaction
 // whether its comply the predetermined rules.
 func validateTransaction(reqTransaction transaction.Transaction) error {
 	if reqTransaction.Nama == "" {
@@ -150,6 +148,14 @@ func validateTransaction(reqTransaction transaction.Transaction) error {
 
 	if reqTransaction.Instagram == "" || strings.HasPrefix(reqTransaction.LineID, "@") {
 		return transaction.ErrInvalidTransactionInstagram
+	}
+
+	if reqTransaction.JumlahTiket <= 0 {
+		return transaction.ErrInvalidTransactionJumlahTiket
+	}
+
+	if reqTransaction.Tanggal.IsZero() {
+		return transaction.ErrInvalidTransactionTanggal
 	}
 
 	return nil

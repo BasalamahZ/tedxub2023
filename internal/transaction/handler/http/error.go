@@ -60,6 +60,18 @@ var (
 	// is not valid format
 	errInvalidTransactionJenisKelamin = errors.New("INVALID_TRANSACTION_JENIS_KELAMIN")
 
+	// errInvalidTransactionJumlahTiket is returned when the given
+	// transaction jumlah tiket is invalid.
+	errInvalidTransactionJumlahTiket = errors.New("INVALID_TRANSACTION_JUMLAH_TIKET")
+
+	// errInvalidTransactionTanggal is returned when the given
+	// transaction tanggal is invalid.
+	errInvalidTransactionTanggal = errors.New("INVALID_TRANSACTION_TANGGAL")
+
+	// errInvalidDateFormat is returned when the given date
+	// string format is invalid.
+	errInvalidDateFormat = errors.New("INVALID_DATE_FORMAT")
+
 	// errMethodNotAllowed is returned when accessing not
 	// allowed HTTP method.
 	errMethodNotAllowed = errors.New("METHOD_NOT_ALLOWED")
@@ -88,5 +100,8 @@ var (
 		transaction.ErrInvalidTransactionLineID:         errInvalidTransactionLineID,
 		transaction.ErrInvalidTransactionInstagram:      errInvalidTransactionInstagram,
 		transaction.ErrInvalidTransactionJenisKelamin:   errInvalidTransactionJenisKelamin,
+		transaction.ErrInvalidTransactionTanggal:        errInvalidTransactionTanggal,
+		transaction.ErrInvalidTransactionJumlahTiket:    errInvalidTransactionJumlahTiket,
+		transaction.ErrInvalidDateFormat:                errInvalidDateFormat,
 	}
 )

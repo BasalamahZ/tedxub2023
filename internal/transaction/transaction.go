@@ -12,27 +12,31 @@ type Service interface {
 
 	// GetTransactionByID returns a transaction with the given
 	// transaction ID.
-	GetTransactionByID(ctx context.Context, transactionID int64) (Transaction, error)
+	GetTransactionByID(ctx context.Context, transactionID int64, nomorTiket string) (Transaction, error)
 }
 
 // Transaction is a transaction.
+
 type Transaction struct {
-	ID               int64
-	Nama             string
-	JenisKelamin     string
-	NomorIdentitas   string
-	AsalInstitusi    string
-	Domisili         string
-	Email            string
-	NomorTelepon     string
-	LineID           string
-	Instagram        string
-	JumlahTiket      int
-	Harga            int64
-	NomorTiket       []string
-	ResponseMidtrans string
-	CheckInStatus    bool
-	CheckInCounter   int
-	CreateTime       time.Time
-	UpdateTime       time.Time
+	ID                int64
+	Nama              string
+	JenisKelamin      string
+	NomorIdentitas    string
+	AsalInstitusi     string
+	Domisili          string
+	Email             string
+	NomorTelepon      string
+	LineID            string
+	Instagram         string
+	JumlahTiket       int
+	TotalHarga        int64
+	Tanggal           time.Time
+	StatusPayment     string
+	OrderID           string
+	ResponseMidtrans  string
+	NomorTiket        []string
+	CheckInStatus     bool
+	CheckInNomorTiket []string
+	CreateTime        time.Time
+	UpdateTime        time.Time
 }
