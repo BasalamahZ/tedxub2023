@@ -18,11 +18,15 @@ type PGStoreClient interface {
 	// Rollback aborts the transaction.
 	Rollback() error
 
-	// DeleteTransactionByEmail deletes all transaction
-	// with the given email
-	DeleteTransactionByEmail(ctx context.Context, email string) error
-
 	// CreateTicket creates a new ticket and return the
 	// created ticket ID.
 	CreateTransaction(ctx context.Context, transaction transaction.Transaction) (int64, error)
+
+	// GetTransactionByID returns a transaction with the given
+	// transaction ID.
+	GetTransactionByID(ctx context.Context, transactionID int64) (transaction.Transaction, error)
+
+	// DeleteTransactionByEmail deletes all transaction
+	// with the given email
+	DeleteTransactionByEmail(ctx context.Context, email string) error
 }

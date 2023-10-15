@@ -2,8 +2,11 @@ package postgresql
 
 import (
 	"errors"
+	"time"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
+	"github.com/tedxub2023/internal/transaction"
 	"github.com/tedxub2023/internal/transaction/service"
 )
 
@@ -61,4 +64,67 @@ func (sc *storeClient) Rollback() error {
 		return tx.Rollback()
 	}
 	return errInvalidRollback
+}
+
+type transactionDB struct {
+	ID               int64          `db:"id"`
+	Nama             string         `db:"nama"`
+	JenisKelamin     string         `db:"jenis_kelamin"`
+	NomorIdentitas   string         `db:"nomor_identitas"`
+	AsalInstitusi    string         `db:"asal_institusi"`
+	Domisili         string         `db:"domisili"`
+	Email            string         `db:"email"`
+	NomorTelepon     string         `db:"nomor_telepon"`
+	LineID           string         `db:"line_id"`
+	Instagram        string         `db:"instagram"`
+	JumlahTiket      int            `db:"jumlah_tiket"`
+	Harga            int64          `db:"harga"`
+	NomorTiket       pq.StringArray `db:"nomor_tiket"`
+	ResponseMidtrans string         `db:"response_midtrans"`
+	CheckInStatus    *bool          `db:"checkin_status"`
+	CheckInCounter   *int           `db:"checkin_counter"`
+	CreateTime       time.Time      `db:"create_time"`
+	UpdateTime       *time.Time     `db:"update_time"`
+}
+
+// format formats database struct into domain struct.
+func (tdb *transactionDB) format() transaction.Transaction {
+	t := transaction.Transaction{
+		ID:               tdb.ID,
+		Nama:             tdb.Nama,
+		JenisKelamin:     tdb.JenisKelamin,
+		NomorIdentitas:   tdb.NomorIdentitas,
+		AsalInstitusi:    tdb.AsalInstitusi,
+		Domisili:         tdb.Domisili,
+		Email:            tdb.Email,
+		NomorTelepon:     tdb.NomorTelepon,
+		LineID:           tdb.LineID,
+		Instagram:        tdb.Instagram,
+		JumlahTiket:      tdb.JumlahTiket,
+		Harga:            tdb.Harga,
+		ResponseMidtrans: tdb.ResponseMidtrans,
+		CreateTime:       tdb.CreateTime,
+	}
+
+	if len(tdb.NomorTiket) > 0 {
+		ticketNumbers := make([]string, 0)
+		for _, ticketNumber := range tdb.NomorTiket {
+			ticketNumbers = append(ticketNumbers, ticketNumber)
+		}
+		t.NomorTiket = ticketNumbers
+	}
+
+	if tdb.CheckInStatus != nil {
+		t.CheckInStatus = *tdb.CheckInStatus
+	}
+
+	if tdb.CheckInCounter != nil {
+		t.CheckInCounter = *tdb.CheckInCounter
+	}
+
+	if tdb.UpdateTime != nil {
+		t.UpdateTime = *tdb.UpdateTime
+	}
+
+	return t
 }
