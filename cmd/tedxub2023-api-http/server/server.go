@@ -13,6 +13,10 @@ import (
 	tickethttphandler "github.com/tedxub2023/internal/ticket/handler/http"
 	ticketservice "github.com/tedxub2023/internal/ticket/service"
 	ticketpgstore "github.com/tedxub2023/internal/ticket/store/postgresql"
+	"github.com/tedxub2023/internal/transaction"
+	transactionhttphandler "github.com/tedxub2023/internal/transaction/handler/http"
+	transactionservice "github.com/tedxub2023/internal/transaction/service"
+	transactionpgstore "github.com/tedxub2023/internal/transaction/store/postgresql"
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
@@ -84,6 +88,22 @@ func new() (*server, error) {
 		}
 	}
 
+	// initialize transaction service
+	var transactionSvc transaction.Service
+	{
+		pgStore, err := transactionpgstore.New(db)
+		if err != nil {
+			log.Printf("[twitter-api-http] failed to initialize transaction postgresql store: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize transaction postgresql store: %s", err.Error())
+		}
+
+		transactionSvc, err = transactionservice.New(pgStore)
+		if err != nil {
+			log.Printf("[twitter-api-http] failed to initialize transaction service: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize transaction service: %s", err.Error())
+		}
+	}
+
 	// initialize ticket HTTP handler
 	{
 		identities := []tickethttphandler.HandlerIdentity{
@@ -127,6 +147,21 @@ func new() (*server, error) {
 		}
 
 		s.handlers = append(s.handlers, merchTTP)
+	}
+
+	// initialize transaction HTTP handler
+	{
+		identities := []transactionhttphandler.HandlerIdentity{
+			transactionhttphandler.HandlerTransactions,
+		}
+
+		transactionHTTP, err := transactionhttphandler.New(transactionSvc, identities)
+		if err != nil {
+			log.Printf("[twitter-api-http] failed to initialize transaction http handlers: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize transaction http handlers: %s", err.Error())
+		}
+
+		s.handlers = append(s.handlers, transactionHTTP)
 	}
 
 	return s, nil
