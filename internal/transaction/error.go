@@ -44,7 +44,19 @@ var (
 	// instagram is invalid.
 	ErrInvalidTransactionInstagram = errors.New("invalid transaction instagram")
 
-	// errInvalidTransactionJenisKelamin is returned when the request
-	// is not valid format
+	// errInvalidTransactionJenisKelamin is returned when the given transaction
+	// jenis kelamin is invalid.
 	ErrInvalidTransactionJenisKelamin = errors.New("invalid transaction jenis kelamin")
+
+	// errInvalidTransactionJumlahTiket is returned when the given transaction
+	// jumlah tiket is invalid.
+	ErrInvalidTransactionJumlahTiket = errors.New("invalid transaction jumlah tiket")
+
+	// errInvalidTransactionTanggal is returned when the given transaction
+	// tanggal is invalid.
+	ErrInvalidTransactionTanggal = errors.New("invalid transaction tanggal")
+
+	// ErrInvalidDateFormat is returned when the given date
+	// format is invalid.
+	ErrInvalidDateFormat = errors.New("invalid date format")
 )
