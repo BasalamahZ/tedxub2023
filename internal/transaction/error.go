@@ -4,39 +4,47 @@ import "errors"
 
 // Followings are the known errors returned from transaction.
 var (
-	// ErrInvalidTicketNama is returned when the given ticket
+	// ErrDataNotFound is returned when the wanted data is
+	// not found.
+	ErrDataNotFound = errors.New("data not found")
+
+	// ErrInvalidTransactionID is returned when the given transaction
+	// id is invalid.
+	ErrInvalidTransactionID = errors.New("invalid transaction id")
+
+	// ErrInvalidTransactionNama is returned when the given transaction
 	// nama is invalid.
-	ErrInvalidTicketNama = errors.New("invalid ticket nama")
+	ErrInvalidTransactionNama = errors.New("invalid transaction nama")
 
-	// ErrInvalidTicketNomorIdentitas is returned when the given ticket
+	// ErrInvalidTransactionNomorIdentitas is returned when the given transaction
 	// nomor identitas is invalid.
-	ErrInvalidTicketNomorIdentitas = errors.New("invalid ticket nomor identitas")
+	ErrInvalidTransactionNomorIdentitas = errors.New("invalid transaction nomor identitas")
 
-	// ErrInvalidTicketAsalInstitusi is returned when the given ticket
+	// ErrInvalidTransactionAsalInstitusi is returned when the given transaction
 	// asal institusi is invalid.
-	ErrInvalidTicketAsalInstitusi = errors.New("invalid ticket asal institusi")
+	ErrInvalidTransactionAsalInstitusi = errors.New("invalid transaction asal institusi")
 
-	// ErrInvalidTicketDomisili is returned when the given ticket
+	// ErrInvalidTransactionDomisili is returned when the given transaction
 	// domisili is invalid.
-	ErrInvalidTicketDomisili = errors.New("invalid ticket domisili")
+	ErrInvalidTransactionDomisili = errors.New("invalid transaction domisili")
 
-	// ErrInvalidTicketEmail is returned when the given ticket
+	// ErrInvalidTransactionEmail is returned when the given transaction
 	// email is invalid.
-	ErrInvalidTicketEmail = errors.New("invalid ticket email")
+	ErrInvalidTransactionEmail = errors.New("invalid transaction email")
 
-	// ErrInvalidTicketNomorTelepon is returned when the given ticket
+	// ErrInvalidTransactionNomorTelepon is returned when the given transaction
 	// nomor telepon is invalid.
-	ErrInvalidTicketNomorTelepon = errors.New("invalid ticket nomor telepon")
+	ErrInvalidTransactionNomorTelepon = errors.New("invalid transaction nomor telepon")
 
-	// ErrInvalidTicketLineID is returned when the given ticket
+	// ErrInvalidTransactionLineID is returned when the given transaction
 	// line id is invalid.
-	ErrInvalidTicketLineID = errors.New("invalid ticket line id")
+	ErrInvalidTransactionLineID = errors.New("invalid transaction line id")
 
-	// ErrInvalidTicketInstagram is returned when the given ticket
+	// ErrInvalidTransactionInstagram is returned when the given transaction
 	// instagram is invalid.
-	ErrInvalidTicketInstagram = errors.New("invalid ticket instagram")
+	ErrInvalidTransactionInstagram = errors.New("invalid transaction instagram")
 
-	// errInvalidTicketJenisKelamin is returned when the request
+	// errInvalidTransactionJenisKelamin is returned when the request
 	// is not valid format
-	ErrInvalidTicketJenisKelamin = errors.New("invalid ticket jenis kelamin")
+	ErrInvalidTransactionJenisKelamin = errors.New("invalid transaction jenis kelamin")
 )

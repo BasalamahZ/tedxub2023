@@ -2,6 +2,8 @@ package postgresql
 
 import (
 	"context"
+	"database/sql"
+	"fmt"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
@@ -71,4 +73,19 @@ func (sc *storeClient) CreateTransaction(ctx context.Context, reqTransaction tra
 	}
 
 	return ticketID, nil
+}
+
+func (sc *storeClient) GetTransactionByID(ctx context.Context, transactionID int64) (transaction.Transaction, error) {
+	query := fmt.Sprintf(queryGetTransaction, "WHERE t.id = $1")
+
+	// query single row
+	var tdb transactionDB
+	err := sc.q.QueryRowx(query, transactionID).StructScan(&tdb)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return transaction.Transaction{}, transaction.ErrDataNotFound
+		}
+		return transaction.Transaction{}, err
+	}
+	return tdb.format(), nil
 }

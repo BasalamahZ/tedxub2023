@@ -152,6 +152,7 @@ func new() (*server, error) {
 	// initialize transaction HTTP handler
 	{
 		identities := []transactionhttphandler.HandlerIdentity{
+			transactionhttphandler.HandlerTransaction,
 			transactionhttphandler.HandlerTransactions,
 		}
 

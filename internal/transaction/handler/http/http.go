@@ -32,8 +32,15 @@ type HandlerIdentity struct {
 
 // Followings are the known HTTP handler identities
 var (
-	// HandlerTransactions denotes HTTP handler to interact
+	// HandlerTransaction denotes HTTP handler to interact
 	// with a transaction
+	HandlerTransaction = HandlerIdentity{
+		Name: "transaction",
+		URL:  "/transactions/{id}",
+	}
+
+	// HandlerTransactions denotes HTTP handler to interact
+	// with transactions
 	HandlerTransactions = HandlerIdentity{
 		Name: "transactions",
 		URL:  "/transactions",
@@ -73,6 +80,10 @@ func New(transaction transaction.Service, identities []HandlerIdentity) (*Handle
 func (h *Handler) createHTTPHandler(configName string) (http.Handler, error) {
 	var httpHandler http.Handler
 	switch configName {
+	case HandlerTransaction.Name:
+		httpHandler = &transactionHandler{
+			transaction: h.transaction,
+		}
 	case HandlerTransactions.Name:
 		httpHandler = &transactionsHandler{
 			transaction: h.transaction,
@@ -92,16 +103,20 @@ func (h *Handler) Start(multiplexer *mux.Router) error {
 }
 
 type transactionHTTP struct {
-	ID             *int64  `json:"id"`
-	Nama           *string `json:"nama"`
-	JenisKelamin   *string `json:"jenis_kelamin"`
-	NomorIdentitas *string `json:"nomor_identitas"`
-	AsalInstitusi  *string `json:"asal_institusi"`
-	Domisili       *string `json:"domisili"`
-	Email          *string `json:"email"`
-	NomorTelepon   *string `json:"nomor_telepon"`
-	LineID         *string `json:"line_id"`
-	Instagram      *string `json:"instagram"`
-	JumlahTiket    *int    `json:"jumlah_tiket"`
-	Harga          *int64  `json:"harga"`
+	ID               *int64    `json:"id"`
+	Nama             *string   `json:"nama"`
+	JenisKelamin     *string   `json:"jenis_kelamin"`
+	NomorIdentitas   *string   `json:"nomor_identitas"`
+	AsalInstitusi    *string   `json:"asal_institusi"`
+	Domisili         *string   `json:"domisili"`
+	Email            *string   `json:"email"`
+	NomorTelepon     *string   `json:"nomor_telepon"`
+	LineID           *string   `json:"line_id"`
+	Instagram        *string   `json:"instagram"`
+	JumlahTiket      *int      `json:"jumlah_tiket"`
+	Harga            *int64    `json:"harga"`
+	NomorTiket       *[]string `json:"nomor_tiket"`
+	ResponseMidtrans *string   `json:"response_midtrans"`
+	CheckInStatus    *bool     `json:"checkin_status"`
+	CheckInCounter   *int      `json:"checkin_counter"`
 }

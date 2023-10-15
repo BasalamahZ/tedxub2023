@@ -67,6 +67,27 @@ func (s *service) ReplaceTransactionByEmail(ctx context.Context, reqTransaction 
 	return ticketID, nil
 }
 
+func (s *service) GetTransactionByID(ctx context.Context, transactionID int64) (transaction.Transaction, error) {
+	// validate id
+	if transactionID <= 0 {
+		return transaction.Transaction{}, transaction.ErrInvalidTransactionID
+	}
+
+	// get pg store client without using transaction
+	pgStoreClient, err := s.pgStore.NewClient(false)
+	if err != nil {
+		return transaction.Transaction{}, err
+	}
+
+	// get user from pgstore
+	result, err := pgStoreClient.GetTransactionByID(ctx, transactionID)
+	if err != nil {
+		return transaction.Transaction{}, err
+	}
+
+	return result, nil
+}
+
 func genereteTicketNumber(reqTransaction transaction.Transaction) ([]string, error) {
 	// Calculate the CRC32 hash of the data
 	hash := crc32.ChecksumIEEE([]byte(reqTransaction.Email))
@@ -95,40 +116,40 @@ func genereteTicketNumber(reqTransaction transaction.Transaction) ([]string, err
 // whether its comply the predetermined rules.
 func validateTransaction(reqTransaction transaction.Transaction) error {
 	if reqTransaction.Nama == "" {
-		return transaction.ErrInvalidTicketNama
+		return transaction.ErrInvalidTransactionNama
 	}
 
 	if reqTransaction.JenisKelamin == "" || (reqTransaction.JenisKelamin != "Pria" && reqTransaction.JenisKelamin != "Wanita") {
-		return transaction.ErrInvalidTicketJenisKelamin
+		return transaction.ErrInvalidTransactionJenisKelamin
 	}
 
 	if reqTransaction.NomorIdentitas == "" || len(reqTransaction.NomorIdentitas) < 15 {
-		return transaction.ErrInvalidTicketNomorIdentitas
+		return transaction.ErrInvalidTransactionNomorIdentitas
 	}
 
 	if reqTransaction.AsalInstitusi == "" {
-		return transaction.ErrInvalidTicketAsalInstitusi
+		return transaction.ErrInvalidTransactionAsalInstitusi
 	}
 
 	if reqTransaction.Domisili == "" {
-		return transaction.ErrInvalidTicketDomisili
+		return transaction.ErrInvalidTransactionDomisili
 	}
 
 	_, err := mail.ParseAddress(reqTransaction.Email)
 	if reqTransaction.Email == "" || err != nil {
-		return transaction.ErrInvalidTicketEmail
+		return transaction.ErrInvalidTransactionEmail
 	}
 
 	if reqTransaction.NomorTelepon == "" || len(reqTransaction.NomorTelepon) < 10 || len(reqTransaction.NomorTelepon) > 13 {
-		return transaction.ErrInvalidTicketNomorTelepon
+		return transaction.ErrInvalidTransactionNomorTelepon
 	}
 
 	if reqTransaction.LineID == "" || strings.HasPrefix(reqTransaction.LineID, "@") {
-		return transaction.ErrInvalidTicketLineID
+		return transaction.ErrInvalidTransactionLineID
 	}
 
 	if reqTransaction.Instagram == "" || strings.HasPrefix(reqTransaction.LineID, "@") {
-		return transaction.ErrInvalidTicketInstagram
+		return transaction.ErrInvalidTransactionInstagram
 	}
 
 	return nil
