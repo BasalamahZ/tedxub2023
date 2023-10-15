@@ -9,6 +9,10 @@ type Service interface {
 	// ReplaceTransactionByEmail replace all transaction
 	// with the given email
 	ReplaceTransactionByEmail(ctx context.Context, transaction Transaction) (int64, error)
+
+	// GetTransactionByID returns a transaction with the given
+	// transaction ID.
+	GetTransactionByID(ctx context.Context, transactionID int64) (Transaction, error)
 }
 
 // Transaction is a transaction.
