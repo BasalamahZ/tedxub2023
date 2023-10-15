@@ -12,6 +12,10 @@ var (
 	errUnknownConfig = errors.New("unknown config name")
 )
 
+// dateFormat denotes the standard date format used in
+// transaction HTTP request and response.
+var dateFormat = "02-01-2006"
+
 // Handler contains transaction HTTP-handlers.
 type Handler struct {
 	handlers    map[string]*handler
@@ -103,20 +107,23 @@ func (h *Handler) Start(multiplexer *mux.Router) error {
 }
 
 type transactionHTTP struct {
-	ID               *int64    `json:"id"`
-	Nama             *string   `json:"nama"`
-	JenisKelamin     *string   `json:"jenis_kelamin"`
-	NomorIdentitas   *string   `json:"nomor_identitas"`
-	AsalInstitusi    *string   `json:"asal_institusi"`
-	Domisili         *string   `json:"domisili"`
-	Email            *string   `json:"email"`
-	NomorTelepon     *string   `json:"nomor_telepon"`
-	LineID           *string   `json:"line_id"`
-	Instagram        *string   `json:"instagram"`
-	JumlahTiket      *int      `json:"jumlah_tiket"`
-	Harga            *int64    `json:"harga"`
-	NomorTiket       *[]string `json:"nomor_tiket"`
-	ResponseMidtrans *string   `json:"response_midtrans"`
-	CheckInStatus    *bool     `json:"checkin_status"`
-	CheckInCounter   *int      `json:"checkin_counter"`
+	ID                *int64    `json:"id"`
+	Nama              *string   `json:"nama"`
+	JenisKelamin      *string   `json:"jenis_kelamin"`
+	NomorIdentitas    *string   `json:"nomor_identitas"`
+	AsalInstitusi     *string   `json:"asal_institusi"`
+	Domisili          *string   `json:"domisili"`
+	Email             *string   `json:"email"`
+	NomorTelepon      *string   `json:"nomor_telepon"`
+	LineID            *string   `json:"line_id"`
+	Instagram         *string   `json:"instagram"`
+	JumlahTiket       *int      `json:"jumlah_tiket"`
+	TotalHarga        *int64    `json:"total_harga"`
+	Tanggal           *string   `json:"tanggal"`
+	OrderID           *string   `json:"order_id"`
+	StatusPayment     *string   `json:"status_payment"`
+	ResponseMidtrans  *string   `json:"response_midtrans"`
+	NomorTiket        *[]string `json:"nomor_tiket"`
+	CheckInStatus     *bool     `json:"checkin_status"`
+	CheckInNomorTiket *[]string `json:"checkin_nomor_tiket"`
 }
