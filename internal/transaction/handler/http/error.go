@@ -84,7 +84,7 @@ var (
 	// ticket number is invalid.
 	errInvalidTicketNumber = errors.New("INVALID_TICKET_NUMBER")
 
-	// errFailedJSONMarshal is returned when the JSON
+	// errFailedJSONMarshal is returned when the JSONs
 	// marshal process failed.
 	errFailedJSONMarshal = errors.New("FAILED_JSON_MARSHAL")
 
@@ -103,6 +103,9 @@ var (
 	// errAllTicketAlreadyCheckedIn is returned when all ticket
 	// already checked in
 	errAllTicketAlreadyCheckedIn = errors.New("ALL_TICKET_ALREADY_CHECKED_IN")
+	// errPaymentNoSettlement is returned when the given payment
+	// is not settlement.
+	errPaymentNotSettlement = errors.New("PAYMENT_NOT_SETTLEMENT")
 )
 
 var (
@@ -131,5 +134,6 @@ var (
 		transaction.ErrTicketNotFound:                   errTicketNotFound,
 		transaction.ErrTicketNotYetPaid:                 errTicketNotYetPaid,
 		transaction.ErrAllTicketAlreadyCheckedIn:        errAllTicketAlreadyCheckedIn,
+		transaction.ErrPaymentNotSettlement:             errPaymentNotSettlement,
 	}
 )

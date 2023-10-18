@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Ticket</title>
+    <style>
+        html{
+            height: 0;
+        }
+        .app {
+            text-align: center;
+            font-family: sans-serif;
+        }
+
+        .ticket-wrapper {
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: left;
+            display: inline-block;
+            margin: 10px;
+            width: 300px;
+            position: relative;
+        }
+
+        .label {
+            font-size: 14px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .qr-code img {
+            max-width: 140px;
+            display: block;
+            margin: 20px auto;
+        }
+
+        .ticket-number {
+            font-size: 18px;
+            margin-top: 15px;
+            text-align: center; /* Center-align text under QR code */
+        }
+
+        .label {
+            margin-bottom: -10px;
+            font-size: 14px;
+        }
+
+        .value {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .ticket-number {
+            text-align: center; /* Center-align text under QR code */
+        }
+
+        .right-text {
+            text-align: justify;
+            width: 500;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <h1>Semayam Asa</h1>
+    <div class="ticket-wrapper">
+        <div class="biodata-wrapper">
+            <p class="label">Nama Lengkap</p>
+            <p class="value">{{.Name}}</p>
+        </div>
+        <div class="biodata-wrapper">
+            <p class="label">Email</p>
+            <p class="value">{{.Email}}</p>
+        </div>
+        <div class="biodata-wrapper">
+            <p class="label">Nomor Identitas</p>
+            <p class="value">{{.NumberIdentity}}</p>
+        </div>
+        <div class="biodata-wrapper">
+            <p class="label">Tanggal Event</p>
+            <p class="value">{{.DateTime}}</p>
+        </div>
+        <div class="qr-code">
+            <img
+                alt="qr-code"
+                src="{{.QRCODE}}"
+            />
+        </div>
+        <div class="ticket-number">
+            <p class="label">Nomor Tiket</p>
+            <p class="value">{{.NumberTicket}}</p>
+        </div>
+        
+    </div>
+    <div class="right-text">
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.
+            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
+            Provident, at ad consequatur doloremque voluptates quos eligendi optio.
+        </p>
+    </div>
+</div>
+</body>
+</html>

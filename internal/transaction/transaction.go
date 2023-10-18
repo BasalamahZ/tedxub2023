@@ -17,6 +17,10 @@ type Service interface {
 	// UpdateCheckInStatus returns a ticket number and status with the giveb
 	// transaction ID and ticket number
 	UpdateCheckInStatus(ctx context.Context, id int64, nomorTiket string) (string, error)
+
+	// UpdatePaymentStatus update the payment status in DB
+	// and send a email after completed payment
+	UpdatePaymentStatus(ctx context.Context, trasactionID int64) error
 }
 
 // Transaction is a transaction.

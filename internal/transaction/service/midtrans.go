@@ -39,3 +39,12 @@ func (s *service) payment(reqTransaction transaction.Transaction) (*coreapi.Char
 
 	return coreApiRes, nil
 }
+
+func (s *service) checkStatusPayment(orderID string) (*coreapi.TransactionStatusResponse, error) {
+	res, err := coreapi.CheckTransaction(orderID)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
