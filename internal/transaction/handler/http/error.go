@@ -79,6 +79,30 @@ var (
 	// errRequestTimeout is returned when processing time
 	// has reached the timeout limit.
 	errRequestTimeout = errors.New("REQUEST_TIMEOUT")
+
+	// errInvalidTicketNumber is returned when the given
+	// ticket number is invalid.
+	errInvalidTicketNumber = errors.New("INVALID_TICKET_NUMBER")
+
+	// errFailedJSONMarshal is returned when the JSON
+	// marshal process failed.
+	errFailedJSONMarshal = errors.New("FAILED_JSON_MARSHAL")
+
+	// errTicketAlreadyCheckedIn is returned when the given
+	// ticket_number is already checkedIn
+	errTicketAlreadyCheckedIn = errors.New("TICKET_ALREADY_CHECKED_IN")
+
+	// errTicketNotFound is returned when the given
+	// ticket_number is not in the row with id given
+	errTicketNotFound = errors.New("TICKET_NOT_FOUND")
+
+	// errTicketNotYetPaid is returned when the given
+	// ticket_number is not yet paid
+	errTicketNotYetPaid = errors.New("TIKET_NOT_YET_PAID")
+
+	// errAllTicketAlreadyCheckedIn is returned when all ticket
+	// already checked in
+	errAllTicketAlreadyCheckedIn = errors.New("ALL_TICKET_ALREADY_CHECKED_IN")
 )
 
 var (
@@ -103,5 +127,9 @@ var (
 		transaction.ErrInvalidTransactionTanggal:        errInvalidTransactionTanggal,
 		transaction.ErrInvalidTransactionJumlahTiket:    errInvalidTransactionJumlahTiket,
 		transaction.ErrInvalidDateFormat:                errInvalidDateFormat,
+		transaction.ErrTicketAlreadyCheckedIn:           errTicketAlreadyCheckedIn,
+		transaction.ErrTicketNotFound:                   errTicketNotFound,
+		transaction.ErrTicketNotYetPaid:                 errTicketNotYetPaid,
+		transaction.ErrAllTicketAlreadyCheckedIn:        errAllTicketAlreadyCheckedIn,
 	}
 )

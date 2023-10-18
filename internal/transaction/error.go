@@ -59,4 +59,20 @@ var (
 	// ErrInvalidDateFormat is returned when the given date
 	// format is invalid.
 	ErrInvalidDateFormat = errors.New("invalid date format")
+
+	// ErrTicketAlreadyCheckedIn is returned when the given
+	// ticket_number is already checkedIn
+	ErrTicketAlreadyCheckedIn = errors.New("ticket already checked in")
+
+	// ErrTicketNotFound is returned when the given
+	// ticket_number is not in the row with id given
+	ErrTicketNotFound = errors.New("ticket not found")
+
+	// ErrTicketNotYetPaid is returned when the given
+	// ticket_number is not yet paid
+	ErrTicketNotYetPaid = errors.New("ticket not yet paid")
+
+	// ErrAllTicketAlreadyCheckedIn is returned when all ticket
+	// already checked in
+	ErrAllTicketAlreadyCheckedIn = errors.New("all ticket already checked in")
 )
