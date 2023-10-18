@@ -167,21 +167,10 @@ func (s *service) UpdateCheckInStatus(ctx context.Context, id int64, ticketNumbe
 		return "", transaction.ErrInvalidTransactionID
 	}
 
-	pgStoreClient, err := s.pgStore.NewClient(true)
+	pgStoreClient, err := s.pgStore.NewClient(false)
 	if err != nil {
 		return "", err
 	}
-
-	defer func() error {
-		if err != nil {
-			errTx := pgStoreClient.Rollback()
-			if errTx != nil {
-				err = errTx
-			}
-			return err
-		}
-		return nil
-	}()
 
 	tx, err := pgStoreClient.GetTransactionByID(ctx, id)
 	if err != nil {
@@ -219,14 +208,9 @@ func (s *service) UpdateCheckInStatus(ctx context.Context, id int64, ticketNumbe
 		tx.CheckInStatus = true
 	}
 
-	err = pgStoreClient.UpdateCheckInStatus(ctx, tx)
+	err = pgStoreClient.UpdateTransactionByID(ctx, tx, s.timeNow())
 	if err != nil {
 		log.Println(err)
-		return "", err
-	}
-
-	err = pgStoreClient.Commit()
-	if err != nil {
 		return "", err
 	}
 

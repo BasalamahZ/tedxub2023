@@ -79,12 +79,29 @@ const queryuDeleteTransactionByEmail = `
 	AND
 		status_payment = :status_payment
 `
-const queryUpdateCheckInStatus = `
+const queryUpdateTransaction = `
 	UPDATE
 		transaction
 	SET
+		nama = :nama,
+		jenis_kelamin = :jenis_kelamin,
+		nomor_identitas = :nomor_identitas,
+		asal_institusi = :asal_institusi,
+		domisili = :domisili,
+		email = :email,
+		nomor_telepon = :nomor_telepon,
+		line_id = :line_id,
+		instagram = :instagram,
+		jumlah_tiket = :jumlah_tiket,
+		total_harga = :total_harga,
+		tanggal = :tanggal,
+		order_id = :order_id,
+		status_payment = :status_payment,
+		response_midtrans = :response_midtrans,
+		nomor_tiket = ARRAY[:nomor_tiket],
 		checkin_status = :checkin_status,
-		checkin_nomor_tiket = ARRAY[:checkin_nomor_tiket]
+		update_time = :update_time,
+		%s
 	WHERE
 		id = :id
 `

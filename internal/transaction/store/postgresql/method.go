@@ -92,21 +92,45 @@ func (sc *storeClient) GetTransactionByID(ctx context.Context, transactionID int
 	return tdb.format(), nil
 }
 
-func (sc *storeClient) UpdateCheckInStatus(ctx context.Context, transaction transaction.Transaction) error {
+func (sc *storeClient) UpdateTransactionByID(ctx context.Context, transaction transaction.Transaction, updateTime time.Time) error {
 	argsKV := map[string]interface{}{
-		"id":                  transaction.ID,
-		"checkin_nomor_tiket": transaction.CheckInNomorTiket,
-		"checkin_status":      transaction.CheckInStatus,
+		"nama":              transaction.Nama,
+		"jenis_kelamin":     transaction.JenisKelamin,
+		"nomor_identitas":   transaction.NomorIdentitas,
+		"asal_institusi":    transaction.AsalInstitusi,
+		"domisili":          transaction.Domisili,
+		"email":             transaction.Email,
+		"nomor_telepon":     transaction.NomorTelepon,
+		"line_id":           transaction.LineID,
+		"instagram":         transaction.Instagram,
+		"jumlah_tiket":      transaction.JumlahTiket,
+		"total_harga":       transaction.TotalHarga,
+		"tanggal":           transaction.Tanggal,
+		"order_id":          transaction.OrderID,
+		"status_payment":    transaction.StatusPayment,
+		"response_midtrans": transaction.ResponseMidtrans,
+		"nomor_tiket":       transaction.NomorTiket,
+		"checkin_status":    transaction.CheckInStatus,
+		"update_time":       updateTime,
+		"id":                transaction.ID,
+	}
+	query := fmt.Sprintf(queryUpdateTransaction, "")
+
+	if len(transaction.CheckInNomorTiket) != 0 {
+		argsKV["checkin_nomor_tiket"] = transaction.CheckInNomorTiket
+		query = fmt.Sprintf(queryUpdateTransaction, "checkin_nomor_tiket = ARRAY[:checkin_nomor_tiket]")
 	}
 
-	query, args, err := sqlx.Named(queryUpdateCheckInStatus, argsKV)
+	query, args, err := sqlx.Named(query, argsKV)
 	if err != nil {
 		return err
 	}
+
 	query, args, err = sqlx.In(query, args...)
 	if err != nil {
 		return err
 	}
+
 	query = sc.q.Rebind(query)
 
 	_, err = sc.q.Exec(query, args...)
