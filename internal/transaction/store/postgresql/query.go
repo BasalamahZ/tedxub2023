@@ -79,3 +79,12 @@ const queryuDeleteTransactionByEmail = `
 	AND
 		status_payment = :status_payment
 `
+const queryUpdateCheckInStatus = `
+	UPDATE
+		transaction
+	SET
+		checkin_status = :checkin_status,
+		checkin_nomor_tiket = ARRAY[:checkin_nomor_tiket]
+	WHERE
+		id = :id
+`

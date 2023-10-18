@@ -91,3 +91,28 @@ func (sc *storeClient) GetTransactionByID(ctx context.Context, transactionID int
 
 	return tdb.format(), nil
 }
+
+func (sc *storeClient) UpdateCheckInStatus(ctx context.Context, transaction transaction.Transaction) error {
+	argsKV := map[string]interface{}{
+		"id":                  transaction.ID,
+		"checkin_nomor_tiket": transaction.CheckInNomorTiket,
+		"checkin_status":      transaction.CheckInStatus,
+	}
+
+	query, args, err := sqlx.Named(queryUpdateCheckInStatus, argsKV)
+	if err != nil {
+		return err
+	}
+	query, args, err = sqlx.In(query, args...)
+	if err != nil {
+		return err
+	}
+	query = sc.q.Rebind(query)
+
+	_, err = sc.q.Exec(query, args...)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -49,6 +49,13 @@ var (
 		Name: "transactions",
 		URL:  "/transactions",
 	}
+
+	// HandlerCheckIn update checkin status
+	// after participant scan ticket (enter event)
+	HandlerCheckIn = HandlerIdentity{
+		Name: "checkin",
+		URL:  "/checkin/{id}",
+	}
 )
 
 // New creates a new Handler.
@@ -90,6 +97,10 @@ func (h *Handler) createHTTPHandler(configName string) (http.Handler, error) {
 		}
 	case HandlerTransactions.Name:
 		httpHandler = &transactionsHandler{
+			transaction: h.transaction,
+		}
+	case HandlerCheckIn.Name:
+		httpHandler = &checkInHandler{
 			transaction: h.transaction,
 		}
 	default:

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/mail"
 	"strings"
@@ -159,4 +160,75 @@ func validateTransaction(reqTransaction transaction.Transaction) error {
 	}
 
 	return nil
+}
+
+func (s *service) UpdateCheckInStatus(ctx context.Context, id int64, ticketNumber string) (string, error) {
+	if id <= 0 {
+		return "", transaction.ErrInvalidTransactionID
+	}
+
+	pgStoreClient, err := s.pgStore.NewClient(true)
+	if err != nil {
+		return "", err
+	}
+
+	defer func() error {
+		if err != nil {
+			errTx := pgStoreClient.Rollback()
+			if errTx != nil {
+				err = errTx
+			}
+			return err
+		}
+		return nil
+	}()
+
+	tx, err := pgStoreClient.GetTransactionByID(ctx, id)
+	if err != nil {
+		return "", err
+	}
+
+	if tx.CheckInStatus {
+		return "", transaction.ErrAllTicketAlreadyCheckedIn
+	} else if tx.StatusPayment != "settlement" {
+		return "", transaction.ErrTicketNotYetPaid
+	}
+
+	var isTicketAvailable bool
+
+	for _, ticNum := range tx.NomorTiket {
+		if ticketNumber == ticNum {
+			isTicketAvailable = true
+			break
+		}
+	}
+
+	if isTicketAvailable {
+		for _, ticNum := range tx.CheckInNomorTiket {
+			if ticketNumber == ticNum {
+				return "", transaction.ErrTicketAlreadyCheckedIn
+			}
+		}
+	} else {
+		return "", transaction.ErrDataNotFound
+	}
+
+	tx.CheckInNomorTiket = append(tx.CheckInNomorTiket, ticketNumber)
+
+	if len(tx.CheckInNomorTiket) == len(tx.NomorTiket) {
+		tx.CheckInStatus = true
+	}
+
+	err = pgStoreClient.UpdateCheckInStatus(ctx, tx)
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+
+	err = pgStoreClient.Commit()
+	if err != nil {
+		return "", err
+	}
+
+	return ticketNumber, nil
 }

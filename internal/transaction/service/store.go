@@ -30,4 +30,8 @@ type PGStoreClient interface {
 	// DeleteTransactionByEmail deletes all transaction
 	// with the given email and tanggal.
 	DeleteTransactionByEmail(ctx context.Context, email string, tanggal time.Time) error
+
+	// UpdateCheckInStatus updates check in status with the given
+	// transaction ID and ticket number.
+	UpdateCheckInStatus(ctx context.Context, transaction transaction.Transaction) error
 }

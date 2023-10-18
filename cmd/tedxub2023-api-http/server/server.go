@@ -155,6 +155,7 @@ func new() (*server, error) {
 		identities := []transactionhttphandler.HandlerIdentity{
 			transactionhttphandler.HandlerTransaction,
 			transactionhttphandler.HandlerTransactions,
+			transactionhttphandler.HandlerCheckIn,
 		}
 
 		transactionHTTP, err := transactionhttphandler.New(transactionSvc, identities)

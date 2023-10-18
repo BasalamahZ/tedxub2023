@@ -13,6 +13,10 @@ type Service interface {
 	// GetTransactionByID returns a transaction with the given
 	// transaction ID.
 	GetTransactionByID(ctx context.Context, transactionID int64, nomorTiket string) (Transaction, error)
+
+	// UpdateCheckInStatus returns a ticket number and status with the giveb
+	// transaction ID and ticket number
+	UpdateCheckInStatus(ctx context.Context, id int64, nomorTiket string) (string, error)
 }
 
 // Transaction is a transaction.
