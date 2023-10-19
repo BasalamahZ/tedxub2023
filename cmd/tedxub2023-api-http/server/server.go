@@ -98,7 +98,7 @@ func new() (*server, error) {
 			return nil, fmt.Errorf("failed to initialize transaction postgresql store: %s", err.Error())
 		}
 
-		transactionSvc, err = transactionservice.New(pgStore, midtrans.Sandbox, os.Getenv("SERVER_KEY_MIDTRANS"))
+		transactionSvc, err = transactionservice.New(pgStore, midtrans.Sandbox, os.Getenv("SERVER_KEY_MIDTRANS_DEV"))
 		if err != nil {
 			log.Printf("[twitter-api-http] failed to initialize transaction service: %s\n", err.Error())
 			return nil, fmt.Errorf("failed to initialize transaction service: %s", err.Error())
