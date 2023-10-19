@@ -100,7 +100,7 @@ const queryUpdateTransaction = `
 		response_midtrans = :response_midtrans,
 		nomor_tiket = ARRAY[:nomor_tiket],
 		checkin_status = :checkin_status,
-		update_time = :update_time,
+		update_time = :update_time
 		%s
 	WHERE
 		id = :id

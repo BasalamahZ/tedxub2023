@@ -11,6 +11,11 @@ require (
 )
 
 require (
+	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.1 // indirect
+	github.com/cockroachdb/apd v1.1.0 // indirect
+	github.com/leekchan/accounting v1.0.0 // indirect
 	github.com/midtrans/midtrans-go v1.3.7 // indirect
+	github.com/pkg/errors v0.8.1 // indirect
+	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 )

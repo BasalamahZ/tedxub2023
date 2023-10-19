@@ -75,4 +75,8 @@ var (
 	// ErrAllTicketAlreadyCheckedIn is returned when all ticket
 	// already checked in
 	ErrAllTicketAlreadyCheckedIn = errors.New("all ticket already checked in")
+
+	// ErrPaymentNoSettlement is returned when the given payment
+	// is not settlement.
+	ErrPaymentNotSettlement = errors.New("payment not settlement")
 )

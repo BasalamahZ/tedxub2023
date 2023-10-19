@@ -67,3 +67,30 @@ func (g *Gomail) SendMail() error {
 	}
 	return nil
 }
+
+func (g *Gomail) SetBodyHTMLMainEvent(totalTickets int, totalPrice string, dateTime string) error {
+	var body bytes.Buffer
+	path := "global/template/mainEvent.html"
+
+	t, err := template.ParseFiles(path)
+	if err != nil {
+		return ticket.ErrParseBodyHTML
+	}
+
+	t.Execute(&body, struct {
+		TotalTickets int
+		TotalPrice   string
+		DateTime     string
+	}{
+		TotalTickets: totalTickets,
+		TotalPrice:   totalPrice,
+		DateTime:     dateTime,
+	})
+
+	g.message.SetBody("text/html", body.String())
+	return nil
+}
+
+func (g *Gomail) SetAttachFile(path string) {
+	g.message.Attach(path)
+}

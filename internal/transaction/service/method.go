@@ -1,15 +1,22 @@
 package service
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
+	"net/http"
 	"net/mail"
+	"os"
 	"strings"
+	"text/template"
 	"time"
 
+	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
+	"github.com/leekchan/accounting"
+	m "github.com/tedxub2023/internal/ticket/service"
 	"github.com/tedxub2023/internal/transaction"
 )
 
@@ -208,11 +215,180 @@ func (s *service) UpdateCheckInStatus(ctx context.Context, id int64, ticketNumbe
 		tx.CheckInStatus = true
 	}
 
-	err = pgStoreClient.UpdateTransactionByID(ctx, tx, s.timeNow())
+	_, err = pgStoreClient.UpdateTransactionByID(ctx, tx, s.timeNow())
 	if err != nil {
 		log.Println(err)
 		return "", err
 	}
 
 	return ticketNumber, nil
+}
+
+func generateNumberTicket(txID int64, date string, totalTickets int) []string {
+	var ticketNumbers []string
+
+	asciiVal := 65
+	for i := 0; i < totalTickets; i++ {
+		ticketNumbers = append(ticketNumbers, fmt.Sprintf("SEMAYAMASA-%s/%c%d", date, rune(asciiVal), txID))
+		asciiVal++
+	}
+
+	return ticketNumbers
+}
+
+func (s *service) UpdatePaymentStatus(ctx context.Context, trasactionID int64) (transaction.Transaction, error) {
+	pgStoreClient, err := s.pgStore.NewClient(true)
+	if err != nil {
+		return transaction.Transaction{}, err
+	}
+
+	defer func() {
+		if err != nil {
+			errTx := pgStoreClient.Rollback()
+			if errTx != nil {
+				err = errTx
+			}
+		}
+	}()
+
+	tx, err := pgStoreClient.GetTransactionByID(ctx, trasactionID)
+	if err != nil {
+		return transaction.Transaction{}, err
+	}
+
+	res, err := s.checkStatusPayment(tx.OrderID)
+	if err != nil {
+		return tx, err
+	}
+
+	if res.TransactionStatus != "settlement" {
+		return tx, nil
+	}
+
+	ticketNumbers := generateNumberTicket(tx.ID, tx.Tanggal.Format("02"), tx.JumlahTiket)
+
+	jsonData, err := json.Marshal(res)
+	if err != nil {
+		return transaction.Transaction{}, err
+	}
+
+	tx.ResponseMidtrans = string(jsonData)
+	tx.NomorTiket = ticketNumbers
+	tx.StatusPayment = res.TransactionStatus
+
+	tx, err = pgStoreClient.UpdateTransactionByID(ctx, tx, s.timeNow())
+	if err != nil {
+		return transaction.Transaction{}, err
+	}
+
+	if err := pgStoreClient.Commit(); err != nil {
+		return transaction.Transaction{}, err
+	}
+
+	req, err := http.NewRequest("PUT", fmt.Sprintf(os.Getenv("SEND_EMAIL_API"), tx.ID), nil)
+	if err != nil {
+		return transaction.Transaction{}, err
+	}
+
+	client := &http.Client{}
+	_, err = client.Do(req)
+	if err != nil {
+		return transaction.Transaction{}, err
+	}
+
+	return tx, nil
+}
+
+func (s *service) SendMail(ctx context.Context, txID int64) error {
+	pgStoreClient, err := s.pgStore.NewClient(false)
+	if err != nil {
+		return err
+	}
+
+	tx, err := pgStoreClient.GetTransactionByID(ctx, txID)
+	if err != nil {
+		return err
+	}
+
+	if err := createPDF(tx); err != nil {
+		return err
+	}
+
+	go sendMail(tx)
+
+	return nil
+}
+
+func createPDF(tx transaction.Transaction) error {
+	wkhtmltopdf.SetPath(os.Getenv("WKHTMLTOPDF_PATH"))
+
+	pdfg, err := wkhtmltopdf.NewPDFGenerator()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	pdfg.PageSize.Set(wkhtmltopdf.PageSizeA4)
+	pdfg.Orientation.Set(wkhtmltopdf.OrientationPortrait)
+
+	path := "global/template/pdf.html"
+
+	t, err := template.ParseFiles(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body := new(bytes.Buffer)
+
+	go func() {
+		for i := 0; i < len(tx.NomorTiket); i++ {
+			t.Execute(body, struct {
+				Name           string
+				Email          string
+				NumberIdentity string
+				DateTime       string
+				QRCODE         string
+				NumberTicket   string
+			}{
+				Name:           tx.Nama,
+				Email:          tx.Email,
+				NumberIdentity: tx.NomorIdentitas,
+				DateTime:       tx.Tanggal.Format("02 January 2006"),
+				QRCODE:         fmt.Sprintf("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=%s", fmt.Sprintf(os.Getenv("URL_QRCODE"), tx.ID, tx.NomorTiket[i])),
+				NumberTicket:   tx.NomorTiket[i],
+			})
+
+			if i != (len(tx.NomorTiket) - 1) {
+				body.WriteString(`<P style="page-break-before: always">`)
+			}
+		}
+	}()
+
+	pdfg.AddPage(wkhtmltopdf.NewPageReader(body))
+
+	if err := pdfg.Create(); err != nil {
+		return err
+	}
+
+	go pdfg.WriteFile(fmt.Sprintf("global/storage/SEMAYAMASA-%s-%d.pdf", tx.Nama, tx.ID))
+
+	return nil
+}
+
+func sendMail(tx transaction.Transaction) error {
+	mail := m.NewMailClient()
+	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
+	mail.SetReciever(tx.Email)
+	mail.SetSubject("Registrasi Panggung Swara Insan")
+	mail.SetAttachFile(fmt.Sprintf("global/storage/SEMAYAMASA-%s-%d.pdf", tx.Nama, tx.ID))
+
+	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
+	totalPrice := ac.FormatMoney(tx.TotalHarga)
+	if err := mail.SetBodyHTMLMainEvent(tx.JumlahTiket, totalPrice, tx.Tanggal.Format("02 January 2006")); err != nil {
+		return err
+	}
+
+	if err := mail.SendMail(); err != nil {
+		return err
+	}
+	return nil
 }

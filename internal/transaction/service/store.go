@@ -31,7 +31,7 @@ type PGStoreClient interface {
 	// with the given email and tanggal.
 	DeleteTransactionByEmail(ctx context.Context, email string, tanggal time.Time) error
 
-	// UpdateTrasactionByID updates transaction with the given
+	// UpdateTransactionByID updates a transaction with the given
 	// transaction ID.
-	UpdateTransactionByID(ctx context.Context, transaction transaction.Transaction, updateTime time.Time) error
+	UpdateTransactionByID(ctx context.Context, transaction transaction.Transaction, updateTime time.Time) (transaction.Transaction, error)
 }
