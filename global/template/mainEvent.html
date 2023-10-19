@@ -4,122 +4,140 @@
     <title>Document</title>
 
     <style>
-      html {
-        color: black;
-      }
-
       .header-tb {
         color: black;
         min-width: 80px;
-        max-width: 130px;
+        max-width: 200px;
         width: 100%;
         font-size: 14px;
         padding: 10px;
         height: 40px;
       }
-
+      
       .header-wrapper {
         color: black;
         background-color: rgb(213, 226, 255);
       }
-
+      
       .table .body-wrapper {
         color: black;
         border: 1px solid red;
       }
-
+      
       .table {
         color: black;
         text-align: left;
         width: 100%;
       }
-
+      
       .body-tb {
         color: black;
         font-size: 15px;
-        padding: 20px;
+        padding: 15px;
       }
-
+      
       .total {
         color: black;
         display: flex;
+        justify-content: space-between;
         margin-top: 30px;
         padding: 20px 20px;
         font-weight: bold;
-        justify-content: space-between; /* Add this line to space the label and price */
       }
       
-      .total-price {
-        font-weight: bold;
-        color: rgb(0, 0, 0); /* Adjust the color as needed */
-        font-size: 16px; /* Adjust the font size as needed */
-      }
-
       .table-wrapper {
-        margin: 0 auto; /* This line centers the table horizontally */
         color: black;
-        max-width: 700px;
         border-radius: 8px;
-        border: 1px solid rgb(185, 185, 185);
+        border: 1px solid rgb(207, 207, 207);
+        margin-top:20px;
       }
-
+      
       .event-info {
         color: black;
         background-color: #fff;
         border-radius: 10px;
         margin: 30px auto;
       }
-
+      
       .event-info h1 {
         color: black;
         font-size: 24px;
       }
-
+      
       .event-info p {
         color: black;
         font-size: 16px;
         margin: 10px 0;
       }
-
+      
       .event-info .location {
         color: black;
+        font-weight: bold;
+      }
+      
+      
+      .email-wrapper{
+        color: black;
+        max-width: 500px;
+      }
+      
+      .body-email{
+        color: black;
+        display: flex;
+        justify-content: center;
+      }
+      
+      .detail-text {
+        color: black;
+        margin-top: 25px !important;
+      }
+      
+      hr.solid {
+        color: black;
+        border-top: .5px solid #000;
+      }
+      
+      .ringkasan{
+        color: black;
+        font-size:20px;
       }
     </style>
   </head>
-  <body>
-    <div>
-      <div class="event-info">
-        <h1>Semayam Asa</h1>
-        <p>Jadwal Event: {{.DateTime}}</p>
-        <p class="location">
-          Lokasi Event: Universitas Brawijaya
-        </p>
-        <p>Jumlah Tiket: {{.TotalTickets}} x Tiket</p>
-        <p class="price">Total Harga: {{.TotalPrice}}</p>
+  <body class="body-email">
+    <div class="email-wrapper">
+      <div>
+        <div class="event-info">
+          <h1>TEDxUniversitasBrawijaya Semayam Asa</h1>
+          <p class="detail-text">Jadwal Event: {{.DateTime}}</p>
+          <p class="detail-text">Lokasi Event: Universitas Brawijaya</p>
+          <p class="detail-text">Jumlah Tiket: {{.TotalTickets}} x Tiket</p>
+          <p class="detail-text">Total Harga: {{.TotalPrice}}</p>
+        </div>
       </div>
-    </div>
-
-    <div class="table-wrapper">
-      <table class="table">
-        <tr class="header-wrapper">
-          <th class="header-tb">Ringkasan</th>
-          <th class="header-tb">Harga per tiket</th>
-          <th class="header-tb">Kuantitas</th>
-          <th class="header-tb">Total</th>
-        </tr>
-        <tr class="body-wrapper">
-          <td class="body-tb">Tiket Semayam Asa</td>
-          <td class="body-tb">Rp30.000</td>
-          <td class="body-tb">{{.TotalTickets}}</td>
-          <td class="body-tb">{{.TotalPrice}}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td class="body-tb">Total</td>
-          <td class="body-tb total-price">{{.TotalPrice}}</td>
-        </tr>
-      </table>
+      <hr class="solid" />
+      <h1 class="ringkasan">Ringkasan Pesanan</h1>
+      <div class="table-wrapper">
+        <table class="table">
+          <tr class="header-wrapper">
+            <th class="header-tb">Ringkasan</th>
+            <th class="header-tb">Harga per tiket</th>
+            <th class="header-tb">Kuantitas</th>
+            <th class="header-tb">Total</th>
+          </tr>
+          <tr class="body-wrapper">
+            <td class="body-tb">Tiket Semayam Asa</td>
+            <td class="body-tb">Rp30.000</td>
+            <td class="body-tb">{{.TotalTickets}}</td>
+            <td class="body-tb">{{.TotalPrice}}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="body-tb">Total</td>
+            <td class="body-tb total-price">{{.TotalPrice}}</td>
+          </tr>
+        </table>
+      </div>
     </div>
   </body>
 </html>

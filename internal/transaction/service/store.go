@@ -33,5 +33,5 @@ type PGStoreClient interface {
 
 	// UpdateTransactionByID updates a transaction with the given
 	// transaction ID.
-	UpdateTransactionByID(ctx context.Context, transaction transaction.Transaction, updateTime time.Time) error
+	UpdateTransactionByID(ctx context.Context, transaction transaction.Transaction, updateTime time.Time) (transaction.Transaction, error)
 }

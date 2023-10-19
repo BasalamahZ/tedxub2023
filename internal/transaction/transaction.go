@@ -20,7 +20,11 @@ type Service interface {
 
 	// UpdatePaymentStatus update the payment status in DB
 	// and send a email after completed payment
-	UpdatePaymentStatus(ctx context.Context, trasactionID int64) error
+	UpdatePaymentStatus(ctx context.Context, trasactionID int64) (Transaction, error)
+
+	// SendMail sends a mail to people who bought
+	// the ticket
+	SendMail(ctx context.Context, txID int64) error
 }
 
 // Transaction is a transaction.
