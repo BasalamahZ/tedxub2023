@@ -2,6 +2,7 @@ package service
 
 import (
 	"bytes"
+	"io/ioutil"
 	"log"
 	"os"
 	"strconv"
@@ -99,22 +100,12 @@ func (g *Gomail) SetBodyHTMLPendingMail(name string, totalTickets int, totalPric
 	var body bytes.Buffer
 	path := "global/template/pendingMail.html"
 
-	t, err := template.ParseFiles(path)
+	htmlContent, err := ioutil.ReadFile(path)
 	if err != nil {
-		return ticket.ErrParseBodyHTML
+		return err
 	}
 
-	t.Execute(&body, struct {
-		Name         string
-		TotalTickets int
-		TotalPrice   string
-		DateTime     string
-	}{
-		Name:         name,
-		TotalTickets: totalTickets,
-		TotalPrice:   totalPrice,
-		DateTime:     dateTime,
-	})
+	body.Write(htmlContent)
 
 	g.message.SetBody("text/html", body.String())
 	return nil

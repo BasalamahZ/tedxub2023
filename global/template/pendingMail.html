@@ -1,76 +1,84 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Don't Forget to Pay Your Ticket</title>
+<html lang="en">
+  <head>
+
+    <title>TEDxUniversitasBrawijaya</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
+      body {
+        color: black;
+        font-family: sans-serif;
+        padding: 3rem;
+      }
 
-        h1 {
-            color: #333;
-        }
+      p, a, h1 {
+        color: black;
+        margin: 0
+      }
 
-        p {
-            color: #555;
-            margin: 20px 0;
-        }
+      .red-text {
+        color: black;
+        color: red;
+      }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
+      .bold {
+        color: black;
+        font-weight: bold;
+      }
 
-        li {
-            margin: 5px 0;
-        }
+      .italic {
+        color: black;
+        font-style: italic;
+      }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+      .flex-container {
+        color: black;
+        margin-top: 2rem;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem
+      }
 
-        .detail{
-            color: black;
-            text-align: center;
-        }
+      .divider-line {
+        color: black;
+        background-color: black;
+        height: 1px;
+        width: 40%;
+        margin: 1rem 0 0 0;
+      }
+
+      img {
+        width: 12rem;
+        margin-top: 1rem;
+        border-top: 1px solid;
+        padding: 1rem 2rem 0 2rem;
+      }
+
+      h1 {
+        color: black;
+        font-size: 1rem;
+      }
     </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Don't Forget to Pay Your Ticket</h1>
-        <p>
-            Dear {{.Name}},
-        </p>
-        <p>
-            This is a friendly reminder that you have an unpaid ticket that requires your attention. Failure to pay this ticket may result in additional fines or legal actions.
-        </p>
-        <p class="detail">
-            Ticket Details:
-            <ul>
-                <li style="text-align: center; color:black;"><strong>Issue Date:</strong> {{.DateTime}}</li>
-                <li style="text-align: center; color:black"><strong>Total Tickets:</strong> {{.TotalTickets}}</li>
-                <li style="text-align: center; color:black"><strong>Total Tickets:</strong> {{.TotalPrice}}</li>
-            </ul>
-        </p>
-        <p>
-            To make your payment, please visit our online payment portal or use the payment options specified on the back of your ticket. Payment must be received by the due date to avoid further penalties.
-        </p>
-        <p>
-            Thank you for your prompt attention to this matter. If you have any questions or need assistance, please don't hesitate to contact our customer support team at <a href="https://www.instagram.com/tedxuniversitasbrawijaya">TEDxUniversitasBrawijaya</a>.
-        </p>
-        <p>
-            Sincerely,
-            TEDxUniversitas Brawijaya
-        </p>
+  </head>
+  <body>
+    <div class="flex-container">
+      <h1 class="red-text" style="margin-bottom: 10px;"">Satu Langkah lagi untuk mendapatkan tiket Semayam Asa</h1>
+      <p class="bold">
+        <span class="red-text" style="margin-top: 10px;">INGAT!</span> Jangan menutup lama ini dan segera
+        selesaikan pembayaranmu dengan melakukan
+        <span class="italic">scan</span> pada
+        <span class="italic">QR code</span> yang tertera.
+      </p>
+      <p class="bold" style="margin-top: 10px; margin-bottom: 10px;"">Terima kasih.</p>
+      <p >Salam hangat, <br /><span class="bold"><span class="red-text">TEDx</span>UniversitasBrawijaya</span
+        ></p>
+      <img src="https://arcudskzafkijqukfool.supabase.co/storage/v1/object/public/tedxub2023/logo.png" alt="TEDxUB logo" />
+      <div>
+          <a href="https://tedxuniversitasbrawijaya.org/">tedxuniversitasbrawijaya.org</a>
+          <p><span class="bold">Instagram: </span> @tedxuniversitasbrawijaya</p>
+          <p><span class="bold"> Twitter: </span> @tedxbrawijaya</p>
+          <div><span class="bold">Email: </span><a href="mailto:tedxuniversitasbrawijaya@gmail.com">tedxuniversitasbrawijaya@gmail.com</a></p>
+      </ul>
     </div>
-</body>
+  </body>
 </html>
