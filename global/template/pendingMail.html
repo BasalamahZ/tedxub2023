@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Don't Forget to Pay Your Ticket</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+            margin: 20px 0;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail{
+            color: black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Don't Forget to Pay Your Ticket</h1>
+        <p>
+            Dear {{.Name}},
+        </p>
+        <p>
+            This is a friendly reminder that you have an unpaid ticket that requires your attention. Failure to pay this ticket may result in additional fines or legal actions.
+        </p>
+        <p class="detail">
+            Ticket Details:
+            <ul>
+                <li style="text-align: center; color:black;"><strong>Issue Date:</strong> {{.DateTime}}</li>
+                <li style="text-align: center; color:black"><strong>Total Tickets:</strong> {{.TotalTickets}}</li>
+                <li style="text-align: center; color:black"><strong>Total Tickets:</strong> {{.TotalPrice}}</li>
+            </ul>
+        </p>
+        <p>
+            To make your payment, please visit our online payment portal or use the payment options specified on the back of your ticket. Payment must be received by the due date to avoid further penalties.
+        </p>
+        <p>
+            Thank you for your prompt attention to this matter. If you have any questions or need assistance, please don't hesitate to contact our customer support team at <a href="https://www.instagram.com/tedxuniversitasbrawijaya">TEDxUniversitasBrawijaya</a>.
+        </p>
+        <p>
+            Sincerely,
+            TEDxUniversitas Brawijaya
+        </p>
+    </div>
+</body>
+</html>

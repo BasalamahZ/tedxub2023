@@ -32,8 +32,6 @@ func (h *transactionHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.handleGetTransactionByID(w, r, int64(transactionID))
 	case http.MethodPatch:
 		h.handleUpdatePaymentStatus(w, r, int64(transactionID))
-	case http.MethodPut:
-		h.handleSendMail(w, r, int64(transactionID))
 	default:
 		helper.WriteErrorResponse(w, http.StatusMethodNotAllowed, []string{errMethodNotAllowed.Error()})
 	}
@@ -130,7 +128,7 @@ func parseGetTransactionFilter(request url.Values) (string, error) {
 }
 
 func (h *transactionHandler) handleUpdatePaymentStatus(w http.ResponseWriter, r *http.Request, transactionID int64) {
-	ctx, cancel := context.WithTimeout(r.Context(), 2000*time.Millisecond)
+	ctx, cancel := context.WithTimeout(r.Context(), 5000*time.Millisecond)
 	defer cancel()
 
 	var (
@@ -179,64 +177,6 @@ func (h *transactionHandler) handleUpdatePaymentStatus(w http.ResponseWriter, r 
 		resBody, err = json.Marshal(helper.ResponseEnvelope{
 			Status: "Success",
 			Data:   data,
-		})
-
-		if err != nil {
-			err = errInternalServer
-			statusCode = http.StatusInternalServerError
-		}
-	}
-}
-
-func (h *transactionHandler) handleSendMail(w http.ResponseWriter, r *http.Request, transactionID int64) {
-	ctx, cancel := context.WithTimeout(r.Context(), 2000*time.Millisecond)
-	defer cancel()
-
-	var (
-		err        error
-		source     string
-		resBody    []byte
-		statusCode = http.StatusOK
-	)
-
-	defer func() {
-		if err != nil {
-			log.Printf("[Transaction HTTP][handleSendMail] Failed update transaction. transactionID: %v. Source: %s, Err: %s\n", transactionID, source, err.Error())
-			helper.WriteErrorResponse(w, statusCode, []string{err.Error()})
-			return
-		}
-		helper.WriteResponse(w, resBody, statusCode, helper.JSONContentTypeDecorator)
-	}()
-
-	errChan := make(chan error, 1)
-
-	go func() {
-		err := h.transaction.SendMail(ctx, transactionID)
-		if err != nil {
-			parsedErr := errInternalServer
-			statusCode = http.StatusInternalServerError
-			if v, ok := mapHTTPError[err]; ok {
-				parsedErr = v
-				statusCode = http.StatusBadRequest
-			}
-
-			if statusCode == http.StatusInternalServerError {
-				log.Printf("[Transaction HTTP][handleSendMail] Internal error from SendEmail. transactionID: %v. Err: %s\n", transactionID, err.Error())
-			}
-
-			errChan <- parsedErr
-			return
-		}
-	}()
-
-	select {
-	case <-ctx.Done():
-		err = errRequestTimeout
-		statusCode = http.StatusGatewayTimeout
-	case err = <-errChan:
-	default:
-		resBody, err = json.Marshal(helper.ResponseEnvelope{
-			Status: "Success",
 		})
 
 		if err != nil {
