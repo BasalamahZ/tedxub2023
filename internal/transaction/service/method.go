@@ -84,6 +84,24 @@ func (s *service) ReplaceTransactionByEmail(ctx context.Context, reqTransaction 
 	return ticketID, nil
 }
 
+func sendPendingMail(tx transaction.Transaction) error {
+	mail := m.NewMailClient()
+	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
+	mail.SetReciever(tx.Email)
+	mail.SetSubject("Registrasi Panggung Swara Insan")
+
+	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
+	totalPrice := ac.FormatMoney(tx.TotalHarga)
+	if err := mail.SetBodyHTMLPendingMail(tx.Nama, tx.JumlahTiket, totalPrice, tx.Tanggal.Format("02 January 2006")); err != nil {
+		return err
+	}
+
+	if err := mail.SendMail(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *service) GetTransactionByID(ctx context.Context, transactionID int64, nomorTiket string) (transaction.Transaction, error) {
 	// validate id
 	if transactionID <= 0 {
@@ -242,24 +260,6 @@ func generateNumberTicket(txID int64, date string, totalTickets int) []string {
 	}
 
 	return ticketNumbers
-}
-
-func sendPendingMail(tx transaction.Transaction) error {
-	mail := m.NewMailClient()
-	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
-	mail.SetReciever(tx.Email)
-	mail.SetSubject("Registrasi Panggung Swara Insan")
-
-	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
-	totalPrice := ac.FormatMoney(tx.TotalHarga)
-	if err := mail.SetBodyHTMLPendingMail(tx.Nama, tx.JumlahTiket, totalPrice, tx.Tanggal.Format("02 January 2006")); err != nil {
-		return err
-	}
-
-	if err := mail.SendMail(); err != nil {
-		return err
-	}
-	return nil
 }
 
 func createPDF(tx transaction.Transaction) error {
