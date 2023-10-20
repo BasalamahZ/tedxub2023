@@ -42,7 +42,7 @@
         .ticket-number {
             font-size: 18px;
             margin-top: 15px;
-            text-align: center; /* Center-align text under QR code */
+            text-align: center;
         }
 
         .label {
@@ -56,16 +56,30 @@
         }
 
         .ticket-number {
-            text-align: center; /* Center-align text under QR code */
+            text-align: center;
         }
 
         .right-text {
             text-align: justify;
             width: 500;
         }
+        .logo-container {
+            text-align: right; 
+        }
     </style>
 </head>
 <body>
+    <div class="logo-container">
+        <img
+            id="event-image"
+            alt="logo"
+            src="https://arcudskzafkijqukfool.supabase.co/storage/v1/object/public/tedxub2023/logo.png"
+        />
+    </div>
+    
+    <h5>Tiket Event</h5>
+    <h4 style="margin-bottom: -20px;">Semayam Asa TEDxUniversitasBrawijaya 2023</h4>
+    <h5>{{.DateTime}} | Nyore Cafe</h5>
 <div class="app">
     <h1>Semayam Asa</h1>
     <div class="ticket-wrapper">
@@ -98,36 +112,30 @@
         
     </div>
     <div class="right-text">
+        <h4>Informasi Penukaran</h4>
         <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.
-            Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.Laborum eum nesciunt optio aut ducimus sit omnis, fugit, nihil quos autem corrupti. 
-            Provident, at ad consequatur doloremque voluptates quos eligendi optio.
+            <ol>
+                <li>E-voucher ini hanya dapat ditukarkan dengan tiket fisik sesuai dengan tanggal kunjungan yang dipilih;</li>
+                <li>Jika tiket digunakan oleh orang lain, orang tersebut harus membawa surat kuasa atau fotocopy kartu identitas (nama yang tertera pada surat kuasa dan dan kartu identitas harus sesuai dengan yang tertera pada e-voucher);</li>
+                <li>Tiket yang sudah dibeli tidak dapat dikembalikan;</li>
+                <li>Tunjukan kartu identitas (KTM/KTP/SIM) saat hendak menukarkan e-voucher;</li>
+                <li>Tunjukan e-voucher kepada panitia penyelenggara untuk scan QR Code;</li>
+                <li>Setelah QR Code terverifikasi, panitia penyelenggara akan memberikan tiket untuk memasuki venue acara.</li>
+            
+            
+            </ol>
+        </p>
+        <h4>Syarat dan Ketentuan</h4>
+        <p>
+            <ol>
+                <li>Setiap pengunjung dipersilahkan untuk berkontribusi pada setiap interaktivitas yang disajikan dalam acara Semayam Asa</li>
+                <li>Setiap pengunjung dipersilahkan untuk membuat konten baik foto atau video yang diunggah melalui story di akun Instagram dan mention akun TEDxUniversitasBrawijaya.</li>
+                <li>Dilarang membawa senjata tajam dan obat-obatan terlarang</li>
+                <li>Dilarang menggunakan atau mengucapkan ujaran yang mengandung unsur pornografi maupun SARA</li>
+                <li>Dilarang membawa makan atau minuman dari luar venue acara</li>
+                <li>Dilarang merusak berbagai instalasi yang ada dalam acara Semayam Asa</li>
+                <li>Panitia penyelenggara berhak untuk tidak memberikan izin memasuki venue acara apabila syarat-syarat dan ketentuan tidak terpenuhi.</li>
+            </ol>
         </p>
     </div>
 </div>
