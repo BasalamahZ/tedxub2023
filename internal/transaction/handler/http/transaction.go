@@ -128,7 +128,7 @@ func parseGetTransactionFilter(request url.Values) (string, error) {
 }
 
 func (h *transactionHandler) handleUpdatePaymentStatus(w http.ResponseWriter, r *http.Request, transactionID int64) {
-	ctx, cancel := context.WithTimeout(r.Context(), 5000*time.Millisecond)
+	ctx, cancel := context.WithTimeout(r.Context(), 10000*time.Millisecond)
 	defer cancel()
 
 	var (
