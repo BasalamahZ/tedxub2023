@@ -199,9 +199,9 @@ func (s *service) UpdatePaymentStatus(ctx context.Context, trasactionID int64) (
 		return tx, err
 	}
 
-	if res.TransactionStatus != "settlement" {
-		return tx, nil
-	}
+	// if res.TransactionStatus != "settlement" {
+	// 	return tx, nil
+	// }
 
 	ticketNumbers := generateNumberTicket(tx.ID, tx.Tanggal.Format("02"), tx.JumlahTiket)
 
