@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
-	"net/http"
 	"net/mail"
 	"os"
 	"strings"
@@ -138,57 +137,6 @@ func (s *service) GetTransactionByID(ctx context.Context, transactionID int64, n
 	return result, nil
 }
 
-// validateTransaction validates fields of the given transaction
-// whether its comply the predetermined rules.
-func validateTransaction(reqTransaction transaction.Transaction) error {
-	if reqTransaction.Nama == "" {
-		return transaction.ErrInvalidTransactionNama
-	}
-
-	if reqTransaction.JenisKelamin == "" || (reqTransaction.JenisKelamin != "Pria" && reqTransaction.JenisKelamin != "Wanita") {
-		return transaction.ErrInvalidTransactionJenisKelamin
-	}
-
-	if reqTransaction.NomorIdentitas == "" || len(reqTransaction.NomorIdentitas) < 15 {
-		return transaction.ErrInvalidTransactionNomorIdentitas
-	}
-
-	if reqTransaction.AsalInstitusi == "" {
-		return transaction.ErrInvalidTransactionAsalInstitusi
-	}
-
-	if reqTransaction.Domisili == "" {
-		return transaction.ErrInvalidTransactionDomisili
-	}
-
-	_, err := mail.ParseAddress(reqTransaction.Email)
-	if reqTransaction.Email == "" || err != nil {
-		return transaction.ErrInvalidTransactionEmail
-	}
-
-	if reqTransaction.NomorTelepon == "" || len(reqTransaction.NomorTelepon) < 10 || len(reqTransaction.NomorTelepon) > 13 {
-		return transaction.ErrInvalidTransactionNomorTelepon
-	}
-
-	if reqTransaction.LineID == "" || strings.HasPrefix(reqTransaction.LineID, "@") {
-		return transaction.ErrInvalidTransactionLineID
-	}
-
-	if reqTransaction.Instagram == "" || strings.HasPrefix(reqTransaction.LineID, "@") {
-		return transaction.ErrInvalidTransactionInstagram
-	}
-
-	if reqTransaction.JumlahTiket <= 0 {
-		return transaction.ErrInvalidTransactionJumlahTiket
-	}
-
-	if reqTransaction.Tanggal.IsZero() {
-		return transaction.ErrInvalidTransactionTanggal
-	}
-
-	return nil
-}
-
 func (s *service) UpdateCheckInStatus(ctx context.Context, id int64, ticketNumber string) (string, error) {
 	if id <= 0 {
 		return "", transaction.ErrInvalidTransactionID
@@ -244,18 +192,6 @@ func (s *service) UpdateCheckInStatus(ctx context.Context, id int64, ticketNumbe
 	return ticketNumber, nil
 }
 
-func generateNumberTicket(txID int64, date string, totalTickets int) []string {
-	var ticketNumbers []string
-
-	asciiVal := 65
-	for i := 0; i < totalTickets; i++ {
-		ticketNumbers = append(ticketNumbers, fmt.Sprintf("SEMAYAMASA-%s/%c%d", date, rune(asciiVal), txID))
-		asciiVal++
-	}
-
-	return ticketNumbers
-}
-
 func (s *service) UpdatePaymentStatus(ctx context.Context, trasactionID int64) (transaction.Transaction, error) {
 	pgStoreClient, err := s.pgStore.NewClient(true)
 	if err != nil {
@@ -301,41 +237,46 @@ func (s *service) UpdatePaymentStatus(ctx context.Context, trasactionID int64) (
 		return transaction.Transaction{}, err
 	}
 
+	if err := createPDF(tx); err != nil {
+		return transaction.Transaction{}, err
+	}
+
+	go sendMail(tx)
+
 	if err := pgStoreClient.Commit(); err != nil {
-		return transaction.Transaction{}, err
-	}
-
-	req, err := http.NewRequest("PUT", fmt.Sprintf(os.Getenv("SEND_EMAIL_API"), tx.ID), nil)
-	if err != nil {
-		return transaction.Transaction{}, err
-	}
-
-	client := &http.Client{}
-	_, err = client.Do(req)
-	if err != nil {
 		return transaction.Transaction{}, err
 	}
 
 	return tx, nil
 }
 
-func (s *service) SendMail(ctx context.Context, txID int64) error {
-	pgStoreClient, err := s.pgStore.NewClient(false)
-	if err != nil {
+func generateNumberTicket(txID int64, date string, totalTickets int) []string {
+	var ticketNumbers []string
+
+	asciiVal := 65
+	for i := 0; i < totalTickets; i++ {
+		ticketNumbers = append(ticketNumbers, fmt.Sprintf("SEMAYAMASA-%s/%c%d", date, rune(asciiVal), txID))
+		asciiVal++
+	}
+
+	return ticketNumbers
+}
+
+func sendPendingMail(tx transaction.Transaction) error {
+	mail := m.NewMailClient()
+	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
+	mail.SetReciever(tx.Email)
+	mail.SetSubject("Registrasi Panggung Swara Insan")
+
+	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
+	totalPrice := ac.FormatMoney(tx.TotalHarga)
+	if err := mail.SetBodyHTMLPendingMail(tx.Nama, tx.JumlahTiket, totalPrice, tx.Tanggal.Format("02 January 2006")); err != nil {
 		return err
 	}
 
-	tx, err := pgStoreClient.GetTransactionByID(ctx, txID)
-	if err != nil {
+	if err := mail.SendMail(); err != nil {
 		return err
 	}
-
-	if err := createPDF(tx); err != nil {
-		return err
-	}
-
-	go sendMail(tx)
-
 	return nil
 }
 
@@ -410,5 +351,56 @@ func sendMail(tx transaction.Transaction) error {
 	if err := mail.SendMail(); err != nil {
 		return err
 	}
+	return nil
+}
+
+// validateTransaction validates fields of the given transaction
+// whether its comply the predetermined rules.
+func validateTransaction(reqTransaction transaction.Transaction) error {
+	if reqTransaction.Nama == "" {
+		return transaction.ErrInvalidTransactionNama
+	}
+
+	if reqTransaction.JenisKelamin == "" || (reqTransaction.JenisKelamin != "Pria" && reqTransaction.JenisKelamin != "Wanita") {
+		return transaction.ErrInvalidTransactionJenisKelamin
+	}
+
+	if reqTransaction.NomorIdentitas == "" || len(reqTransaction.NomorIdentitas) < 15 {
+		return transaction.ErrInvalidTransactionNomorIdentitas
+	}
+
+	if reqTransaction.AsalInstitusi == "" {
+		return transaction.ErrInvalidTransactionAsalInstitusi
+	}
+
+	if reqTransaction.Domisili == "" {
+		return transaction.ErrInvalidTransactionDomisili
+	}
+
+	_, err := mail.ParseAddress(reqTransaction.Email)
+	if reqTransaction.Email == "" || err != nil {
+		return transaction.ErrInvalidTransactionEmail
+	}
+
+	if reqTransaction.NomorTelepon == "" || len(reqTransaction.NomorTelepon) < 10 || len(reqTransaction.NomorTelepon) > 13 {
+		return transaction.ErrInvalidTransactionNomorTelepon
+	}
+
+	if reqTransaction.LineID == "" || strings.HasPrefix(reqTransaction.LineID, "@") {
+		return transaction.ErrInvalidTransactionLineID
+	}
+
+	if reqTransaction.Instagram == "" || strings.HasPrefix(reqTransaction.LineID, "@") {
+		return transaction.ErrInvalidTransactionInstagram
+	}
+
+	if reqTransaction.JumlahTiket <= 0 {
+		return transaction.ErrInvalidTransactionJumlahTiket
+	}
+
+	if reqTransaction.Tanggal.IsZero() {
+		return transaction.ErrInvalidTransactionTanggal
+	}
+
 	return nil
 }
