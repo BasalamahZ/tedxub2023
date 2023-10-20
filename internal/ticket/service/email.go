@@ -94,3 +94,28 @@ func (g *Gomail) SetBodyHTMLMainEvent(totalTickets int, totalPrice string, dateT
 func (g *Gomail) SetAttachFile(path string) {
 	g.message.Attach(path)
 }
+
+func (g *Gomail) SetBodyHTMLPendingMail(name string, totalTickets int, totalPrice string, dateTime string) error {
+	var body bytes.Buffer
+	path := "global/template/pendingMail.html"
+
+	t, err := template.ParseFiles(path)
+	if err != nil {
+		return ticket.ErrParseBodyHTML
+	}
+
+	t.Execute(&body, struct {
+		Name         string
+		TotalTickets int
+		TotalPrice   string
+		DateTime     string
+	}{
+		Name:         name,
+		TotalTickets: totalTickets,
+		TotalPrice:   totalPrice,
+		DateTime:     dateTime,
+	})
+
+	g.message.SetBody("text/html", body.String())
+	return nil
+}
