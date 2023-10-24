@@ -82,7 +82,7 @@ type transactionDB struct {
 	Tanggal           time.Time      `db:"tanggal"`
 	OrderID           string         `db:"order_id"`
 	StatusPayment     string         `db:"status_payment"`
-	ResponseMidtrans  string         `db:"response_midtrans"`
+	ImageURI          *string        `db:"image_uri"`
 	NomorTiket        pq.StringArray `db:"nomor_tiket"`
 	CheckInStatus     *bool          `db:"checkin_status"`
 	CheckInNomorTiket pq.StringArray `db:"checkin_nomor_tiket"`
@@ -93,23 +93,22 @@ type transactionDB struct {
 // format formats database struct into domain struct.
 func (tdb *transactionDB) format() transaction.Transaction {
 	t := transaction.Transaction{
-		ID:               tdb.ID,
-		Nama:             tdb.Nama,
-		JenisKelamin:     tdb.JenisKelamin,
-		NomorIdentitas:   tdb.NomorIdentitas,
-		AsalInstitusi:    tdb.AsalInstitusi,
-		Domisili:         tdb.Domisili,
-		Email:            tdb.Email,
-		NomorTelepon:     tdb.NomorTelepon,
-		LineID:           tdb.LineID,
-		Instagram:        tdb.Instagram,
-		JumlahTiket:      tdb.JumlahTiket,
-		TotalHarga:       tdb.TotalHarga,
-		Tanggal:          tdb.Tanggal,
-		OrderID:          tdb.OrderID,
-		StatusPayment:    tdb.StatusPayment,
-		ResponseMidtrans: tdb.ResponseMidtrans,
-		CreateTime:       tdb.CreateTime,
+		ID:             tdb.ID,
+		Nama:           tdb.Nama,
+		JenisKelamin:   tdb.JenisKelamin,
+		NomorIdentitas: tdb.NomorIdentitas,
+		AsalInstitusi:  tdb.AsalInstitusi,
+		Domisili:       tdb.Domisili,
+		Email:          tdb.Email,
+		NomorTelepon:   tdb.NomorTelepon,
+		LineID:         tdb.LineID,
+		Instagram:      tdb.Instagram,
+		JumlahTiket:    tdb.JumlahTiket,
+		TotalHarga:     tdb.TotalHarga,
+		Tanggal:        tdb.Tanggal,
+		OrderID:        tdb.OrderID,
+		StatusPayment:  tdb.StatusPayment,
+		CreateTime:     tdb.CreateTime,
 	}
 
 	if len(tdb.NomorTiket) > 0 {
@@ -118,6 +117,10 @@ func (tdb *transactionDB) format() transaction.Transaction {
 			ticketNumbers = append(ticketNumbers, ticketNumber)
 		}
 		t.NomorTiket = ticketNumbers
+	}
+
+	if tdb.ImageURI != nil {
+		t.ImageURI = *tdb.ImageURI
 	}
 
 	if tdb.CheckInStatus != nil {
