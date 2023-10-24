@@ -7,7 +7,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/midtrans/midtrans-go"
 	merchhttphandler "github.com/tedxub2023/internal/merch/handler/http"
 	ourTeamhttphandler "github.com/tedxub2023/internal/ourteam/handler/http"
 	"github.com/tedxub2023/internal/ticket"
@@ -18,6 +17,7 @@ import (
 	transactionhttphandler "github.com/tedxub2023/internal/transaction/handler/http"
 	transactionservice "github.com/tedxub2023/internal/transaction/service"
 	transactionpgstore "github.com/tedxub2023/internal/transaction/store/postgresql"
+	uploadhttphandler "github.com/tedxub2023/internal/upload/handler/http"
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
@@ -78,13 +78,13 @@ func new() (*server, error) {
 	{
 		pgStore, err := ticketpgstore.New(db)
 		if err != nil {
-			log.Printf("[twitter-api-http] failed to initialize ticket postgresql store: %s\n", err.Error())
+			log.Printf("[tedxub2023-api-http] failed to initialize ticket postgresql store: %s\n", err.Error())
 			return nil, fmt.Errorf("failed to initialize ticket postgresql store: %s", err.Error())
 		}
 
 		ticketSvc, err = ticketservice.New(pgStore)
 		if err != nil {
-			log.Printf("[twitter-api-http] failed to initialize ticket service: %s\n", err.Error())
+			log.Printf("[tedxub2023-api-http] failed to initialize ticket service: %s\n", err.Error())
 			return nil, fmt.Errorf("failed to initialize ticket service: %s", err.Error())
 		}
 	}
@@ -94,13 +94,13 @@ func new() (*server, error) {
 	{
 		pgStore, err := transactionpgstore.New(db)
 		if err != nil {
-			log.Printf("[twitter-api-http] failed to initialize transaction postgresql store: %s\n", err.Error())
+			log.Printf("[tedxub2023-api-http] failed to initialize transaction postgresql store: %s\n", err.Error())
 			return nil, fmt.Errorf("failed to initialize transaction postgresql store: %s", err.Error())
 		}
 
-		transactionSvc, err = transactionservice.New(pgStore, midtrans.Sandbox, os.Getenv("SERVER_KEY_MIDTRANS_DEV"))
+		transactionSvc, err = transactionservice.New(pgStore)
 		if err != nil {
-			log.Printf("[twitter-api-http] failed to initialize transaction service: %s\n", err.Error())
+			log.Printf("[tedxub2023-api-http] failed to initialize transaction service: %s\n", err.Error())
 			return nil, fmt.Errorf("failed to initialize transaction service: %s", err.Error())
 		}
 	}
@@ -113,7 +113,7 @@ func new() (*server, error) {
 
 		ticketHTTP, err := tickethttphandler.New(ticketSvc, identities)
 		if err != nil {
-			log.Printf("[twitter-api-http] failed to initialize ticket http handlers: %s\n", err.Error())
+			log.Printf("[tedxub2023-api-http] failed to initialize ticket http handlers: %s\n", err.Error())
 			return nil, fmt.Errorf("failed to initialize ticket http handlers: %s", err.Error())
 		}
 
@@ -128,7 +128,7 @@ func new() (*server, error) {
 
 		ourTeamHTTP, err := ourTeamhttphandler.New(identities)
 		if err != nil {
-			log.Printf("[twitter-api-http] failed to initialize ourTeam http handlers: %s\n", err.Error())
+			log.Printf("[tedxub2023-api-http] failed to initialize ourTeam http handlers: %s\n", err.Error())
 			return nil, fmt.Errorf("failed to initialize ourTeam http handlers: %s", err.Error())
 		}
 
@@ -143,7 +143,7 @@ func new() (*server, error) {
 
 		merchTTP, err := merchhttphandler.New(identities)
 		if err != nil {
-			log.Printf("[twitter-api-http] failed to initialize ourTeam http handlers: %s\n", err.Error())
+			log.Printf("[tedxub2023-api-http] failed to initialize ourTeam http handlers: %s\n", err.Error())
 			return nil, fmt.Errorf("failed to initialize ourTeam http handlers: %s", err.Error())
 		}
 
@@ -160,11 +160,27 @@ func new() (*server, error) {
 
 		transactionHTTP, err := transactionhttphandler.New(transactionSvc, identities)
 		if err != nil {
-			log.Printf("[twitter-api-http] failed to initialize transaction http handlers: %s\n", err.Error())
+			log.Printf("[tedxub2023-api-http] failed to initialize transaction http handlers: %s\n", err.Error())
 			return nil, fmt.Errorf("failed to initialize transaction http handlers: %s", err.Error())
 		}
 
 		s.handlers = append(s.handlers, transactionHTTP)
+	}
+
+	
+	// initialize upload HTTP handler
+	{
+		identities := []uploadhttphandler.HandlerIdentity{
+			uploadhttphandler.HandlerUpload,
+		}
+
+		uploadHTTP, err := uploadhttphandler.New(identities)
+		if err != nil {
+			log.Printf("[upload-api-http] failed to initialize upload http handlers: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize upload http handlers: %s", err.Error())
+		}
+
+		s.handlers = append(s.handlers, uploadHTTP)
 	}
 
 	return s, nil
