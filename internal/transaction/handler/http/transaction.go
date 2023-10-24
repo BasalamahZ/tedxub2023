@@ -3,6 +3,7 @@ package http
 import (
 	"context"
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -148,10 +149,55 @@ func (h *transactionHandler) handleUpdatePaymentStatus(w http.ResponseWriter, r 
 	}()
 
 	errChan := make(chan error, 1)
-	resChan := make(chan transaction.Transaction, 1)
+	resChan := make(chan int64, 1)
 
 	go func() {
-		res, err := h.transaction.UpdatePaymentStatus(ctx, transactionID)
+		// read body
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			statusCode = http.StatusBadRequest
+			errChan <- errBadRequest
+			return
+		}
+
+		// unmarshall body
+		request := transactionHTTP{}
+		err = json.Unmarshal(body, &request)
+		if err != nil {
+			statusCode = http.StatusBadRequest
+			errChan <- errBadRequest
+			return
+		}
+
+		// get current result transaction
+		current, err := h.transaction.GetTransactionByID(ctx, transactionID, "")
+		if err != nil {
+			// determine error and status code, by default its internal error
+			parsedErr := errInternalServer
+			statusCode = http.StatusInternalServerError
+			if v, ok := mapHTTPError[err]; ok {
+				parsedErr = v
+				statusCode = http.StatusBadRequest
+			}
+
+			// log the actual error if its internal error
+			if statusCode == http.StatusInternalServerError {
+				log.Printf("[Transaction HTTP][handleGetTransactionByID] Internal error from GetTransactionByID. transactionID: %v. Err: %s\n", transactionID, err.Error())
+			}
+
+			errChan <- parsedErr
+			return
+		}
+
+		// format HTTP request into service object
+		reqTransaction, err := parseTransactionFromUpdateRequest(request, current)
+		if err != nil {
+			statusCode = http.StatusBadRequest
+			errChan <- err
+			return
+		}
+
+		err = h.transaction.UpdatePaymentStatus(ctx, reqTransaction)
 		if err != nil {
 			parsedErr := errInternalServer
 			statusCode = http.StatusInternalServerError
@@ -160,12 +206,12 @@ func (h *transactionHandler) handleUpdatePaymentStatus(w http.ResponseWriter, r 
 				statusCode = http.StatusBadRequest
 			}
 			if statusCode == http.StatusInternalServerError {
-				log.Printf("[Transaction HTTP][handleUpdateTransactionByID] Internal error from UpdateTransactionByID. transactionID: %v. Err: %s\n", transactionID, err.Error())
+				log.Printf("[Transaction HTTP][handleUpdatePaymentStatus] Internal error from UpdatePaymentStatus. transactionID: %v. Err: %s\n", transactionID, err.Error())
 			}
 			errChan <- parsedErr
 			return
 		}
-		resChan <- res
+		resChan <- transactionID
 	}()
 
 	select {
@@ -173,15 +219,26 @@ func (h *transactionHandler) handleUpdatePaymentStatus(w http.ResponseWriter, r 
 		err = errRequestTimeout
 		statusCode = http.StatusGatewayTimeout
 	case err = <-errChan:
-	case data := <-resChan:
+	case transactionID := <-resChan:
 		resBody, err = json.Marshal(helper.ResponseEnvelope{
 			Status: "Success",
-			Data:   data,
+			Data:   transactionID,
 		})
-
-		if err != nil {
-			err = errInternalServer
-			statusCode = http.StatusInternalServerError
-		}
 	}
+}
+
+// parseTransactionFromUpdateRequest returns transaction
+// from the given HTTP request object.
+func parseTransactionFromUpdateRequest(th transactionHTTP, current transaction.Transaction) (transaction.Transaction, error) {
+	result := current
+
+	if th.ImageURI != nil {
+		result.ImageURI = *th.ImageURI
+	}
+
+	if th.StatusPayment != nil {
+		result.StatusPayment = *th.StatusPayment
+	}
+
+	return result, nil
 }

@@ -23,7 +23,7 @@ func formatTransaction(t transaction.Transaction) (transactionHTTP, error) {
 		Tanggal:           &tanggal,
 		OrderID:           &t.OrderID,
 		StatusPayment:     &t.StatusPayment,
-		ResponseMidtrans:  &t.ResponseMidtrans,
+		ImageURI:          &t.ImageURI,
 		NomorTiket:        &t.NomorTiket,
 		CheckInStatus:     &t.CheckInStatus,
 		CheckInNomorTiket: &t.CheckInNomorTiket,

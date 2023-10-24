@@ -68,6 +68,10 @@ var (
 	// transaction tanggal is invalid.
 	errInvalidTransactionTanggal = errors.New("INVALID_TRANSACTION_TANGGAL")
 
+	// errInvalidTransactionImageURI is returned when the given
+	// transaction image uri is invalid.
+	errInvalidTransactionImageURI = errors.New("INVALID_TRANSACTION_IMAGE_URI")
+
 	// errInvalidDateFormat is returned when the given date
 	// string format is invalid.
 	errInvalidDateFormat = errors.New("INVALID_DATE_FORMAT")
@@ -103,6 +107,7 @@ var (
 	// errAllTicketAlreadyCheckedIn is returned when all ticket
 	// already checked in
 	errAllTicketAlreadyCheckedIn = errors.New("ALL_TICKET_ALREADY_CHECKED_IN")
+
 	// errPaymentNoSettlement is returned when the given payment
 	// is not settlement.
 	errPaymentNotSettlement = errors.New("PAYMENT_NOT_SETTLEMENT")
@@ -129,6 +134,7 @@ var (
 		transaction.ErrInvalidTransactionJenisKelamin:   errInvalidTransactionJenisKelamin,
 		transaction.ErrInvalidTransactionTanggal:        errInvalidTransactionTanggal,
 		transaction.ErrInvalidTransactionJumlahTiket:    errInvalidTransactionJumlahTiket,
+		transaction.ErrInvalidTransactionImageURI:       errInvalidTransactionImageURI,
 		transaction.ErrInvalidDateFormat:                errInvalidDateFormat,
 		transaction.ErrTicketAlreadyCheckedIn:           errTicketAlreadyCheckedIn,
 		transaction.ErrTicketNotFound:                   errTicketNotFound,

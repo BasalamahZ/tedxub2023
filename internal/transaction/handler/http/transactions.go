@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/tedxub2023/global/helper"
@@ -18,11 +19,115 @@ type transactionsHandler struct {
 
 func (h *transactionsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
+	case http.MethodGet:
+		h.handleGetAllTransactions(w, r)
 	case http.MethodPost:
 		h.handleReplaceTransactionByEmail(w, r)
 	default:
 		helper.WriteErrorResponse(w, http.StatusMethodNotAllowed, []string{errMethodNotAllowed.Error()})
 	}
+}
+
+func (h *transactionsHandler) handleGetAllTransactions(w http.ResponseWriter, r *http.Request) {
+	// add timeout to context
+	ctx, cancel := context.WithTimeout(r.Context(), 3000*time.Millisecond)
+	defer cancel()
+
+	var (
+		err        error           // stores error in this handler
+		source     string          // stores request source
+		resBody    []byte          // stores response body to write
+		statusCode = http.StatusOK // stores response status code
+	)
+
+	// write response
+	defer func() {
+		// error
+		if err != nil {
+			log.Printf("[Transaction HTTP][handleGetAllTransactions] Failed to get all transaction. Source: %s, Err: %s\n", source, err.Error())
+			helper.WriteErrorResponse(w, statusCode, []string{err.Error()})
+			return
+		}
+		// success
+		helper.WriteResponse(w, resBody, statusCode, helper.JSONContentTypeDecorator)
+	}()
+
+	// prepare channels for main go routine
+	resChan := make(chan []transaction.Transaction, 1)
+	errChan := make(chan error, 1)
+
+	go func() {
+		// parsed filter
+		statusPayment, tanggal, err := parseGetTransactionsFilter(r.URL.Query())
+		if err != nil {
+			statusCode = http.StatusBadRequest
+			errChan <- err
+			return
+		}
+
+		res, err := h.transaction.GetAllTransactions(ctx, statusPayment, tanggal)
+		if err != nil {
+			// determine error and status code, by default its internal error
+			parsedErr := errInternalServer
+			statusCode = http.StatusInternalServerError
+			if v, ok := mapHTTPError[err]; ok {
+				parsedErr = v
+				statusCode = http.StatusBadRequest
+			}
+
+			// log the actual error if its internal error
+			if statusCode == http.StatusInternalServerError {
+				log.Printf("[Match HTTP][handleGetAllGames] Internal error from GetAllMatchs. Err: %s\n", err.Error())
+			}
+
+			errChan <- parsedErr
+			return
+		}
+
+		resChan <- res
+	}()
+
+	// wait and handle main go routine
+	select {
+	case <-ctx.Done():
+		statusCode = http.StatusGatewayTimeout
+		err = errRequestTimeout
+	case err = <-errChan:
+	case res := <-resChan:
+		// format each transactions
+		transactions := make([]transactionHTTP, 0)
+		for _, r := range res {
+			var t transactionHTTP
+			t, err = formatTransaction(r)
+			if err != nil {
+				return
+			}
+			transactions = append(transactions, t)
+		}
+
+		// construct response data
+		resBody, err = json.Marshal(helper.ResponseEnvelope{
+			Data: transactions,
+		})
+	}
+}
+
+func parseGetTransactionsFilter(request url.Values) (string, time.Time, error) {
+	var statusPayment string
+	if query := request.Get("status_payment"); query != "" {
+		statusPayment = query
+	}
+
+	var tanggal time.Time
+	if queryDate := request.Get("tanggal"); queryDate != "" {
+		beforeParsed, err := time.Parse(dateFormat, queryDate)
+		if err != nil {
+			return "", time.Time{}, err
+		}
+		tanggal = beforeParsed
+	}
+
+	return statusPayment, tanggal, nil
 }
 
 func (h *transactionsHandler) handleReplaceTransactionByEmail(w http.ResponseWriter, r *http.Request) {
