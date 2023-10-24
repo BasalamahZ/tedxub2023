@@ -17,7 +17,7 @@ func (s *service) payment(reqTransaction transaction.Transaction) (*coreapi.Char
 			{
 				ID:    "1",
 				Name:  "Ticket Propaganda 2",
-				Price: 30000,
+				Price: 25000,
 				Qty:   int32(reqTransaction.JumlahTiket),
 			},
 		},

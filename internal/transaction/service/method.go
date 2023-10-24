@@ -25,7 +25,7 @@ func (s *service) ReplaceTransactionByEmail(ctx context.Context, reqTransaction 
 		return 0, err
 	}
 	reqTransaction.CreateTime = s.timeNow()
-	reqTransaction.TotalHarga = 30000 * int64(reqTransaction.JumlahTiket)
+	reqTransaction.TotalHarga = 25000 * int64(reqTransaction.JumlahTiket)
 
 	// get pg store client with using transaction
 	pgStoreClient, err := s.pgStore.NewClient(true)
@@ -200,7 +200,7 @@ func (s *service) UpdatePaymentStatus(ctx context.Context, reqTransaction transa
 		if err := createPDF(reqTransaction); err != nil {
 			return err
 		}
-	
+
 		go sendMail(reqTransaction)
 	}
 
@@ -222,7 +222,7 @@ func sendPendingMail(tx transaction.Transaction) error {
 	if err := mail.SendMail(); err != nil {
 		return err
 	}
-  
+
 	return nil
 }
 
