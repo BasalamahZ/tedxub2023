@@ -56,6 +56,10 @@ var (
 	// tanggal is invalid.
 	ErrInvalidTransactionTanggal = errors.New("invalid transaction tanggal")
 
+	// errInvalidTransactionImageURI is returned when the given transaction
+	// image uri is invalid.
+	ErrInvalidTransactionImageURI = errors.New("invalid transaction image uri")
+
 	// ErrInvalidDateFormat is returned when the given date
 	// format is invalid.
 	ErrInvalidDateFormat = errors.New("invalid date format")
