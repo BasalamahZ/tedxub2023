@@ -94,7 +94,7 @@
 
       .detail-text {
         color: black;
-        margin-top: 25px !important;
+        margin-top: 25px;
       }
 
       hr.solid {
@@ -105,6 +105,12 @@
       .ringkasan {
         color: black;
         font-size: 20px;
+      }
+
+      .footer {
+        color: black;
+        margin-top: 50px;
+        text-align: center;
       }
     </style>
   </head>
@@ -121,6 +127,43 @@
           Berikut kami lampirkan invoice dan e-ticket yang dapat kamu tunjukan kepada panitia penyelenggara saat hendak memasuki venue acara.
         </p>
         <br>
+      </div>  
+      <div class="email-wrapper">
+        <div>
+          <div class="event-info">
+            <h1>Detail Pembelian Tiket</h1>
+            <p class="detail-text">Jadwal Event: {{.DateTime}}</p>
+            <p class="detail-text">Lokasi Event: Universitas Brawijaya</p>
+            <p class="detail-text">Jumlah Tiket: {{.TotalTickets}} x Tiket</p>
+            <p class="detail-text">Total Harga: {{.TotalPrice}}</p>
+          </div>
+        </div>
+        <hr class="solid" />
+        <h1 class="ringkasan">Ringkasan Pesanan</h1>
+        <div class="table-wrapper">
+          <table class="table">
+            <tr class="header-wrapper">
+              <th class="header-tb">Ringkasan</th>
+              <th class="header-tb">Harga per tiket</th>
+              <th class="header-tb">Kuantitas</th>
+              <th class="header-tb">Total</th>
+            </tr>
+            <tr class="body-wrapper">
+              <td class="body-tb">Tiket Semayam Asa</td>
+              <td class="body-tb">Rp25.000</td>
+              <td class="body-tb">{{.TotalTickets}}</td>
+              <td class="body-tb">{{.TotalPrice}}</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td class="body-tb">Total</td>
+              <td class="body-tb total-price">{{.TotalPrice}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="footer">
         <p>Terima kasih dan sampai jumpa!</p>
         <br />
         <p>Salam hangat,</p>
@@ -148,41 +191,6 @@
           <p>Instagram: @tedxuniversitasbrawijaya</p>
           <p>Twitter: @tedxbrawijaya</p>
           <p>Email: tedxuniversitasbrawijaya@gmail.com</p>
-        </div>
-      </div>  
-      <div class="email-wrapper">
-        <div>
-          <div class="event-info">
-            <h1>Detail Pembelian Tiket</h1>
-            <p class="detail-text">Jadwal Event: {{.DateTime}}</p>
-            <p class="detail-text">Lokasi Event: Universitas Brawijaya</p>
-            <p class="detail-text">Jumlah Tiket: {{.TotalTickets}} x Tiket</p>
-            <p class="detail-text">Total Harga: {{.TotalPrice}}</p>
-          </div>
-        </div>
-        <hr class="solid" />
-        <h1 class="ringkasan">Ringkasan Pesanan</h1>
-        <div class="table-wrapper">
-          <table class="table">
-            <tr class="header-wrapper">
-              <th class="header-tb">Ringkasan</th>
-              <th class="header-tb">Harga per tiket</th>
-              <th class="header-tb">Kuantitas</th>
-              <th class="header-tb">Total</th>
-            </tr>
-            <tr class="body-wrapper">
-              <td class="body-tb">Tiket Semayam Asa</td>
-              <td class="body-tb">Rp30.000</td>
-              <td class="body-tb">{{.TotalTickets}}</td>
-              <td class="body-tb">{{.TotalPrice}}</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td class="body-tb">Total</td>
-              <td class="body-tb total-price">{{.TotalPrice}}</td>
-            </tr>
-          </table>
         </div>
       </div>
     </div>
