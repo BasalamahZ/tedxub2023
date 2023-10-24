@@ -3,7 +3,6 @@ package service
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
@@ -54,19 +53,7 @@ func (s *service) ReplaceTransactionByEmail(ctx context.Context, reqTransaction 
 	rand.Seed(time.Now().UnixNano())
 	randomNum := rand.Intn(1e10)
 	reqTransaction.OrderID = fmt.Sprintf("%010d", randomNum)
-
-	resPayment, err := s.payment(reqTransaction)
-	if err != nil {
-		return 0, err
-	}
-
-	reqTransaction.StatusPayment = resPayment.TransactionStatus
-
-	jsonData, err := json.Marshal(resPayment)
-	if err != nil {
-		return 0, err
-	}
-	reqTransaction.ResponseMidtrans = string(jsonData)
+	reqTransaction.StatusPayment = "pending"
 
 	ticketID, err := pgStoreClient.CreateTransaction(ctx, reqTransaction)
 	if err != nil {
@@ -84,22 +71,20 @@ func (s *service) ReplaceTransactionByEmail(ctx context.Context, reqTransaction 
 	return ticketID, nil
 }
 
-func sendPendingMail(tx transaction.Transaction) error {
-	mail := m.NewMailClient()
-	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
-	mail.SetReciever(tx.Email)
-	mail.SetSubject("Registrasi Panggung Swara Insan")
-
-	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
-	totalPrice := ac.FormatMoney(tx.TotalHarga)
-	if err := mail.SetBodyHTMLPendingMail(tx.Nama, tx.JumlahTiket, totalPrice, tx.Tanggal.Format("02 January 2006")); err != nil {
-		return err
+func (s *service) GetAllTransactions(ctx context.Context, statusPayment string, tanggal time.Time) ([]transaction.Transaction, error) {
+	// get pg store client without using transaction
+	pgStoreClient, err := s.pgStore.NewClient(false)
+	if err != nil {
+		return nil, err
 	}
 
-	if err := mail.SendMail(); err != nil {
-		return err
+	// get all transactions from postgre
+	result, err := pgStoreClient.GetAllTransactions(ctx, statusPayment, tanggal)
+	if err != nil {
+		return nil, err
 	}
-	return nil
+
+	return result, nil
 }
 
 func (s *service) GetTransactionByID(ctx context.Context, transactionID int64, nomorTiket string) (transaction.Transaction, error) {
@@ -183,7 +168,7 @@ func (s *service) UpdateCheckInStatus(ctx context.Context, id int64, ticketNumbe
 		tx.CheckInStatus = true
 	}
 
-	_, err = pgStoreClient.UpdateTransactionByID(ctx, tx, s.timeNow())
+	err = pgStoreClient.UpdateTransactionByID(ctx, tx, s.timeNow())
 	if err != nil {
 		log.Println(err)
 		return "", err
@@ -192,62 +177,50 @@ func (s *service) UpdateCheckInStatus(ctx context.Context, id int64, ticketNumbe
 	return ticketNumber, nil
 }
 
-func (s *service) UpdatePaymentStatus(ctx context.Context, trasactionID int64) (transaction.Transaction, error) {
-	pgStoreClient, err := s.pgStore.NewClient(true)
+func (s *service) UpdatePaymentStatus(ctx context.Context, reqTransaction transaction.Transaction) error {
+	// validate id
+	if reqTransaction.ID <= 0 {
+		return transaction.ErrInvalidTransactionID
+	}
+
+	pgStoreClient, err := s.pgStore.NewClient(false)
 	if err != nil {
-		return transaction.Transaction{}, err
+		return err
 	}
 
-	defer func() {
-		if err != nil {
-			errTx := pgStoreClient.Rollback()
-			if errTx != nil {
-				err = errTx
-			}
-		}
-	}()
+	ticketNumbers := generateNumberTicket(reqTransaction.ID, reqTransaction.Tanggal.Format("02"), reqTransaction.JumlahTiket)
+	reqTransaction.NomorTiket = ticketNumbers
 
-	tx, err := pgStoreClient.GetTransactionByID(ctx, trasactionID)
+	err = pgStoreClient.UpdateTransactionByID(ctx, reqTransaction, s.timeNow())
 	if err != nil {
-		return transaction.Transaction{}, err
+		return err
 	}
 
-	res, err := s.checkStatusPayment(tx.OrderID)
-	if err != nil {
-		return tx, err
+	if err := createPDF(reqTransaction); err != nil {
+		return err
 	}
 
-	if res.TransactionStatus != "settlement" {
-		return tx, nil
+	go sendMail(reqTransaction)
+
+	return nil
+}
+
+func sendPendingMail(tx transaction.Transaction) error {
+	mail := m.NewMailClient()
+	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
+	mail.SetReciever(tx.Email)
+	mail.SetSubject("Registrasi Panggung Swara Insan")
+
+	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
+	totalPrice := ac.FormatMoney(tx.TotalHarga)
+	if err := mail.SetBodyHTMLPendingMail(tx.Nama, tx.JumlahTiket, totalPrice, tx.Tanggal.Format("02 January 2006")); err != nil {
+		return err
 	}
 
-	ticketNumbers := generateNumberTicket(tx.ID, tx.Tanggal.Format("02"), tx.JumlahTiket)
-
-	jsonData, err := json.Marshal(res)
-	if err != nil {
-		return transaction.Transaction{}, err
+	if err := mail.SendMail(); err != nil {
+		return err
 	}
-
-	tx.ResponseMidtrans = string(jsonData)
-	tx.NomorTiket = ticketNumbers
-	tx.StatusPayment = res.TransactionStatus
-
-	tx, err = pgStoreClient.UpdateTransactionByID(ctx, tx, s.timeNow())
-	if err != nil {
-		return transaction.Transaction{}, err
-	}
-
-	if err := createPDF(tx); err != nil {
-		return transaction.Transaction{}, err
-	}
-
-	go sendMail(tx)
-
-	if err := pgStoreClient.Commit(); err != nil {
-		return transaction.Transaction{}, err
-	}
-
-	return tx, nil
+	return nil
 }
 
 func generateNumberTicket(txID int64, date string, totalTickets int) []string {
