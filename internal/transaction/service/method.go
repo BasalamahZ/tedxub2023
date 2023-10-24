@@ -222,6 +222,7 @@ func sendPendingMail(tx transaction.Transaction) error {
 	if err := mail.SendMail(); err != nil {
 		return err
 	}
+  
 	return nil
 }
 
