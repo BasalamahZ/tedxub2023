@@ -196,11 +196,13 @@ func (s *service) UpdatePaymentStatus(ctx context.Context, reqTransaction transa
 		return err
 	}
 
-	if err := createPDF(reqTransaction); err != nil {
-		return err
+	if reqTransaction.StatusPayment == "settlement" {
+		if err := createPDF(reqTransaction); err != nil {
+			return err
+		}
+	
+		go sendMail(reqTransaction)
 	}
-
-	go sendMail(reqTransaction)
 
 	return nil
 }
@@ -220,6 +222,7 @@ func sendPendingMail(tx transaction.Transaction) error {
 	if err := mail.SendMail(); err != nil {
 		return err
 	}
+  
 	return nil
 }
 
