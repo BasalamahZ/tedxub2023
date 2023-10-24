@@ -14,13 +14,16 @@ type Service interface {
 	// transaction ID.
 	GetTransactionByID(ctx context.Context, transactionID int64, nomorTiket string) (Transaction, error)
 
+	// GetAllTransactions returns all transaction and filter by status and tanggal.
+	GetAllTransactions(ctx context.Context, statusPayment string, tanggal time.Time) ([]Transaction, error)
+
 	// UpdateCheckInStatus returns a ticket number and status with the giveb
 	// transaction ID and ticket number
 	UpdateCheckInStatus(ctx context.Context, id int64, nomorTiket string) (string, error)
 
 	// UpdatePaymentStatus update the payment status in DB
 	// and send a email after completed payment
-	UpdatePaymentStatus(ctx context.Context, trasactionID int64) (Transaction, error)
+	UpdatePaymentStatus(ctx context.Context, reqTransaction Transaction) error
 }
 
 // Transaction is a transaction.
@@ -41,7 +44,7 @@ type Transaction struct {
 	Tanggal           time.Time
 	StatusPayment     string
 	OrderID           string
-	ResponseMidtrans  string
+	ImageURI          string
 	NomorTiket        []string
 	CheckInStatus     bool
 	CheckInNomorTiket []string

@@ -133,7 +133,7 @@ type transactionHTTP struct {
 	Tanggal           *string   `json:"tanggal"`
 	OrderID           *string   `json:"order_id"`
 	StatusPayment     *string   `json:"status_payment"`
-	ResponseMidtrans  *string   `json:"response_midtrans"`
+	ImageURI          *string   `json:"image_uri"`
 	NomorTiket        *[]string `json:"nomor_tiket"`
 	CheckInStatus     *bool     `json:"checkin_status"`
 	CheckInNomorTiket *[]string `json:"checkin_nomor_tiket"`

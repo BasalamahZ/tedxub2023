@@ -18,7 +18,6 @@ const queryCreateTransaction = `
 		tanggal,
 		order_id,
 		status_payment,
-		response_midtrans,
 		create_time
 	) VALUES (
 		:nama,
@@ -35,7 +34,6 @@ const queryCreateTransaction = `
 		:tanggal,
 		:order_id,
 		:status_payment,
-		:response_midtrans,
 		:create_time
 	) RETURNING
 		id
@@ -58,7 +56,7 @@ const queryGetTransaction = `
 		t.tanggal,
 		t.order_id,
 		t.status_payment,
-		t.response_midtrans,
+		t.image_uri,
 		t.nomor_tiket,
 		t.checkin_status,
 		t.checkin_nomor_tiket,
@@ -97,7 +95,7 @@ const queryUpdateTransaction = `
 		tanggal = :tanggal,
 		order_id = :order_id,
 		status_payment = :status_payment,
-		response_midtrans = :response_midtrans,
+		image_uri = :image_uri,
 		nomor_tiket = ARRAY[:nomor_tiket],
 		checkin_status = :checkin_status,
 		update_time = :update_time
