@@ -200,7 +200,6 @@ func (s *service) UpdatePaymentStatus(ctx context.Context, reqTransaction transa
 		if err := createPDF(reqTransaction); err != nil {
 			return err
 		}
-
 		go sendMail(reqTransaction)
 	}
 
@@ -211,7 +210,7 @@ func sendPendingMail(tx transaction.Transaction) error {
 	mail := m.NewMailClient()
 	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
 	mail.SetReciever(tx.Email)
-	mail.SetSubject("Registrasi Panggung Swara Insan")
+	mail.SetSubject("Konfirmasi Pembelian Tiket")
 
 	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
 	totalPrice := ac.FormatMoney(tx.TotalHarga)
@@ -222,7 +221,6 @@ func sendPendingMail(tx transaction.Transaction) error {
 	if err := mail.SendMail(); err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -297,7 +295,7 @@ func sendMail(tx transaction.Transaction) error {
 	mail := m.NewMailClient()
 	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
 	mail.SetReciever(tx.Email)
-	mail.SetSubject("Registrasi Panggung Swara Insan")
+	mail.SetSubject("Tiket Semayam Asa")
 	mail.SetAttachFile(fmt.Sprintf("global/storage/SEMAYAMASA-%s-%d.pdf", tx.Nama, tx.ID))
 
 	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
