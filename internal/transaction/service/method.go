@@ -25,7 +25,7 @@ func (s *service) ReplaceTransactionByEmail(ctx context.Context, reqTransaction 
 		return 0, err
 	}
 	reqTransaction.CreateTime = s.timeNow()
-	reqTransaction.TotalHarga = 30000 * int64(reqTransaction.JumlahTiket)
+	reqTransaction.TotalHarga = 25000 * int64(reqTransaction.JumlahTiket)
 
 	// get pg store client with using transaction
 	pgStoreClient, err := s.pgStore.NewClient(true)
