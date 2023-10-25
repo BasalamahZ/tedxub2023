@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	maxFileSize int64 = 1024 * 1024 // 1 MB
+	maxFileSize int64 = 2048 * 2048 // 2 MB
 )
 
 type uploadHandler struct {
