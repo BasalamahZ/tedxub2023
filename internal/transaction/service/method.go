@@ -53,7 +53,7 @@ func (s *service) ReplaceTransactionByEmail(ctx context.Context, reqTransaction 
 	rand.Seed(time.Now().UnixNano())
 	randomNum := rand.Intn(1e10)
 	reqTransaction.OrderID = fmt.Sprintf("%010d", randomNum)
-	reqTransaction.StatusPayment = "pending"
+	reqTransaction.StatusPayment = "unpaid"
 
 	ticketID, err := pgStoreClient.CreateTransaction(ctx, reqTransaction)
 	if err != nil {

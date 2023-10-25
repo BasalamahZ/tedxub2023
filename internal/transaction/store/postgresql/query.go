@@ -65,6 +65,8 @@ const queryGetTransaction = `
 	FROM
 		transaction t
 	%s
+	ORDER BY 
+		t.create_time DESC
 `
 
 const queryuDeleteTransactionByEmail = `
