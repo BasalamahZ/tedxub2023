@@ -156,7 +156,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        13,
+				ID:        14,
 				Nama:      "Lanyard",
 				Harga:     "Rp25.000",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -164,7 +164,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        14,
+				ID:        15,
 				Nama:      "Korek",
 				Harga:     "Rp15.000",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -172,7 +172,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        14,
+				ID:        16,
 				Nama:      "Totebag",
 				Harga:     "Rp74.900",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -180,7 +180,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        15,
+				ID:        17,
 				Nama:      "Bundling 1",
 				Harga:     "Rp125.000",
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
@@ -191,7 +191,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link: "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        16,
+				ID:        18,
 				Nama:      "Bundling 2",
 				Harga:     "Rp145.000",
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
@@ -202,7 +202,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link: "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        9,
+				ID:        19,
 				Nama:      "Extra Bundling",
 				Harga:     "Rp225.000",
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
