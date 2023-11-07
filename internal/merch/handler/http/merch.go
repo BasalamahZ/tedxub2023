@@ -53,54 +53,6 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 		data := []MerchHTTP{
 			{
 				ID:        1,
-				Nama:      "Kaos (Ring Tee)",
-				Harga:     "Rp129.900",
-				Deskripsi: "Setiap individu merupakan pribadi yang unik. Keunikan ini dapat kamu wujudkan melalui bahasa rupa yang imajinatif!",
-				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712259/MERCH%20%2B%20BG/Artboard_1_wtscgn.png",
-				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
-			},
-			{
-				ID:        2,
-				Nama:      "Kaos (Oversize)",
-				Harga:     "Rp139.900",
-				Deskripsi: "Manifestasikan intuisi dirimu sebagai insan yang bergelora.",
-				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712260/MERCH%20%2B%20BG/Artboard_2_sdp4gr.png",
-				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
-			},
-			{
-				ID:        3,
-				Nama:      "Totebag",
-				Harga:     "Rp74.900",
-				Deskripsi: "Adakalanya kreativitas membawa dirimu hanyut dalam dimensi yang tak terlupakan.",
-				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712258/MERCH%20%2B%20BG/TOTE_BAG_p0eivf.png",
-				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
-			},
-			{
-				ID:        4,
-				Nama:      "Lanyard",
-				Harga:     "Rp25.000",
-				Deskripsi: "Personalisasikan dan ekspresikan dirimu di antara eksklusivitas yang mendominasi!",
-				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712256/MERCH%20%2B%20BG/LANYARD_okcqeo.png",
-				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
-			},
-			{
-				ID:        5,
-				Nama:      "Sticker Pack",
-				Harga:     "Rp25.000",
-				Deskripsi: "Eksplorasi imajinatif melahirkan keunikan dengan nilai tak terbatas.",
-				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712260/MERCH%20%2B%20BG/stickerpack_z552r2.png",
-				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
-			},
-			{
-				ID:        6,
-				Nama:      "Korek",
-				Harga:     "Rp15.000",
-				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
-				Thumbnail: "https://res.cloudinary.com/dpcwbnax4/image/upload/v1694712260/MERCH%20%2B%20BG/LIGHTER_pkr0rf.png",
-				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
-			},
-			{
-				ID:        7,
 				Nama:      "Hoodie",
 				Harga:     "Rp220.000",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -108,7 +60,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        8,
+				ID:        2,
 				Nama:      "Oversized T-shirt",
 				Harga:     "Rp120.000",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -116,7 +68,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        9,
+				ID:        3,
 				Nama:      "T-shirt",
 				Harga:     "Rp100.000",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -124,7 +76,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        10,
+				ID:        4,
 				Nama:      "Sticker Pack",
 				Harga:     "Rp15.000",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -132,7 +84,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        11,
+				ID:        5,
 				Nama:      "Korek",
 				Harga:     "Rp15.000",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -140,7 +92,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        12,
+				ID:        6,
 				Nama:      "T-Shirt (Ring Tee)",
 				Harga:     "Rp129.900",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -148,7 +100,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        13,
+				ID:        7,
 				Nama:      "T-Shirt (Oversize)",
 				Harga:     "Rp139.900",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -156,7 +108,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        14,
+				ID:        8,
 				Nama:      "Lanyard",
 				Harga:     "Rp25.000",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -164,7 +116,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        15,
+				ID:        9,
 				Nama:      "Korek",
 				Harga:     "Rp15.000",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -172,7 +124,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        16,
+				ID:        10,
 				Nama:      "Totebag",
 				Harga:     "Rp74.900",
 				Deskripsi: "Lakukan ekspedisimu dengan semangat yang terus memantik!",
@@ -180,7 +132,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link:      "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        17,
+				ID:        11,
 				Nama:      "Bundling 1",
 				Harga:     "Rp125.000",
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
@@ -191,7 +143,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link: "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        18,
+				ID:        12,
 				Nama:      "Bundling 2",
 				Harga:     "Rp145.000",
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
@@ -202,7 +154,7 @@ func (h *merchHandler) handleGetAllMerch(w http.ResponseWriter, r *http.Request)
 				Link: "https://forms.gle/rXEmJSnip4w5kRgd6",
 			},
 			{
-				ID:        19,
+				ID:        13,
 				Nama:      "Extra Bundling",
 				Harga:     "Rp225.000",
 				Deskripsi: "Penawaran Menarik untukmu! Merchandise istimewa ini dapat kamu miliki dengan harga yang spesial!",
