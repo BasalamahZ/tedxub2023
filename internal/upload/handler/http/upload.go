@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/cloudinary/cloudinary-go/v2"
@@ -68,6 +69,8 @@ func (h *uploadHandler) handleUpload(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		var folder string
+
 		// get file from form-data
 		uploaded, uploadedHeader, err := r.FormFile("file")
 		if err != nil {
@@ -75,6 +78,12 @@ func (h *uploadHandler) handleUpload(w http.ResponseWriter, r *http.Request) {
 			errChan <- errBadRequest
 			return
 		}
+		if strings.HasSuffix(uploadedHeader.Filename, ".pdf") {
+			folder = "PDF-Invoice"
+		} else {
+			folder = "Bukti-Transfer-TEDX"
+		}
+
 		defer uploaded.Close()
 
 		// get and validates file size
@@ -93,7 +102,7 @@ func (h *uploadHandler) handleUpload(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// create file
-		res, err := cld.Upload.Upload(ctx, uploaded, uploader.UploadParams{Folder: "Bukti-Transfer-TEDX"})
+		res, err := cld.Upload.Upload(ctx, uploaded, uploader.UploadParams{Folder: folder})
 		if err != nil {
 			// determine error and status code, by default its internal error
 			parsedErr := errInternalServerError

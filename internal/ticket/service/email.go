@@ -69,7 +69,7 @@ func (g *Gomail) SendMail() error {
 	return nil
 }
 
-func (g *Gomail) SetBodyHTMLMainEvent(totalTickets int, totalPrice string, dateTime string) error {
+func (g *Gomail) SetBodyHTMLMainEvent(totalTickets int, totalPrice string) error {
 	var body bytes.Buffer
 	path := "global/template/mainEvent.html"
 
@@ -81,11 +81,9 @@ func (g *Gomail) SetBodyHTMLMainEvent(totalTickets int, totalPrice string, dateT
 	t.Execute(&body, struct {
 		TotalTickets int
 		TotalPrice   string
-		DateTime     string
 	}{
 		TotalTickets: totalTickets,
 		TotalPrice:   totalPrice,
-		DateTime:     dateTime,
 	})
 
 	g.message.SetBody("text/html", body.String())
@@ -96,7 +94,7 @@ func (g *Gomail) SetAttachFile(path string) {
 	g.message.Attach(path)
 }
 
-func (g *Gomail) SetBodyHTMLPendingMail(name string, totalTickets int, totalPrice string, dateTime string) error {
+func (g *Gomail) SetBodyHTMLPendingMail(name string, totalTickets int, totalPrice string) error {
 	var body bytes.Buffer
 	path := "global/template/pendingMail.html"
 
