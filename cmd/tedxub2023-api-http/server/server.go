@@ -7,6 +7,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/tedxub2023/internal/mainevent"
+	maineventhttphandler "github.com/tedxub2023/internal/mainevent/handler/http"
+	maineventservice "github.com/tedxub2023/internal/mainevent/service"
+	maineventpgstore "github.com/tedxub2023/internal/mainevent/store/postgresql"
 	merchhttphandler "github.com/tedxub2023/internal/merch/handler/http"
 	ourTeamhttphandler "github.com/tedxub2023/internal/ourteam/handler/http"
 	"github.com/tedxub2023/internal/ticket"
@@ -105,6 +109,22 @@ func new() (*server, error) {
 		}
 	}
 
+	// initialize mainevent service
+	var maineventSvc mainevent.Service
+	{
+		pgStore, err := maineventpgstore.New(db)
+		if err != nil {
+			log.Printf("[tedxub2023-api-http] failed to initialize mainevent postgresql store: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize mainevent postgresql store: %s", err.Error())
+		}
+
+		maineventSvc, err = maineventservice.New(pgStore)
+		if err != nil {
+			log.Printf("[tedxub2023-api-http] failed to initialize mainevent service: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize mainevent service: %s", err.Error())
+		}
+	}
+
 	// initialize ticket HTTP handler
 	{
 		identities := []tickethttphandler.HandlerIdentity{
@@ -167,7 +187,6 @@ func new() (*server, error) {
 		s.handlers = append(s.handlers, transactionHTTP)
 	}
 
-	
 	// initialize upload HTTP handler
 	{
 		identities := []uploadhttphandler.HandlerIdentity{
@@ -183,6 +202,23 @@ func new() (*server, error) {
 		s.handlers = append(s.handlers, uploadHTTP)
 	}
 
+	// initialize mainevent HTTP handler
+	{
+		identities := []maineventhttphandler.HandlerIdentity{
+			maineventhttphandler.HandlerMainEvent,
+			maineventhttphandler.HandlerMainEvents,
+			maineventhttphandler.HandlerCheckIn,
+			maineventhttphandler.HandlerCounter,
+		}
+
+		maineventHTTP, err := maineventhttphandler.New(maineventSvc, identities)
+		if err != nil {
+			log.Printf("[tedxub2023-api-http] failed to initialize mainevent http handlers: %s\n", err.Error())
+			return nil, fmt.Errorf("failed to initialize mainevent http handlers: %s", err.Error())
+		}
+
+		s.handlers = append(s.handlers, maineventHTTP)
+	}
 	return s, nil
 }
 
