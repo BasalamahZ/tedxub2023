@@ -214,7 +214,7 @@ func sendPendingMail(tx transaction.Transaction) error {
 
 	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
 	totalPrice := ac.FormatMoney(tx.TotalHarga)
-	if err := mail.SetBodyHTMLPendingMail(tx.Nama, tx.JumlahTiket, totalPrice, tx.Tanggal.Format("02 January 2006")); err != nil {
+	if err := mail.SetBodyHTMLPendingMail(tx.Nama, tx.JumlahTiket, totalPrice); err != nil {
 		return err
 	}
 
@@ -300,7 +300,7 @@ func sendMail(tx transaction.Transaction) error {
 
 	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
 	totalPrice := ac.FormatMoney(tx.TotalHarga)
-	if err := mail.SetBodyHTMLMainEvent(tx.JumlahTiket, totalPrice, tx.Tanggal.Format("02 January 2006")); err != nil {
+	if err := mail.SetBodyHTMLMainEvent(tx.JumlahTiket, totalPrice); err != nil {
 		return err
 	}
 
