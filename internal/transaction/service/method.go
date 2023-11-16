@@ -212,9 +212,7 @@ func sendPendingMail(tx transaction.Transaction) error {
 	mail.SetReciever(tx.Email)
 	mail.SetSubject("Konfirmasi Pembelian Tiket")
 
-	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
-	totalPrice := ac.FormatMoney(tx.TotalHarga)
-	if err := mail.SetBodyHTMLPendingMail(tx.Nama, tx.JumlahTiket, totalPrice); err != nil {
+	if err := mail.SetBodyHTMLPendingMail(); err != nil {
 		return err
 	}
 

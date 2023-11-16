@@ -8,8 +8,8 @@ import (
 	"net/mail"
 	"time"
 
-	"github.com/leekchan/accounting"
 	"github.com/robfig/cron/v3"
+	"github.com/tedxub2023/global/helper"
 	"github.com/tedxub2023/internal/mainevent"
 	m "github.com/tedxub2023/internal/ticket/service"
 )
@@ -21,7 +21,7 @@ func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent main
 		return 0, err
 	}
 	reqMainEvent.CreateTime = s.timeNow()
-	reqMainEvent.TotalHarga = 50000 * int64(reqMainEvent.JumlahTiket)
+	reqMainEvent.TotalHarga = 70000 * int64(reqMainEvent.JumlahTiket)
 
 	// get pg store client
 	pgStoreClient, err := s.pgStore.NewClient(true)
@@ -55,7 +55,7 @@ func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent main
 		return 0, err
 	}
 
-	go sendPendingMail(reqMainEvent)
+	go sendMainEventPendingMail(reqMainEvent)
 
 	// commit changes
 	err = pgStoreClient.Commit()
@@ -195,21 +195,39 @@ func (s *service) UpdatePaymentStatus(ctx context.Context, reqMainEvent maineven
 	}
 
 	if reqMainEvent.Status == mainevent.StatusSettlement {
-		go sendMail(reqMainEvent)
+		if err := generatePDF(reqMainEvent); err != nil {
+			return err
+		}
+
+		go sendSuccessTransactionMail(reqMainEvent)
 	}
 
 	return nil
 }
 
-func sendPendingMail(tx mainevent.MainEvent) error {
+func sendTransactionDeclinedMail(tx mainevent.MainEvent) error {
+	mail := m.NewMailClient()
+	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
+	mail.SetReciever(tx.Email)
+	mail.SetSubject("Transaksi Ditolak")
+
+	if err := mail.SetBodyHTMLDeclinedTransaction(); err != nil {
+		return err
+	}
+
+	if err := mail.SendMail(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func sendMainEventPendingMail(tx mainevent.MainEvent) error {
 	mail := m.NewMailClient()
 	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
 	mail.SetReciever(tx.Email)
 	mail.SetSubject("Konfirmasi Pembelian Tiket")
 
-	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
-	totalPrice := ac.FormatMoney(tx.TotalHarga)
-	if err := mail.SetBodyHTMLPendingMail(tx.Nama, tx.JumlahTiket, totalPrice); err != nil {
+	if err := mail.SetBodyHTMLMainEventPendingMail(); err != nil {
 		return err
 	}
 
@@ -231,20 +249,26 @@ func generateNumberTicket(txID int64, totalTickets int) []string {
 	return ticketNumbers
 }
 
-func sendMail(tx mainevent.MainEvent) error {
+func sendSuccessTransactionMail(tx mainevent.MainEvent) error {
 	mail := m.NewMailClient()
 	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
 	mail.SetReciever(tx.Email)
-	mail.SetSubject("Tiket Main Event")
-	mail.SetAttachFile(tx.FileURI)
+	mail.SetSubject("Tiket Memantik Baskara")
+	mail.SetAttachFile(fmt.Sprintf("global/storage/ted/%s-%s.pdf", tx.Nama, tx.Type.String()))
 
-	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
-	totalPrice := ac.FormatMoney(tx.TotalHarga)
-	if err := mail.SetBodyHTMLMainEvent(tx.JumlahTiket, totalPrice); err != nil {
+	if err := mail.SetBodyHTMLSuccessTransaction(tx); err != nil {
 		return err
 	}
 
 	if err := mail.SendMail(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func generatePDF(tx mainevent.MainEvent) error {
+	err := helper.PDF(tx)
+	if err != nil {
 		return err
 	}
 	return nil
@@ -308,6 +332,8 @@ func (s *service) AddCronJobs(ctx context.Context) error {
 				if err == nil {
 					log.Println("deleted", result.ID)
 				}
+
+				go sendTransactionDeclinedMail(result)
 			}
 		}
 

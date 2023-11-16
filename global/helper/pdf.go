@@ -1,11 +1,13 @@
 package helper
 
 import (
+	"fmt"
 	"image"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/tedxub2023/internal/mainevent"
 	"github.com/unidoc/unipdf/v3/common/license"
 	"github.com/unidoc/unipdf/v3/creator"
 	"github.com/unidoc/unipdf/v3/model"
@@ -26,7 +28,7 @@ func downloadImage(url string) (image.Image, error) {
 	return img, nil
 }
 
-func PDF() error {
+func PDF(tx mainevent.MainEvent) error {
 	err := license.SetMeteredKey(os.Getenv("UNIDOC_LICENSE_API_KEY"))
 	if err != nil {
 		panic(err)
@@ -92,7 +94,8 @@ func PDF() error {
 	c.Draw(p)
 
 	// biodata
-	p = c.NewParagraph("Nama: Galih Permana")
+	name := fmt.Sprintf("Nama: %s", tx.Nama)
+	p = c.NewParagraph(name)
 	p.SetFont(helvetica)
 	p.SetFontSize(14)
 	p.SetLineHeight(1.5)
@@ -100,7 +103,8 @@ func PDF() error {
 	p.SetColor(creator.ColorBlack)
 	c.Draw(p)
 
-	p = c.NewParagraph("Nomor Identitas: 205150301111034")
+	identityNumber := fmt.Sprintf("Nomor Identitas: %s", tx.NomorIdentitas)
+	p = c.NewParagraph(identityNumber)
 	p.SetFont(helvetica)
 	p.SetFontSize(14)
 	p.SetLineHeight(1.5)
@@ -108,7 +112,8 @@ func PDF() error {
 	p.SetColor(creator.ColorBlack)
 	c.Draw(p)
 
-	p = c.NewParagraph("Email: ygalihpermana@student.ub.ac.id")
+	email := fmt.Sprintf("Email: %s", tx.Email)
+	p = c.NewParagraph(email)
 	p.SetFont(helvetica)
 	p.SetFontSize(14)
 	p.SetLineHeight(1.5)
@@ -116,7 +121,8 @@ func PDF() error {
 	p.SetColor(creator.ColorBlack)
 	c.Draw(p)
 
-	p = c.NewParagraph("No Telpon: 089621490655")
+	phone := fmt.Sprintf("No Telpon: %s", tx.NomorTelepon)
+	p = c.NewParagraph(phone)
 	p.SetFont(helvetica)
 	p.SetFontSize(14)
 	p.SetLineHeight(1.5)
@@ -124,7 +130,8 @@ func PDF() error {
 	p.SetColor(creator.ColorBlack)
 	c.Draw(p)
 
-	p = c.NewParagraph("Jenis Tiket: Early Bird Tiket")
+	ticketType := fmt.Sprintf("Jenis Tiket: %s", tx.Type.String())
+	p = c.NewParagraph(ticketType)
 	p.SetFont(helvetica)
 	p.SetFontSize(14)
 	p.SetLineHeight(1.5)
@@ -202,7 +209,8 @@ func PDF() error {
 	p.SetTextAlignment(creator.TextAlignmentJustify)
 	c.Draw(p)
 
-	err = c.WriteToFile("global/storage/ted/hello_world.pdf")
+	path := fmt.Sprintf("global/storage/ted/%s-%s.pdf", tx.Nama, tx.Type.String())
+	err = c.WriteToFile(path)
 	if err != nil {
 		log.Println("Write file error:", err)
 	}

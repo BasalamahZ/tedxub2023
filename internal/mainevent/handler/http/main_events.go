@@ -195,17 +195,19 @@ func (h *maineventsHandler) handleReplaceMainEventByEmail(w http.ResponseWriter,
 // parseMainEventFromCreateRequest returns MainEvent
 // from the given HTTP request object.
 func parseMainEventFromCreateRequest(meh mainEventHTTP) (mainevent.MainEvent, error) {
+	disability, err := parseDisability(*meh.Disabilitas)
+	if err != nil {
+		return mainevent.MainEvent{}, err
+	}
+
 	result := mainevent.MainEvent{
-		Status: mainevent.StatusUnpaid,
-		Type:   mainevent.TypeEarlyBird,
+		Status:      mainevent.StatusUnpaid,
+		Type:        mainevent.TypeEarlyBird,
+		Disabilitas: disability,
 	}
 
 	if meh.Nama != nil {
 		result.Nama = *meh.Nama
-	}
-
-	if meh.Disabilitas != nil {
-		result.Disabilitas = *meh.Disabilitas
 	}
 
 	if meh.NomorIdentitas != nil {
@@ -222,10 +224,6 @@ func parseMainEventFromCreateRequest(meh mainEventHTTP) (mainevent.MainEvent, er
 
 	if meh.NomorTelepon != nil {
 		result.NomorTelepon = *meh.NomorTelepon
-	}
-
-	if meh.Instagram != nil {
-		result.Instagram = *meh.Instagram
 	}
 
 	if meh.JumlahTiket != nil {

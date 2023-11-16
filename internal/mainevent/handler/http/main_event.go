@@ -245,9 +245,5 @@ func parseMainEventFromUpdateRequest(meh mainEventHTTP, current mainevent.MainEv
 		result.Status = status
 	}
 
-	if meh.FileURI != nil {
-		result.FileURI = *meh.FileURI
-	}
-
 	return result, nil
 }

@@ -48,10 +48,6 @@ var (
 	// status is invalid.
 	ErrInvalidMainEventStatus = errors.New("invalid main event status")
 
-	// errInvalidMainEventFileURI is returned when the given main event
-	// file uri is invalid.
-	ErrInvalidMainEventFileURI = errors.New("invalid main event file uri")
-
 	// errInvalidMainEventImageURI is returned when the given main event
 	// image uri is invalid.
 	ErrInvalidMainEventImageURI = errors.New("invalid main event image uri")

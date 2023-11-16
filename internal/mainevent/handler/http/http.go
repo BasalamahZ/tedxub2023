@@ -57,7 +57,7 @@ var (
 	// after participant scan ticket (enter event)
 	HandlerCheckIn = HandlerIdentity{
 		Name: "checkin",
-		URL:  "/checkin/{id}",
+		URL:  "/checkin/mainevent/{id}",
 	}
 )
 
@@ -127,16 +127,14 @@ func (h *Handler) Start(multiplexer *mux.Router) error {
 type mainEventHTTP struct {
 	ID                *int64    `json:"id"`
 	Nama              *string   `json:"nama"`
-	Disabilitas       *bool     `json:"disabilitas"`
+	Disabilitas       *string   `json:"disabilitas"`
 	NomorIdentitas    *string   `json:"nomor_identitas"`
 	AsalInstitusi     *string   `json:"asal_institusi"`
 	Email             *string   `json:"email"`
 	NomorTelepon      *string   `json:"nomor_telepon"`
-	Instagram         *string   `json:"instagram"`
 	JumlahTiket       *int      `json:"jumlah_tiket"`
 	TotalHarga        *int64    `json:"total_harga"`
 	OrderID           *string   `json:"order_id"`
-	FileURI           *string   `json:"file_uri"`
 	Type              *string   `json:"type"`
 	Status            *string   `json:"status"`
 	ImageURI          *string   `json:"image_uri"`

@@ -103,6 +103,10 @@ var (
 	// errPaymentNoSettlement is returned when the given payment
 	// is not settlement.
 	errPaymentNotSettlement = errors.New("PAYMENT_NOT_SETTLEMENT")
+
+	// errInvalidMainEventDisability is returned when the given
+	// main event disability is invalid.
+	errInvalidMainEventDisability = errors.New("INVALID_MAIN_EVENT_DISABILITY")
 )
 
 var (
@@ -124,7 +128,6 @@ var (
 		mainevent.ErrInvalidMainEventType:           errInvalidMainEventType,
 		mainevent.ErrInvalidMainEventStatus:         errInvalidMainEventStatus,
 		mainevent.ErrInvalidMainEventJumlahTiket:    errInvalidMainEventJumlahTiket,
-		mainevent.ErrInvalidMainEventFileURI:        errInvalidMainEventFileURI,
 		mainevent.ErrInvalidMainEventImageURI:       errInvalidMainEventImageURI,
 		mainevent.ErrTicketAlreadyCheckedIn:         errTicketAlreadyCheckedIn,
 		mainevent.ErrTicketNotFound:                 errTicketNotFound,

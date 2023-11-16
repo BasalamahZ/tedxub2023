@@ -31,13 +31,11 @@ type Service interface {
 type MainEvent struct {
 	ID                int64
 	Nama              string
-	Disabilitas       bool
+	Disabilitas       Disability
 	NomorIdentitas    string
 	AsalInstitusi     string
 	Email             string
 	NomorTelepon      string
-	Instagram         string
-	FileURI           string
 	Type              Type
 	JumlahTiket       int
 	TotalHarga        int64
@@ -128,4 +126,38 @@ func (s Status) Value() int {
 // String returns string representaion of a status type.
 func (s Status) String() string {
 	return statusName[s]
+}
+
+type Disability int
+
+const (
+	DisabilityUnknown      Disability = 0
+	SensoricDisability     Disability = 1
+	PyshicDisability       Disability = 2
+	IntellectualDisability Disability = 3
+	MentalDisability       Disability = 4
+)
+
+var (
+	DisabilityList = map[Disability]struct{}{
+		SensoricDisability:     {},
+		PyshicDisability:       {},
+		IntellectualDisability: {},
+		MentalDisability:       {},
+	}
+
+	disabilityName = map[Disability]string{
+		SensoricDisability:     "Disabilitas Sensorik",
+		PyshicDisability:       "Disabilitas Fisik",
+		IntellectualDisability: "Disabilitas Intelektual",
+		MentalDisability:       "Disabilitas Mental",
+	}
+)
+
+func (d Disability) Value() int {
+	return int(d)
+}
+
+func (d Disability) String() string {
+	return disabilityName[d]
 }
