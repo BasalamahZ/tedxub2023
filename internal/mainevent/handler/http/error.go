@@ -111,6 +111,10 @@ var (
 	// errEarlyBirdTicketSoldOut is returned when the early bird
 	// ticket is sold out.
 	errEarlyBirdTicketSoldOut = errors.New("EARLY_BIRD_TICKET_SOLD_OUT_OR_TOTAL_TICKET_BUY_OVER_THE_LIMIT")
+
+	// errTicketNotAlreadyAccepted is returned when the given
+	// ticketis not already accepted
+	errTicketNotAlreadyAccepted = errors.New("TICKET_NOT_ALREADY_ACCEPTED")
 )
 
 var (
@@ -139,5 +143,6 @@ var (
 		mainevent.ErrAllTicketAlreadyCheckedIn:      errAllTicketAlreadyCheckedIn,
 		mainevent.ErrPaymentNotSettlement:           errPaymentNotSettlement,
 		mainevent.ErrEarlyBirdTicketSoldOut:         errEarlyBirdTicketSoldOut,
+		mainevent.ErrTicketNotAlreadyAccepted:       errTicketNotAlreadyAccepted,
 	}
 )

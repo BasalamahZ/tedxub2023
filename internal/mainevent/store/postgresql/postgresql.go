@@ -74,7 +74,6 @@ type maineventDB struct {
 	AsalInstitusi     string               `db:"asal_institusi"`
 	Email             string               `db:"email"`
 	NomorTelepon      string               `db:"nomor_telepon"`
-	Instagram         string               `db:"instagram"`
 	JumlahTiket       int                  `db:"jumlah_tiket"`
 	TotalHarga        int64                `db:"total_harga"`
 	OrderID           string               `db:"order_id"`

@@ -80,7 +80,13 @@ func (h *counterHandler) handleGetMainEventCounter(w http.ResponseWriter, r *htt
 			return
 		}
 
-		resChan <- len(res)
+		counter := 0
+
+		for _, t := range res {
+			counter += t.JumlahTiket
+		}
+
+		resChan <- counter
 	}()
 
 	// wait and handle main go routine
