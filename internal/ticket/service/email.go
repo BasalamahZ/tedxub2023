@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"text/template"
+	"time"
 
 	"github.com/leekchan/accounting"
 	"github.com/tedxub2023/internal/mainevent"
@@ -169,6 +170,30 @@ func (g *Gomail) SetBodyHTMLMainEventPendingMail() error {
 	}
 
 	body.Write(file)
+
+	g.message.SetBody("text/html", body.String())
+	return nil
+}
+
+func (g *Gomail) SetBodyHTMLInformAdmin(tx mainevent.MainEvent) error {
+	path := "global/template/informEmail.html"
+
+	t, err := template.ParseFiles(path)
+	if err != nil {
+		return ticket.ErrParseBodyHTML
+	}
+
+	var body bytes.Buffer
+
+	t.Execute(&body, struct {
+		Name  string
+		Email string
+		Date  string
+	}{
+		Name:  tx.Nama,
+		Email: tx.Email,
+		Date:  time.Now().Format("2006-01-02 15:04:05"),
+	})
 
 	g.message.SetBody("text/html", body.String())
 	return nil

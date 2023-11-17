@@ -76,8 +76,8 @@ var (
 	// typeName maps type to it's string representation.
 	typeName = map[Type]string{
 		TypeEarlyBird: "early-bird",
-		TypePresale1:  "presale-1",
-		TypePresale2:  "presale-2",
+		TypePresale1:  "presale",
+		TypePresale2:  "normal",
 	}
 )
 
@@ -136,6 +136,7 @@ const (
 	PyshicDisability       Disability = 2
 	IntellectualDisability Disability = 3
 	MentalDisability       Disability = 4
+	NoneDisability         Disability = 5
 )
 
 var (
@@ -144,6 +145,7 @@ var (
 		PyshicDisability:       {},
 		IntellectualDisability: {},
 		MentalDisability:       {},
+		NoneDisability:         {},
 	}
 
 	disabilityName = map[Disability]string{
@@ -151,6 +153,7 @@ var (
 		PyshicDisability:       "Disabilitas Fisik",
 		IntellectualDisability: "Disabilitas Intelektual",
 		MentalDisability:       "Disabilitas Mental",
+		NoneDisability:         "Tidak ada",
 	}
 )
 

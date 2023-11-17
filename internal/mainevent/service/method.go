@@ -15,19 +15,30 @@ import (
 )
 
 func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent mainevent.MainEvent) (int64, error) {
-	// validate field
-	err := validateMainEvent(reqMainEvent)
-	if err != nil {
-		return 0, err
-	}
-	reqMainEvent.CreateTime = s.timeNow()
-	reqMainEvent.TotalHarga = 70000 * int64(reqMainEvent.JumlahTiket)
-
 	// get pg store client
 	pgStoreClient, err := s.pgStore.NewClient(true)
 	if err != nil {
 		return 0, err
 	}
+
+	tickets, err := pgStoreClient.GetAllMainEvents(ctx, mainevent.GetAllMainEventsFilter{})
+	if err != nil {
+		return 0, err
+	}
+
+	totalEarlyBirdTicket := checkEarlyBirdTicket(tickets)
+	if totalEarlyBirdTicket+reqMainEvent.JumlahTiket > 15 && reqMainEvent.Type == mainevent.TypeEarlyBird {
+		return 0, mainevent.ErrEarlyBirdTicketSoldOut
+	}
+
+	// validate field
+	err = validateMainEvent(reqMainEvent)
+	if err != nil {
+		return 0, err
+	}
+
+	reqMainEvent.CreateTime = s.timeNow()
+	reqMainEvent.TotalHarga = 50000 * int64(reqMainEvent.JumlahTiket)
 
 	// rollback just before return if error
 	defer func() {
@@ -56,6 +67,7 @@ func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent main
 	}
 
 	go sendMainEventPendingMail(reqMainEvent)
+	go sendMailInformAdmin(reqMainEvent)
 
 	// commit changes
 	err = pgStoreClient.Commit()
@@ -65,6 +77,16 @@ func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent main
 	s.AddCronJobs(ctx)
 
 	return ticketID, nil
+}
+
+func checkEarlyBirdTicket(tx []mainevent.MainEvent) int {
+	counter := 0
+	for _, t := range tx {
+		if t.Type == mainevent.TypeEarlyBird {
+			counter += t.JumlahTiket
+		}
+	}
+	return counter
 }
 
 func (s *service) GetAllMainEvents(ctx context.Context, filter mainevent.GetAllMainEventsFilter) ([]mainevent.MainEvent, error) {
@@ -237,12 +259,29 @@ func sendMainEventPendingMail(tx mainevent.MainEvent) error {
 	return nil
 }
 
+func sendMailInformAdmin(tx mainevent.MainEvent) error {
+	mail := m.NewMailClient()
+	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
+	//cemtedxub@gmail.com
+	mail.SetReciever("indrabrata599@gmail.com")
+	mail.SetSubject("Pemberitahuan Pembelian Tiket")
+
+	if err := mail.SetBodyHTMLInformAdmin(tx); err != nil {
+		return err
+	}
+
+	if err := mail.SendMail(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func generateNumberTicket(txID int64, totalTickets int) []string {
 	var ticketNumbers []string
 
 	asciiVal := 65
 	for i := 0; i < totalTickets; i++ {
-		ticketNumbers = append(ticketNumbers, fmt.Sprintf("SEMAYAMASA-1/%c%d", rune(asciiVal), txID))
+		ticketNumbers = append(ticketNumbers, fmt.Sprintf("MEMANTIKBASKARA-1/%c%d", rune(asciiVal), txID))
 		asciiVal++
 	}
 
@@ -254,6 +293,7 @@ func sendSuccessTransactionMail(tx mainevent.MainEvent) error {
 	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
 	mail.SetReciever(tx.Email)
 	mail.SetSubject("Tiket Memantik Baskara")
+
 	mail.SetAttachFile(fmt.Sprintf("global/storage/ted/%s-%s.pdf", tx.Nama, tx.Type.String()))
 
 	if err := mail.SetBodyHTMLSuccessTransaction(tx); err != nil {
@@ -331,9 +371,9 @@ func (s *service) AddCronJobs(ctx context.Context) error {
 				}
 				if err == nil {
 					log.Println("deleted", result.ID)
-				}
 
-				go sendTransactionDeclinedMail(result)
+					go sendTransactionDeclinedMail(result)
+				}
 			}
 		}
 

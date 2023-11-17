@@ -71,4 +71,8 @@ var (
 	// ErrPaymentNoSettlement is returned when the given payment
 	// is not settlement.
 	ErrPaymentNotSettlement = errors.New("payment not settlement")
+
+	//ErrEarlyBirdTicketSoldOut is returned when the given early bird ticket
+	//is sold out
+	ErrEarlyBirdTicketSoldOut = errors.New("early bird ticket sold out or total ticket buy over the limit")
 )
