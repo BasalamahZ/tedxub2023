@@ -35,10 +35,10 @@ func parseType(req string) (mainevent.Type, error) {
 	switch req {
 	case mainevent.TypeEarlyBird.String():
 		return mainevent.TypeEarlyBird, nil
-	case mainevent.TypePresale1.String():
-		return mainevent.TypePresale1, nil
-	case mainevent.TypePresale2.String():
-		return mainevent.TypePresale2, nil
+	case mainevent.TypePresale.String():
+		return mainevent.TypePresale, nil
+	case mainevent.TypeNormalSale.String():
+		return mainevent.TypeNormalSale, nil
 	}
 	return mainevent.TypeUnknown, errInvalidMainEventType
 }
@@ -69,6 +69,8 @@ func parseDisability(req string) (mainevent.Disability, error) {
 		return mainevent.IntellectualDisability, nil
 	case mainevent.MentalDisability.String():
 		return mainevent.MentalDisability, nil
+	case mainevent.NoneDisability.String():
+		return mainevent.NoneDisability, nil
 	}
 	return mainevent.DisabilityUnknown, errInvalidMainEventDisability
 }

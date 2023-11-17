@@ -11,10 +11,15 @@ import (
 	"github.com/robfig/cron/v3"
 	"github.com/tedxub2023/global/helper"
 	"github.com/tedxub2023/internal/mainevent"
-	m "github.com/tedxub2023/internal/ticket/service"
 )
 
 func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent mainevent.MainEvent) (int64, error) {
+	// validate field
+	err := validateMainEvent(reqMainEvent)
+	if err != nil {
+		return 0, err
+	}
+
 	// get pg store client
 	pgStoreClient, err := s.pgStore.NewClient(true)
 	if err != nil {
@@ -27,18 +32,12 @@ func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent main
 	}
 
 	totalEarlyBirdTicket := checkEarlyBirdTicket(tickets)
-	if totalEarlyBirdTicket+reqMainEvent.JumlahTiket > 15 && reqMainEvent.Type == mainevent.TypeEarlyBird {
+	if totalEarlyBirdTicket+reqMainEvent.JumlahTiket > 15 {
 		return 0, mainevent.ErrEarlyBirdTicketSoldOut
 	}
 
-	// validate field
-	err = validateMainEvent(reqMainEvent)
-	if err != nil {
-		return 0, err
-	}
-
 	reqMainEvent.CreateTime = s.timeNow()
-	reqMainEvent.TotalHarga = 50000 * int64(reqMainEvent.JumlahTiket)
+	reqMainEvent.TotalHarga = 49000 * int64(reqMainEvent.JumlahTiket)
 
 	// rollback just before return if error
 	defer func() {
@@ -67,7 +66,6 @@ func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent main
 	}
 
 	go sendMainEventPendingMail(reqMainEvent)
-	go sendMailInformAdmin(reqMainEvent)
 
 	// commit changes
 	err = pgStoreClient.Commit()
@@ -216,6 +214,11 @@ func (s *service) UpdatePaymentStatus(ctx context.Context, reqMainEvent maineven
 		return err
 	}
 
+	if reqMainEvent.Status == mainevent.StatusPending && reqMainEvent.ImageURI != "" {
+		go sendMailInformAdmin(reqMainEvent)
+		return mainevent.ErrTicketNotAlreadyAccepted
+	}
+
 	if reqMainEvent.Status == mainevent.StatusSettlement {
 		if err := generatePDF(reqMainEvent); err != nil {
 			return err
@@ -224,55 +227,6 @@ func (s *service) UpdatePaymentStatus(ctx context.Context, reqMainEvent maineven
 		go sendSuccessTransactionMail(reqMainEvent)
 	}
 
-	return nil
-}
-
-func sendTransactionDeclinedMail(tx mainevent.MainEvent) error {
-	mail := m.NewMailClient()
-	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
-	mail.SetReciever(tx.Email)
-	mail.SetSubject("Transaksi Ditolak")
-
-	if err := mail.SetBodyHTMLDeclinedTransaction(); err != nil {
-		return err
-	}
-
-	if err := mail.SendMail(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func sendMainEventPendingMail(tx mainevent.MainEvent) error {
-	mail := m.NewMailClient()
-	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
-	mail.SetReciever(tx.Email)
-	mail.SetSubject("Konfirmasi Pembelian Tiket")
-
-	if err := mail.SetBodyHTMLMainEventPendingMail(); err != nil {
-		return err
-	}
-
-	if err := mail.SendMail(); err != nil {
-		return err
-	}
-	return nil
-}
-
-func sendMailInformAdmin(tx mainevent.MainEvent) error {
-	mail := m.NewMailClient()
-	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
-	//cemtedxub@gmail.com
-	mail.SetReciever("indrabrata599@gmail.com")
-	mail.SetSubject("Pemberitahuan Pembelian Tiket")
-
-	if err := mail.SetBodyHTMLInformAdmin(tx); err != nil {
-		return err
-	}
-
-	if err := mail.SendMail(); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -286,24 +240,6 @@ func generateNumberTicket(txID int64, totalTickets int) []string {
 	}
 
 	return ticketNumbers
-}
-
-func sendSuccessTransactionMail(tx mainevent.MainEvent) error {
-	mail := m.NewMailClient()
-	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
-	mail.SetReciever(tx.Email)
-	mail.SetSubject("Tiket Memantik Baskara")
-
-	mail.SetAttachFile(fmt.Sprintf("global/storage/ted/%s-%s.pdf", tx.Nama, tx.Type.String()))
-
-	if err := mail.SetBodyHTMLSuccessTransaction(tx); err != nil {
-		return err
-	}
-
-	if err := mail.SendMail(); err != nil {
-		return err
-	}
-	return nil
 }
 
 func generatePDF(tx mainevent.MainEvent) error {

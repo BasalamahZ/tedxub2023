@@ -75,4 +75,8 @@ var (
 	//ErrEarlyBirdTicketSoldOut is returned when the given early bird ticket
 	//is sold out
 	ErrEarlyBirdTicketSoldOut = errors.New("early bird ticket sold out or total ticket buy over the limit")
+
+	//ErrTickeetNotAlreadyAccepted is returned when the given ticket
+	//is not already accepted
+	ErrTicketNotAlreadyAccepted = errors.New("ticket not already accepted")
 )

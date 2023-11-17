@@ -134,7 +134,7 @@ func PDF(tx mainevent.MainEvent) error {
 		p.SetColor(creator.ColorBlack)
 		c.Draw(p)
 
-		ticketType := fmt.Sprintf("Jenis Tiket: %s", tx.Type.String())
+		ticketType := fmt.Sprintf("Jenis Tiket: %s", "Early Bird")
 		p = c.NewParagraph(ticketType)
 		p.SetFont(helvetica)
 		p.SetFontSize(14)
@@ -144,7 +144,8 @@ func PDF(tx mainevent.MainEvent) error {
 		c.Draw(p)
 
 		// barcode
-		image, err := downloadImage("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={https://instagram.com/galjhpermana}")
+		url := fmt.Sprintf(os.Getenv("URL_QRCODE"), tx.ID, nomorTicket)
+		image, err := downloadImage("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + url)
 		if err != nil {
 			return err
 		}

@@ -59,25 +59,25 @@ type Type int
 
 // Followings are the known type.
 const (
-	TypeUnknown   Type = 0
-	TypeEarlyBird Type = 1
-	TypePresale1  Type = 2
-	TypePresale2  Type = 3
+	TypeUnknown    Type = 0
+	TypeEarlyBird  Type = 1
+	TypePresale    Type = 2
+	TypeNormalSale Type = 3
 )
 
 var (
 	// TypeList is a list of valid type.
 	TypeList = map[Type]struct{}{
-		TypeEarlyBird: {},
-		TypePresale1:  {},
-		TypePresale2:  {},
+		TypeEarlyBird:  {},
+		TypePresale:    {},
+		TypeNormalSale: {},
 	}
 
 	// typeName maps type to it's string representation.
 	typeName = map[Type]string{
-		TypeEarlyBird: "early-bird",
-		TypePresale1:  "presale",
-		TypePresale2:  "normal",
+		TypeEarlyBird:  "early-bird",
+		TypePresale:    "pre-sale",
+		TypeNormalSale: "normal-sale",
 	}
 )
 
