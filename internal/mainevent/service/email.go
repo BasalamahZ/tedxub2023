@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/tedxub2023/internal/mainevent"
 	m "github.com/tedxub2023/internal/ticket/service"
@@ -44,8 +45,8 @@ func sendSuccessTransactionMail(tx mainevent.MainEvent) error {
 func sendMailInformAdmin(tx mainevent.MainEvent) error {
 	mail := m.NewMailClient()
 	mail.SetSender("tedxuniversitasbrawijaya@gmail.com")
-	//cemtedxub@gmail.com
-	mail.SetReciever("indrabrata599@gmail.com")
+	email := os.Getenv("EMAIL_CEM")
+	mail.SetReciever(email)
 	mail.SetSubject("Pemberitahuan Pembelian Tiket")
 
 	if err := mail.SetBodyHTMLInformAdmin(tx); err != nil {
