@@ -76,6 +76,7 @@ func (h *checkInHandler) handleUpdateCheckInStatus(w http.ResponseWriter, r *htt
 				statusCode = http.StatusBadRequest
 			}
 			errChan <- parsedErr
+			return
 		}
 		resChan <- res
 	}()

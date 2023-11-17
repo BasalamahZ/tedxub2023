@@ -7,7 +7,10 @@ import (
 	"os"
 	"strconv"
 	"text/template"
+	"time"
 
+	"github.com/leekchan/accounting"
+	"github.com/tedxub2023/internal/mainevent"
 	"github.com/tedxub2023/internal/ticket"
 	"gopkg.in/gomail.v2"
 )
@@ -94,7 +97,7 @@ func (g *Gomail) SetAttachFile(path string) {
 	g.message.Attach(path)
 }
 
-func (g *Gomail) SetBodyHTMLPendingMail(name string, totalTickets int, totalPrice string) error {
+func (g *Gomail) SetBodyHTMLPendingMail() error {
 	var body bytes.Buffer
 	path := "global/template/pendingMail.html"
 
@@ -104,6 +107,93 @@ func (g *Gomail) SetBodyHTMLPendingMail(name string, totalTickets int, totalPric
 	}
 
 	body.Write(htmlContent)
+
+	g.message.SetBody("text/html", body.String())
+	return nil
+}
+
+func (g *Gomail) SetBodyHTMLDeclinedTransaction() error {
+	var body bytes.Buffer
+
+	path := "global/template/declinedTransaction.html"
+
+	file, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	body.Write(file)
+
+	g.message.SetBody("text/html", body.String())
+	return nil
+}
+
+func (g *Gomail) SetBodyHTMLSuccessTransaction(tx mainevent.MainEvent) error {
+	path := "global/template/successTransaction.html"
+
+	t, err := template.ParseFiles(path)
+	if err != nil {
+		return ticket.ErrParseBodyHTML
+	}
+
+	var body bytes.Buffer
+
+	ac := accounting.Accounting{Symbol: "Rp", Precision: 0, Thousand: ".", Decimal: ","}
+	totalPrice := ac.FormatMoney(tx.TotalHarga)
+
+	t.Execute(&body, struct {
+		TypeTickets  string
+		Date         string
+		Location     string
+		TotalTickets int
+		TotalPrice   string
+	}{
+		TypeTickets:  tx.Type.String(),
+		Date:         "2021-01-01",
+		Location:     "Jakarta",
+		TotalTickets: tx.JumlahTiket,
+		TotalPrice:   totalPrice,
+	})
+
+	g.message.SetBody("text/html", body.String())
+	return nil
+}
+
+func (g *Gomail) SetBodyHTMLMainEventPendingMail() error {
+	var body bytes.Buffer
+
+	path := "global/template/mainEventPendingMail.html"
+
+	file, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	body.Write(file)
+
+	g.message.SetBody("text/html", body.String())
+	return nil
+}
+
+func (g *Gomail) SetBodyHTMLInformAdmin(tx mainevent.MainEvent) error {
+	path := "global/template/informEmail.html"
+
+	t, err := template.ParseFiles(path)
+	if err != nil {
+		return ticket.ErrParseBodyHTML
+	}
+
+	var body bytes.Buffer
+
+	t.Execute(&body, struct {
+		Name  string
+		Email string
+		Date  string
+	}{
+		Name:  tx.Nama,
+		Email: tx.Email,
+		Date:  time.Now().Format("2006-01-02 15:04:05"),
+	})
 
 	g.message.SetBody("text/html", body.String())
 	return nil

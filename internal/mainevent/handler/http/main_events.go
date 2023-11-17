@@ -200,12 +200,18 @@ func parseMainEventFromCreateRequest(meh mainEventHTTP) (mainevent.MainEvent, er
 		Type:   mainevent.TypeEarlyBird,
 	}
 
-	if meh.Nama != nil {
-		result.Nama = *meh.Nama
+	if meh.Disabilitas == nil || *meh.Disabilitas == "" {
+		result.Disabilitas = mainevent.NoneDisability
+	} else {
+		disability, err := parseDisability(*meh.Disabilitas)
+		if err != nil {
+			return mainevent.MainEvent{}, err
+		}
+		result.Disabilitas = disability
 	}
 
-	if meh.Disabilitas != nil {
-		result.Disabilitas = *meh.Disabilitas
+	if meh.Nama != nil {
+		result.Nama = *meh.Nama
 	}
 
 	if meh.NomorIdentitas != nil {
@@ -222,10 +228,6 @@ func parseMainEventFromCreateRequest(meh mainEventHTTP) (mainevent.MainEvent, er
 
 	if meh.NomorTelepon != nil {
 		result.NomorTelepon = *meh.NomorTelepon
-	}
-
-	if meh.Instagram != nil {
-		result.Instagram = *meh.Instagram
 	}
 
 	if meh.JumlahTiket != nil {

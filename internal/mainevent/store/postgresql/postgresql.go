@@ -67,26 +67,25 @@ func (sc *storeClient) Rollback() error {
 }
 
 type maineventDB struct {
-	ID                int64            `db:"id"`
-	Nama              string           `db:"nama"`
-	Disabilitas       bool             `db:"disabilitas"`
-	NomorIdentitas    string           `db:"nomor_identitas"`
-	AsalInstitusi     string           `db:"asal_institusi"`
-	Email             string           `db:"email"`
-	NomorTelepon      string           `db:"nomor_telepon"`
-	Instagram         string           `db:"instagram"`
-	JumlahTiket       int              `db:"jumlah_tiket"`
-	TotalHarga        int64            `db:"total_harga"`
-	OrderID           string           `db:"order_id"`
-	Type              mainevent.Type   `db:"type"`
-	Status            mainevent.Status `db:"status"`
-	ImageURI          *string          `db:"image_uri"`
-	FileURI           *string           `db:"file_uri"`
-	NomorTiket        pq.StringArray   `db:"nomor_tiket"`
-	CheckInStatus     *bool            `db:"checkin_status"`
-	CheckInNomorTiket pq.StringArray   `db:"checkin_nomor_tiket"`
-	CreateTime        time.Time        `db:"create_time"`
-	UpdateTime        *time.Time       `db:"update_time"`
+	ID                int64                `db:"id"`
+	Nama              string               `db:"nama"`
+	Disabilitas       mainevent.Disability `db:"disabilitas"`
+	NomorIdentitas    string               `db:"nomor_identitas"`
+	AsalInstitusi     string               `db:"asal_institusi"`
+	Email             string               `db:"email"`
+	NomorTelepon      string               `db:"nomor_telepon"`
+	Instagram         string               `db:"instagram"`
+	JumlahTiket       int                  `db:"jumlah_tiket"`
+	TotalHarga        int64                `db:"total_harga"`
+	OrderID           string               `db:"order_id"`
+	Type              mainevent.Type       `db:"type"`
+	Status            mainevent.Status     `db:"status"`
+	ImageURI          *string              `db:"image_uri"`
+	NomorTiket        pq.StringArray       `db:"nomor_tiket"`
+	CheckInStatus     *bool                `db:"checkin_status"`
+	CheckInNomorTiket pq.StringArray       `db:"checkin_nomor_tiket"`
+	CreateTime        time.Time            `db:"create_time"`
+	UpdateTime        *time.Time           `db:"update_time"`
 }
 
 // format formats database struct into domain struct.
@@ -99,7 +98,6 @@ func (mdb *maineventDB) format() mainevent.MainEvent {
 		AsalInstitusi:  mdb.AsalInstitusi,
 		Email:          mdb.Email,
 		NomorTelepon:   mdb.NomorTelepon,
-		Instagram:      mdb.Instagram,
 		JumlahTiket:    mdb.JumlahTiket,
 		TotalHarga:     mdb.TotalHarga,
 		OrderID:        mdb.OrderID,
@@ -118,10 +116,6 @@ func (mdb *maineventDB) format() mainevent.MainEvent {
 
 	if mdb.ImageURI != nil {
 		t.ImageURI = *mdb.ImageURI
-	}
-
-	if mdb.FileURI != nil {
-		t.FileURI = *mdb.FileURI
 	}
 
 	if mdb.CheckInStatus != nil {

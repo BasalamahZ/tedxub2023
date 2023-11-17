@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container{
+      color: black;
+    }
+
+    .header{
+      color: black;
+      text-align: center;
+    }
+
+    .footer{
+      color: black;
+      text-align: center; 
+    }
+
+    .header-tb {
+      color: black;
+      min-width: 80px;
+      max-width: 200px;
+      font-size: 15px;
+      padding: 10px;
+      height: 40px;
+    }
+
+    .header-wrapper {
+      text-align: center;
+      color: black;
+      background-color: red;
+    }
+
+    .table .body-wrapper {
+      color: black;
+      border: 1px solid red;
+    }
+
+    .table {
+      color: black;
+      text-align: left;
+      width: 100%;
+    }
+
+    .body-tb {
+      color: black;
+      font-size: 15px;
+      padding: 15px;
+    }
+
+    .table-wrapper {
+      color: black;
+      border-radius: 8px;
+      border: 1px solid rgb(207, 207, 207);
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h4>Pembayaran telah berhasil dilakukan!</h4>
+      <p>Terima kasih telah menjadikan <strong><span style="color: red;">TEDx</span>UniversitasBrawijaya 2023</strong> sebagai salah satu bagian dari perjalananmu yang luar biasa!</p>
+      <p>Berikut kami lampirkan invoice dan e-ticket yang dapat kamu tunjukan kepada panitia yang bertugas saat hendak memasuki venue acara.</p>
+    </div>
+    
+    <div class="detail">
+      <h2>Detail Pembelian Tiket</h2>
+      <h4>Jadwal Event		: {{.Date}}</h4>
+      <h4>Lokasi Event		: {{.Location}}</h4>
+      <h4>Jumlah Tiket		: {{.TotalTickets}}</h4>
+      <h4>Jenis Tiket		  : {{.TypeTickets}}</h4>
+      <h4>Total Harga		  : {{.TotalPrice}}</h4>
+    </div>
+
+    <table class="table">
+      <tr class="header-wrapper">
+        <th class="header-tb">Ringkasan</th>
+        <th class="header-tb">Harga tiket</th>
+        <th class="header-tb">Kuantitas</th>
+        <th class="header-tb">Total</th>
+      </tr>
+      <tr class="body-wrapper">
+        <td class="body-tb">Tiket Memantik Baskara TEDxUniversitasBrawijaya 2023</td>
+        <td class="body-tb">Rp50.000</td>
+        <td class="body-tb">{{.TotalTickets}}</td>
+        <td class="body-tb">{{.TotalPrice}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td class="body-tb">Total</td>
+        <td class="body-tb total-price">{{.TotalPrice}}</td>
+      </tr>
+    </table>
+    <div class="footer">
+      <p>Terima kasih dan sampai jumpa!</p>
+      <p>Salam hangat,</p>
+      <p>
+        <span class="tedx"><b style="color: red;">TEDx</b></span
+        ><b>Universitas Brawijaya 2023</b>
+      </p>
+      <br />
+      <hr
+        style="
+          color: #000000;
+          background-color: #000000;
+          height: 1px;
+          border: none;
+          width: 300px;
+        "
+      />
+      <img
+        class="tedxpicture"
+        src="https://drive.google.com/uc?id=1JoNLqUn0xZ7bgtbtBETLruLwOsdoO6pQ"
+        alt=""
+      />
+      <div class="contact">
+        <p>tedxuniversitasbrawijaya.org</p>
+        <p>Instagram: @tedxuniversitasbrawijaya</p>
+        <p>Twitter: @tedxbrawijaya</p>
+        <p>Email: tedxuniversitasbrawijaya@gmail.com</p>
+      </div>
+    </div>
+  </div>
+  
+</body>
+</html>

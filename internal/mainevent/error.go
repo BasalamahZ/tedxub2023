@@ -48,10 +48,6 @@ var (
 	// status is invalid.
 	ErrInvalidMainEventStatus = errors.New("invalid main event status")
 
-	// errInvalidMainEventFileURI is returned when the given main event
-	// file uri is invalid.
-	ErrInvalidMainEventFileURI = errors.New("invalid main event file uri")
-
 	// errInvalidMainEventImageURI is returned when the given main event
 	// image uri is invalid.
 	ErrInvalidMainEventImageURI = errors.New("invalid main event image uri")
@@ -75,4 +71,8 @@ var (
 	// ErrPaymentNoSettlement is returned when the given payment
 	// is not settlement.
 	ErrPaymentNotSettlement = errors.New("payment not settlement")
+
+	//ErrEarlyBirdTicketSoldOut is returned when the given early bird ticket
+	//is sold out
+	ErrEarlyBirdTicketSoldOut = errors.New("early bird ticket sold out or total ticket buy over the limit")
 )

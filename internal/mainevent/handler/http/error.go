@@ -103,6 +103,14 @@ var (
 	// errPaymentNoSettlement is returned when the given payment
 	// is not settlement.
 	errPaymentNotSettlement = errors.New("PAYMENT_NOT_SETTLEMENT")
+
+	// errInvalidMainEventDisability is returned when the given
+	// main event disability is invalid.
+	errInvalidMainEventDisability = errors.New("INVALID_MAIN_EVENT_DISABILITY")
+
+	// errEarlyBirdTicketSoldOut is returned when the early bird
+	// ticket is sold out.
+	errEarlyBirdTicketSoldOut = errors.New("EARLY_BIRD_TICKET_SOLD_OUT_OR_TOTAL_TICKET_BUY_OVER_THE_LIMIT")
 )
 
 var (
@@ -124,12 +132,12 @@ var (
 		mainevent.ErrInvalidMainEventType:           errInvalidMainEventType,
 		mainevent.ErrInvalidMainEventStatus:         errInvalidMainEventStatus,
 		mainevent.ErrInvalidMainEventJumlahTiket:    errInvalidMainEventJumlahTiket,
-		mainevent.ErrInvalidMainEventFileURI:        errInvalidMainEventFileURI,
 		mainevent.ErrInvalidMainEventImageURI:       errInvalidMainEventImageURI,
 		mainevent.ErrTicketAlreadyCheckedIn:         errTicketAlreadyCheckedIn,
 		mainevent.ErrTicketNotFound:                 errTicketNotFound,
 		mainevent.ErrTicketNotYetPaid:               errTicketNotYetPaid,
 		mainevent.ErrAllTicketAlreadyCheckedIn:      errAllTicketAlreadyCheckedIn,
 		mainevent.ErrPaymentNotSettlement:           errPaymentNotSettlement,
+		mainevent.ErrEarlyBirdTicketSoldOut:         errEarlyBirdTicketSoldOut,
 	}
 )

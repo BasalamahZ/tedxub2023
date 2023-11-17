@@ -7,20 +7,19 @@ import "github.com/tedxub2023/internal/mainevent"
 func formatMainEvent(m mainevent.MainEvent) (mainEventHTTP, error) {
 	typeStr := m.Type.String()
 	statusStr := m.Status.String()
+	disabilityStr := m.Disabilitas.String()
 
 	return mainEventHTTP{
 		ID:                &m.ID,
 		Nama:              &m.Nama,
-		Disabilitas:       &m.Disabilitas,
+		Disabilitas:       &disabilityStr,
 		NomorIdentitas:    &m.NomorIdentitas,
 		AsalInstitusi:     &m.AsalInstitusi,
 		Email:             &m.Email,
 		NomorTelepon:      &m.NomorTelepon,
-		Instagram:         &m.Instagram,
 		JumlahTiket:       &m.JumlahTiket,
 		TotalHarga:        &m.TotalHarga,
 		OrderID:           &m.OrderID,
-		FileURI:           &m.FileURI,
 		Status:            &statusStr,
 		Type:              &typeStr,
 		ImageURI:          &m.ImageURI,
@@ -56,4 +55,20 @@ func parseStatus(req string) (mainevent.Status, error) {
 		return mainevent.StatusSettlement, nil
 	}
 	return mainevent.StatusUnknown, errInvalidMainEventStatus
+}
+
+// parseDisability returns mainevent.Disability
+// from the given string.
+func parseDisability(req string) (mainevent.Disability, error) {
+	switch req {
+	case mainevent.SensoricDisability.String():
+		return mainevent.SensoricDisability, nil
+	case mainevent.PyshicDisability.String():
+		return mainevent.PyshicDisability, nil
+	case mainevent.IntellectualDisability.String():
+		return mainevent.IntellectualDisability, nil
+	case mainevent.MentalDisability.String():
+		return mainevent.MentalDisability, nil
+	}
+	return mainevent.DisabilityUnknown, errInvalidMainEventDisability
 }
