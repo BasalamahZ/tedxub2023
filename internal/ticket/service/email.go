@@ -144,13 +144,11 @@ func (g *Gomail) SetBodyHTMLSuccessTransaction(tx mainevent.MainEvent) error {
 	t.Execute(&body, struct {
 		TypeTickets  string
 		Date         string
-		Location     string
 		TotalTickets int
 		TotalPrice   string
 	}{
 		TypeTickets:  "Early Bird",
 		Date:         "3 Desember 2023",
-		Location:     "TBA",
 		TotalTickets: tx.JumlahTiket,
 		TotalPrice:   totalPrice,
 	})

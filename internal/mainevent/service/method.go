@@ -186,7 +186,6 @@ func (s *service) UpdateCheckInStatus(ctx context.Context, id int64, ticketNumbe
 
 	err = pgStoreClient.UpdateMainEventByID(ctx, tx)
 	if err != nil {
-		log.Println(err)
 		return "", err
 	}
 
@@ -216,7 +215,6 @@ func (s *service) UpdatePaymentStatus(ctx context.Context, reqMainEvent maineven
 
 	if reqMainEvent.Status == mainevent.StatusPending && reqMainEvent.ImageURI != "" {
 		go sendMailInformAdmin(reqMainEvent)
-		return mainevent.ErrTicketNotAlreadyAccepted
 	}
 
 	if reqMainEvent.Status == mainevent.StatusSettlement {
@@ -300,7 +298,7 @@ func (s *service) AddCronJobs(ctx context.Context) error {
 
 		for _, result := range results {
 			timeDifference := time.Since(result.CreateTime)
-			if timeDifference.Minutes() > 5 {
+			if timeDifference.Minutes() > 6 {
 				err = pgStoreClient.DeleteMainEventByEmail(ctx, result.Email)
 				if err != nil {
 					log.Println("err delete", err, result.ID)
