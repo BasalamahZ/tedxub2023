@@ -56,7 +56,13 @@ func (h *maineventsHandler) handleGetAllMainEvents(w http.ResponseWriter, r *htt
 	errChan := make(chan error, 1)
 
 	go func() {
-		res, err := h.mainevent.GetAllMainEvents(ctx, mainevent.GetAllMainEventsFilter{})
+		filter, err := ParseGetMainEventsFilter(r.URL.Query())
+		if err != nil {
+			statusCode = http.StatusBadRequest
+			errChan <- err
+			return
+		}
+		res, err := h.mainevent.GetAllMainEvents(ctx, filter)
 		if err != nil {
 			// determine error and status code, by default its internal error
 			parsedErr := errInternalServer
@@ -197,7 +203,7 @@ func (h *maineventsHandler) handleReplaceMainEventByEmail(w http.ResponseWriter,
 func parseMainEventFromCreateRequest(meh mainEventHTTP) (mainevent.MainEvent, error) {
 	result := mainevent.MainEvent{
 		Status: mainevent.StatusUnpaid,
-		Type:   mainevent.TypeEarlyBird,
+		Type:   mainevent.TypePresale,
 	}
 
 	if meh.Disabilitas == nil || *meh.Disabilitas == "" {
