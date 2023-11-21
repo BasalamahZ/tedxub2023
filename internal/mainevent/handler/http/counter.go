@@ -54,7 +54,7 @@ func (h *counterHandler) handleGetMainEventCounter(w http.ResponseWriter, r *htt
 	errChan := make(chan error, 1)
 
 	go func() {
-		filter, err := ParseGetMainEventsFilter(r.URL.Query())
+		filter, err := parseGetMainEventsFilter(r.URL.Query())
 		if err != nil {
 			statusCode = http.StatusBadRequest
 			errChan <- err
@@ -103,7 +103,7 @@ func (h *counterHandler) handleGetMainEventCounter(w http.ResponseWriter, r *htt
 	}
 }
 
-func ParseGetMainEventsFilter(request url.Values) (mainevent.GetAllMainEventsFilter, error) {
+func parseGetMainEventsFilter(request url.Values) (mainevent.GetAllMainEventsFilter, error) {
 	result := mainevent.GetAllMainEventsFilter{}
 
 	var types mainevent.Type

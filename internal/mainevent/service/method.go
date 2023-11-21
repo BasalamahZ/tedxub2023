@@ -37,7 +37,7 @@ func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent main
 	}
 
 	reqMainEvent.CreateTime = s.timeNow()
-	reqMainEvent.TotalHarga = 49000 * int64(reqMainEvent.JumlahTiket)
+	reqMainEvent.TotalHarga = 69000 * int64(reqMainEvent.JumlahTiket)
 
 	// rollback just before return if error
 	defer func() {

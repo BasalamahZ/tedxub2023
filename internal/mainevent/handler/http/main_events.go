@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/tedxub2023/global/helper"
@@ -56,7 +57,7 @@ func (h *maineventsHandler) handleGetAllMainEvents(w http.ResponseWriter, r *htt
 	errChan := make(chan error, 1)
 
 	go func() {
-		filter, err := ParseGetMainEventsFilter(r.URL.Query())
+		filter, err := parseGetMainEventsFilters(r.URL.Query())
 		if err != nil {
 			statusCode = http.StatusBadRequest
 			errChan <- err
@@ -241,4 +242,21 @@ func parseMainEventFromCreateRequest(meh mainEventHTTP) (mainevent.MainEvent, er
 	}
 
 	return result, nil
+}
+
+func parseGetMainEventsFilters(request url.Values) (mainevent.GetAllMainEventsFilter, error) {
+	result := mainevent.GetAllMainEventsFilter{}
+
+	var types mainevent.Type
+	if TypeStr := request.Get("type"); TypeStr != "" {
+		parsedType, err := parseType(TypeStr)
+		if err != nil {
+			return result, errInvalidMainEventType
+		}
+		types = parsedType
+	}
+
+	return mainevent.GetAllMainEventsFilter{
+		Type: types,
+	}, nil
 }
