@@ -31,13 +31,13 @@ func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent main
 		return 0, err
 	}
 
-	totalEarlyBirdTicket := checkEarlyBirdTicket(tickets)
-	if totalEarlyBirdTicket+reqMainEvent.JumlahTiket > 15 {
+	totalPresaleTicket := checkPresaleTicket(tickets)
+	if totalPresaleTicket+reqMainEvent.JumlahTiket > 35 {
 		return 0, mainevent.ErrEarlyBirdTicketSoldOut
 	}
 
 	reqMainEvent.CreateTime = s.timeNow()
-	reqMainEvent.TotalHarga = 49000 * int64(reqMainEvent.JumlahTiket)
+	reqMainEvent.TotalHarga = 69000 * int64(reqMainEvent.JumlahTiket)
 
 	// rollback just before return if error
 	defer func() {
@@ -77,10 +77,10 @@ func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent main
 	return ticketID, nil
 }
 
-func checkEarlyBirdTicket(tx []mainevent.MainEvent) int {
+func checkPresaleTicket(tx []mainevent.MainEvent) int {
 	counter := 0
 	for _, t := range tx {
-		if t.Type == mainevent.TypeEarlyBird {
+		if t.Type == mainevent.TypePresale {
 			counter += t.JumlahTiket
 		}
 	}
@@ -289,7 +289,7 @@ func (s *service) AddCronJobs(ctx context.Context) error {
 	go scheduler.AddFunc("*/1 * * * *", func() {
 		results, err := s.GetAllMainEvents(ctx, mainevent.GetAllMainEventsFilter{
 			Status: mainevent.StatusUnpaid,
-			Type:   mainevent.TypeEarlyBird,
+			Type:   mainevent.TypePresale,
 		})
 		if err != nil {
 			log.Println("err get all", err)

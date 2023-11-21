@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/tedxub2023/global/helper"
@@ -56,7 +57,13 @@ func (h *maineventsHandler) handleGetAllMainEvents(w http.ResponseWriter, r *htt
 	errChan := make(chan error, 1)
 
 	go func() {
-		res, err := h.mainevent.GetAllMainEvents(ctx, mainevent.GetAllMainEventsFilter{})
+		filter, err := parseGetMainEventsFilters(r.URL.Query())
+		if err != nil {
+			statusCode = http.StatusBadRequest
+			errChan <- err
+			return
+		}
+		res, err := h.mainevent.GetAllMainEvents(ctx, filter)
 		if err != nil {
 			// determine error and status code, by default its internal error
 			parsedErr := errInternalServer
@@ -197,7 +204,7 @@ func (h *maineventsHandler) handleReplaceMainEventByEmail(w http.ResponseWriter,
 func parseMainEventFromCreateRequest(meh mainEventHTTP) (mainevent.MainEvent, error) {
 	result := mainevent.MainEvent{
 		Status: mainevent.StatusUnpaid,
-		Type:   mainevent.TypeEarlyBird,
+		Type:   mainevent.TypePresale,
 	}
 
 	if meh.Disabilitas == nil || *meh.Disabilitas == "" {
@@ -235,4 +242,21 @@ func parseMainEventFromCreateRequest(meh mainEventHTTP) (mainevent.MainEvent, er
 	}
 
 	return result, nil
+}
+
+func parseGetMainEventsFilters(request url.Values) (mainevent.GetAllMainEventsFilter, error) {
+	result := mainevent.GetAllMainEventsFilter{}
+
+	var types mainevent.Type
+	if TypeStr := request.Get("type"); TypeStr != "" {
+		parsedType, err := parseType(TypeStr)
+		if err != nil {
+			return result, errInvalidMainEventType
+		}
+		types = parsedType
+	}
+
+	return mainevent.GetAllMainEventsFilter{
+		Type: types,
+	}, nil
 }

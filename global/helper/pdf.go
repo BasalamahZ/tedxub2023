@@ -134,7 +134,7 @@ func PDF(tx mainevent.MainEvent) error {
 		p.SetColor(creator.ColorBlack)
 		c.Draw(p)
 
-		ticketType := fmt.Sprintf("Jenis Tiket: %s", "Early Bird")
+		ticketType := fmt.Sprintf("Jenis Tiket: %s", "Presale")
 		p = c.NewParagraph(ticketType)
 		p.SetFont(helvetica)
 		p.SetFontSize(14)
