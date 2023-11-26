@@ -147,7 +147,7 @@ func (g *Gomail) SetBodyHTMLSuccessTransaction(tx mainevent.MainEvent) error {
 		TotalTickets int
 		TotalPrice   string
 	}{
-		TypeTickets:  "Pre Sale",
+		TypeTickets:  "Normal Sale",
 		Date:         "3 Desember 2023",
 		TotalTickets: tx.JumlahTiket,
 		TotalPrice:   totalPrice,

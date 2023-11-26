@@ -204,7 +204,7 @@ func (h *maineventsHandler) handleReplaceMainEventByEmail(w http.ResponseWriter,
 func parseMainEventFromCreateRequest(meh mainEventHTTP) (mainevent.MainEvent, error) {
 	result := mainevent.MainEvent{
 		Status: mainevent.StatusUnpaid,
-		Type:   mainevent.TypePresale,
+		Type:   mainevent.TypeNormalSale,
 	}
 
 	if meh.Disabilitas == nil || *meh.Disabilitas == "" {
