@@ -85,6 +85,10 @@ func (sc *storeClient) GetAllMainEvents(ctx context.Context, filter mainevent.Ge
 		addConditions = append(addConditions, "m.type = :type")
 		argsKV["type"] = filter.Type
 	}
+	if filter.CheckInStatus {
+		addConditions = append(addConditions, "m.checkin_status = :checkin_status")
+		argsKV["checkin_status"] = filter.CheckInStatus
+	}
 	// construct strings to custom query
 	addCondition := strings.Join(addConditions, " AND ")
 

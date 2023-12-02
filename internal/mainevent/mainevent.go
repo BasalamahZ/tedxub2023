@@ -50,8 +50,9 @@ type MainEvent struct {
 }
 
 type GetAllMainEventsFilter struct {
-	Type   Type
-	Status Status
+	Type          Type
+	Status        Status
+	CheckInStatus bool
 }
 
 // Type denotes type of a schedule.

@@ -32,7 +32,7 @@ func (s *service) ReplaceMainEventByEmail(ctx context.Context, reqMainEvent main
 	}
 
 	totalNormalSaleTicket := checkNormalSaleTicket(tickets)
-	if totalNormalSaleTicket+reqMainEvent.JumlahTiket > 50 {
+	if totalNormalSaleTicket+reqMainEvent.JumlahTiket > 100 {
 		return 0, mainevent.ErrTicketSoldOut
 	}
 

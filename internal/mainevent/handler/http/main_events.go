@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/tedxub2023/global/helper"
@@ -256,7 +257,17 @@ func parseGetMainEventsFilters(request url.Values) (mainevent.GetAllMainEventsFi
 		types = parsedType
 	}
 
+	var checkinStatus bool
+	if checkinStr := request.Get("checkin"); checkinStr != "" {
+		parsedCheckinStatus, err := strconv.ParseBool(checkinStr)
+		if err != nil {
+			return result, mainevent.ErrTicketAlreadyCheckedIn
+		}
+		checkinStatus = parsedCheckinStatus
+	}
+
 	return mainevent.GetAllMainEventsFilter{
-		Type: types,
+		Type:          types,
+		CheckInStatus: checkinStatus,
 	}, nil
 }
